@@ -882,11 +882,45 @@ function dialLink(){var enc=[wsel.energy,wsel.roast,wsel.milk,wsel.sweet,wsel.te
 function patchIt(){var url=dialLink();var nm=($('#hubName')&&$('#hubName').textContent)||'my current';if(navigator.share){navigator.share({title:'My Wired current',text:nm+' at Wired Coffee',url:url}).catch(function(){});}else if(navigator.clipboard){navigator.clipboard.writeText(url);toast('Link copied');}else{toast('Copy: '+url);}}
 function toast(msg){var t=document.createElement('div');t.className='proto';t.style.left='50%';t.style.transform='translateX(-50%)';t.style.bottom='60px';t.textContent='⚡ '+msg;document.body.appendChild(t);setTimeout(function(){t.remove();},1900);}
 function toggleDeep(){deep=!deep;FACTIONS=deep?FACTIONS_CORE.concat(FACTIONS_ADV):FACTIONS_CORE.slice();if(!deep){wsel.flavor=null;wsel.flavors=[];wsel.mode=null;}buildWheel();resolveWheel();var b=$('#deeperBtn');if(b)b.textContent=deep?'− Keep it simple':'+ Go deeper';}
-function quizAdd(w,el){var d=DRINKS[w];add(d.name,'your Current',d.addPrice,el);openCart();}
+
+/* Barista build for every wheel drink that is not on the menu boards.
+   This string prints on the Square ticket, so it is the recipe. */
+var RECIPE={
+ 'dark-circuit':'12 oz cold brew, dark chocolate, black, +1 espresso shot, iced',
+ 'the-kernel':'12 oz cortado, 2 shots, whole milk, hot',
+ 'black-box':'12 oz cold brew, extra bold, black, iced',
+ 'burnt-signal':'12 oz house brew, dark roast, black, hot',
+ 'white-noise':'12 oz breve, white chocolate, hot',
+ 'honeycomb':'12 oz cortado, oat milk, honey, hot',
+ 'caramel-cache':'12 oz latte, caramel, whole milk, hot',
+ 'golden-hour':'12 oz latte, oat milk, honey + vanilla, iced',
+ 'green-volt':'12 oz matcha, oat milk, maple, iced',
+ 'chai-charge':'12 oz dirty chai: chai + 1 espresso shot, whole milk, hot',
+ 'nut-cluster':'12 oz latte, almond milk, hazelnut + dark chocolate, hot',
+ 'cinnamon-toast':'12 oz latte, whole milk, maple + cinnamon, hot',
+ 'vanilla-sky':'12 oz latte, whole milk, vanilla + white chocolate, iced',
+ 'root-access':'12 oz breve, maple + cinnamon, hot',
+ 'cold-circuit':'12 oz mocha, peppermint + dark chocolate, iced',
+ 'static':'12 oz house brew, half-caff, whole milk, hot'};
+function wheelTicketNote(w){
+ if(RECIPE[w])return RECIPE[w];
+ var t=wsel.temp!=null?(wsel.temp===1?'iced':'hot'):null;
+ return '12 oz'+(t?', '+t:'');
+}
+function inventTicketNote(){
+ var c=inventComp(),parts=['12 oz '+c.base];
+ parts.push(c.milk==='Black'?'black':(c.milk+' milk'));
+ if(c.syrup)parts.push((wsel.sweet?wsel.sweet+' pump'+(wsel.sweet>1?'s':'')+' ':'')+c.syrup);
+ if(wsel.energy>=3&&STRENGTH[c.base]&&STRENGTH[c.base].unit!=='shots')parts.push('+1 espresso shot');
+ parts.push(c.temp);
+ if(wsel.flavors&&wsel.flavors.length)parts.push('mix: '+joinNicely(wsel.flavors));
+ return parts.join(', ');
+}
+function quizAdd(w,el){var d=DRINKS[w];add(d.name,wheelTicketNote(w),d.addPrice,el);openCart();}
 function quizTweak(w){var seed=SEED[w]||{base:'Latte',milk:'Whole',syrup:null,temp:'hot'};if(BASES[seed.base]===undefined)seed.base='Latte';sel.base=seed.base;sel.milk=seed.milk;sel.syrup=seed.syrup;sel.temp=seed.temp;sel.pump=0;selectBaseStrength(seed.base,seed.temp);paint();scrollTo2('#build');var inst=document.querySelector('.inst');if(inst&&inst.animate)inst.animate([{boxShadow:'0 0 0 rgba(31,154,214,0)'},{boxShadow:'0 0 40px rgba(31,154,214,.6)'},{boxShadow:'0 0 0 rgba(31,154,214,0)'}],{duration:1200});}
 function inventComp(){var b=(wsel.roast>=3&&(wsel.milk==null||wsel.milk<=1))?((wsel.energy>=3&&wsel.temp===1)?'Cold Brew':'Espresso'):(wsel.milk>=3?'Breve':(wsel.milk>=2?(hasFlav('chocolate')?'Mocha':'Latte'):(wsel.roast<=1?'House Brew':'Cortado')));var milk=['Black','Almond','Oat','Whole'][wsel.milk==null?2:wsel.milk];var syr=null;var sm={'Hazelnut':'Hazelnut','Almond':null,'Cocoa':'Dark Chocolate','Dark Chocolate':'Dark Chocolate','White Chocolate':'White Chocolate','Mocha':'Dark Chocolate','Caramel':'Caramel','Maple':'Maple','Honey':'Honey','Vanilla':'Vanilla','Banana Bread':'Vanilla','Cinnamon':'Maple','Chai spice':null,'Peppermint':'Dark Chocolate','Lemon':null,'Navajo':null};(wsel.flavors||[]).forEach(function(f){if(!syr&&sm[f])syr=sm[f];});return {base:b,milk:milk,syrup:syr,temp:wsel.temp===1?'iced':'hot'};}
 function hasFlav(x){return (wsel.flavors||[]).join(',').toLowerCase().indexOf(x)>-1||famFlavor()===x;}
-function inventAdd(el){add(inventName(),'invented: '+joinNicely(wsel.flavors||[]),inventPrice(),el);openCart();}
+function inventAdd(el){add(inventName(),inventTicketNote(),inventPrice(),el);openCart();}
 function inventTweak(){var c=inventComp();sel.base=c.base;sel.milk=c.milk;sel.syrup=c.syrup;sel.temp=c.temp;sel.pump=(wsel.sweet||0);selectBaseStrength(c.base,c.temp);if(wsel.energy>=3)sel.strength=Math.min((STRENGTH[c.base]||{scale:['']}).scale.length-1,sel.strength+1);paint();scrollTo2('#build');}
 buildWheel();resolveWheel();
 
@@ -980,7 +1014,7 @@ function renderCup(){
  $('#calMg').textContent=(cfg.mg[si]+sel.shot*75)+'mg';$('#cupSize').textContent=(sel.size==='XL'?'20 OZ':(sel.size==='Large'?'16 OZ':size));
 }
 function flare(){var g=$('#glow');g.setAttribute('opacity',0.95);setTimeout(renderCup,380);}
-function addBuild(el){var p=price();if(p===null)return;var cfg=STRENGTH[sel.base];var sn=shotName(sel.base,sel.shot);var mods=[];mods.push(cfg.scale[sel.strength]);if(sel.shot&&!sn)mods.push('+'+sel.shot+' shot');if(sel.temp==='iced')mods.push('iced');if(sel.size==='Large')mods.push('16oz');if(sel.size==='XL')mods.push('20oz');if(sel.milk!=='Whole')mods.push(sel.milk);if(sel.syrup)mods.push(sel.syrup);var nm=$('#cupName').value.trim();var drink=sn||sel.base;
+function addBuild(el){var p=price();if(p===null)return;var cfg=STRENGTH[sel.base];var sn=shotName(sel.base,sel.shot);var mods=[];mods.push(cfg.scale[sel.strength]);if(sel.shot&&!sn)mods.push('+'+sel.shot+' shot');if(sel.temp==='iced')mods.push('iced');if(sel.size==='Large')mods.push('16oz');if(sel.size==='XL')mods.push('20oz');if(sel.milk!=='Whole')mods.push(sel.milk);if(sel.syrup)mods.push((sel.pump||1)+' pump'+((sel.pump||1)>1?'s':'')+' '+sel.syrup);var nm=$('#cupName').value.trim();var drink=sn||sel.base;
  $('#liquid').style.transform='scaleY(0.02)';setTimeout(renderCup,60);flare();
  setTimeout(function(){add((nm?nm+"'s ":'')+drink,mods.join(', '),p,el);},700);}
 $('#cupName').addEventListener('input',renderCup);
