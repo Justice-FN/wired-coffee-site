@@ -231,12 +231,23 @@ section{padding:130px 0;position:relative}
 
 .menu{background:var(--cream);color:var(--ink)}
 .menu .head h2{color:var(--ink)}.menu .num{color:var(--roast)}
-.menu-cols{display:grid;grid-template-columns:1fr 1fr;gap:8px 76px;max-width:1040px}
-.mcat h3{font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--blue);border-bottom:2px solid rgba(31,154,214,.4);padding-bottom:11px;margin:34px 0 12px}
+.menu-cols{max-width:820px}
+.mtabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 8px;max-width:820px}
+.mtab{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:9px 14px;border:1.5px solid rgba(76,26,5,.28);background:none;color:var(--espresso);cursor:pointer;transition:.18s;border-radius:2px}
+.mtab:hover{border-color:var(--espresso)}
+.mtab.on{background:var(--espresso);color:var(--cream);border-color:var(--espresso)}
+.mcat.off{display:none}
+.madd{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:1.5px solid var(--blue);color:var(--blue);background:none;padding:6px 13px;cursor:pointer;transition:.18s;border-radius:2px;flex:0 0 auto;transform:translateY(2px)}
+.madd:hover{background:var(--blue);color:#fff}
+.msizes{display:none;gap:8px;flex-wrap:wrap;margin-top:9px}
+.mrow.szopen .msizes{display:flex}
+.msz{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.08em;border:1.5px solid rgba(76,26,5,.3);background:rgba(255,255,255,.55);color:var(--espresso);padding:8px 14px;cursor:pointer;transition:.18s;border-radius:2px}
+.msz:hover{border-color:var(--blue);color:var(--blue)}
+.mcat h3{font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--blue);border-bottom:2px solid rgba(31,154,214,.4);padding-bottom:9px;margin:22px 0 8px}
 .mcat:first-child h3{margin-top:0}
-.mrow{padding:11px 0;border-bottom:1px solid rgba(76,26,5,.08);cursor:pointer}
+.mrow{padding:8px 0;border-bottom:1px solid rgba(76,26,5,.08);cursor:pointer}
 .mrow .top{display:flex;align-items:baseline;gap:11px}
-.mrow .n{font-family:var(--disp);font-size:22px;font-weight:700}
+.mrow .n{font-family:var(--disp);font-size:18px;font-weight:700}
 .mrow .lead{flex:1;border-bottom:1px dotted rgba(76,26,5,.35);transform:translateY(-6px)}
 .mrow .p{font-family:var(--mono);font-size:15px;color:var(--espresso)}
 .mrow .eq{font-family:var(--mono);font-size:12.5px;color:var(--roast);margin-top:4px}
@@ -266,7 +277,9 @@ section{padding:130px 0;position:relative}
   #printHead img{height:52px;margin:0 auto 8px}
   #printHead .ph-l{font-family:var(--disp);font-size:15pt;color:#1a0f08}
   #printHead .ph-s{font-family:var(--mono);font-size:8pt;color:#4c1a05;margin-top:4px}
-  .menu-cols{grid-template-columns:1fr 1fr!important;gap:0 34px!important}
+  .menu-cols{display:grid!important;grid-template-columns:1fr 1fr!important;gap:0 34px!important;max-width:none!important}
+  .mtabs,.madd,.msizes{display:none!important}
+  .mcat.off{display:block!important}
   .mcat h3{color:#1F9AD6!important}
   .mcat,.mrow,.miy-card{break-inside:avoid}
   .mrow .exp{max-height:none!important;overflow:visible!important;margin-top:3px!important;color:#4c1a05!important}
@@ -506,13 +519,14 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
   <div class="wrap">
     <div id="printHead"><img src="img/logo.png" alt="Wired Coffee Co."><div class="ph-l">Wired Coffee Co. &mdash; Every cup, a current.</div><div class="ph-s">209 W Main St, Cortez CO &middot; inside the Cortez Makerspace &middot; Order at the counter or fundamentalneeds.net &middot; Members save 10% &middot; Every cup funds the makerspace</div></div>
     <div class="head"><span class="num">03 / <b>Order ahead</b></span><h2>The menu.</h2></div>
+    <div class="mtabs" id="menuTabs"></div>
     <div class="menu-cols" id="menuCols"></div>
     <div class="miy">
       <div class="miy-h"><span class="num" style="color:var(--roast);display:block;margin-bottom:8px">Make it yours</span><h3>Every drink, your way.</h3></div>
       <div class="miy-grid" id="miyGrid"></div>
       <div class="miy-foot">Not sure what to get? Dial it in on the screen or ask the counter. Members save 10%.</div>
     </div>
-    <div class="menu-foot">Tap a drink for its spec &middot; pickup ~10 min &middot; tax included <button class="btn btn-line" id="printBtn" style="padding:10px 18px;margin-left:12px" onclick="window.print()">&#9113; Print this menu</button></div>
+    <div class="menu-foot">Tap a row for its spec &middot; <b style="color:var(--blue)">+ Add</b> puts it in your order &middot; pickup ~10 min &middot; tax included <button class="btn btn-line" id="printBtn" style="padding:10px 18px;margin-left:12px" onclick="window.print()">&#9113; Print this menu</button></div>
   </div>
 </section>
 
@@ -526,7 +540,7 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
     <div class="impact reveal">
       <img class="impbg" src="img/fn/oasis2.jpg" alt="">
       <div class="impgrid">
-        <div class="stat"><b data-count="220" data-suf="+">0</b><span>Dine homes with clean water</span></div>
+        <div class="stat"><b data-count="240" data-suf="+">0</b><span>Dine homes with clean water</span></div>
         <div class="stat"><b data-count="200" data-suf="+">0</b><span>makerspace members</span></div>
         <div class="stat"><b data-count="30" data-suf="+">0</b><span>workshops in 6 months</span></div>
         <div class="stat"><b data-count="2020" data-raw="1">0</b><span>founded in Colorado</span></div>
@@ -534,7 +548,7 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
     </div>
 
     <div class="progs">
-      <div class="prog"><div class="ph"><img src="img/fn/oasis.jpg" alt="Oasis Project water install"></div><div class="k">Oasis Project &middot; Water &amp; solar</div><h3>Clean water on the Nation</h3><p>Off-grid solar water systems for Din&eacute; families across the Navajo Nation, built and installed by local high-school students under a teach, train, and hire model. 220+ homes served since 2021, from Rock Point to Shiprock and Kayenta.</p></div>
+      <div class="prog"><div class="ph"><img src="img/fn/oasis.jpg" alt="Oasis Project water install"></div><div class="k">Oasis Project &middot; Water &amp; solar</div><h3>Clean water on the Nation</h3><p>Off-grid solar water systems for Din&eacute; families across the Navajo Nation, built and installed by local high-school students under a teach, train, and hire model. 240+ homes served since 2021, from Rock Point to Shiprock and Kayenta.</p></div>
       <div class="prog"><div class="ph"><img src="img/fn/makerspace.jpg" alt="Cortez Makerspace laser lab"></div><div class="k">Cortez Makerspace &middot; Make anything</div><h3>A shop for the whole town</h3><p>Laser lab, 3D printers, silkscreen, woodshop, and the new xTool MetalFab on Main Street. Opened January 2026, now 200+ members and 30+ workshops, with certification pathways in solar, fabrication, and the trades.</p></div>
       <div class="prog"><div class="ph"><img src="img/fn/youth.jpg" alt="Youth entrepreneurship pitch"></div><div class="k">Youth Entrepreneurship &middot; Build a business</div><h3>Students who pitch, then run it</h3><p>The I.D.E.A. Lab at Southwest Open School lets students earn credit while launching real ventures, with pitch competitions at Kirtland Central too. Some of the students who pitched here now run this counter.</p></div>
     </div>
@@ -590,7 +604,8 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
     <div class="ln disc" id="discLn" style="display:none"><span>Member 10%</span><span id="discv">-$0.00</span></div>
     <div class="ln"><span>Tip</span><span id="tipv">$0.00</span></div>
     <div class="tot"><span>Total</span><span id="tot">$0.00</span></div>
-    <div class="btn btn-blue" style="width:100%;text-align:center" onclick="checkout()">Checkout</div>
+    <div id="closedNote" style="display:none;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;color:#e08a7a;border:1px solid rgba(224,138,122,.4);background:rgba(224,138,122,.08);padding:9px 12px;margin-bottom:10px;text-align:center">&#9889; Online ordering is open Tue&ndash;Sat 8am&ndash;2pm. Build your order now, pay when we're on.</div>
+    <div class="btn btn-blue" id="checkoutBtn" style="width:100%;text-align:center" onclick="checkout()">Checkout</div>
     <div class="note" id="memNote">Card charged by Square &middot; member 10% verified at pickup</div>
    </div>
    <div id="coPanel" style="display:none">
@@ -931,7 +946,26 @@ var MENU=[
  {c:'&#9889; Pizza',items:[['Cheese','3.5 / 13','Slice or 16&quot; whole','Power Hour pick (slice)'],['Pepperoni','4 / 15','Slice or 16&quot; whole','Slice or whole'],['Specialty','5 / 18','Ask what today&rsquo;s is','Slice or 16&quot; whole']]},
  {c:'&#9889; Bagels &amp; Bakery',items:[['Bagel &amp; Cream Cheese','3.5','Fresh bagel + cream cheese','Toasted'],['Breakfast Bagel','6.5','Egg + cheese + bacon or sausage','The morning fix'],['Double Chocolate Espresso Cookie','3','Baked fresh','Has espresso in it'],['Chocolate Chip Cookie','3','Baked fresh','A classic']]},
  {c:'&#9889; Combos',items:[['Maker&rsquo;s Lunch','10','2 pizza slices + 16oz drink','House brew, iced tea, soda, or lemonade'],['Jump Start','8','Breakfast bagel + 12oz house brew or tea','The opener'],['Quick Byte','5','Bagel &amp; cream cheese + 12oz house brew or tea','In and out']]}];
-$('#menuCols').innerHTML=[MENU.slice(0,3),MENU.slice(3)].map(function(col){return '<div>'+col.map(function(cat){return '<div class="mcat"><h3>'+cat.c+'</h3>'+cat.items.map(function(it){return '<div class="mrow" onclick="this.classList.toggle(\'open\')"><div class="top"><span class="n">'+it[0]+'</span><span class="lead"></span><span class="p">'+it[1]+'</span></div><div class="eq">'+it[2]+'</div><div class="exp">'+it[3]+'</div></div>';}).join('')+'</div>';}).join('')+'</div>';}).join('');
+var menuCat=0;
+function menuPlain(h){var d=document.createElement('div');d.innerHTML=h;return d.textContent;}
+function priceDisp(v){return v%1===0?String(v):v.toFixed(2);}
+function sizesFor(catName,it){
+ var ps=String(it[1]).split('/').map(function(x){return parseFloat(x);}).filter(function(x){return isFinite(x);});
+ if(ps.length<=1)return [['',ps[0]||0]];
+ if(catName.indexOf('Pizza')>-1)return [['Slice',ps[0]],['16&quot; whole',ps[1]]];
+ if(menuPlain(it[0])==='Espresso')return [['Single',ps[0]],['Double',ps[1]]];
+ var lb=['12 oz','16 oz','20 oz'];
+ return ps.map(function(p,i){return [lb[i]||'',p];});
+}
+function menuAdd(ci,ii,si,el){var it=MENU[ci].items[ii],sz=sizesFor(MENU[ci].c,it)[si];add(menuPlain(it[0]),menuPlain(sz[0]),sz[1],el);var row=el&&el.closest?el.closest('.mrow'):null;if(row)row.classList.remove('szopen');}
+function menuPlus(ev,ci,ii,el){ev.stopPropagation();var it=MENU[ci].items[ii],szs=sizesFor(MENU[ci].c,it);if(szs.length===1){menuAdd(ci,ii,0,el);return;}var row=el.closest('.mrow');document.querySelectorAll('.mrow.szopen').forEach(function(r){if(r!==row)r.classList.remove('szopen');});row.classList.toggle('szopen');}
+function setMenuCat(i){menuCat=i;document.querySelectorAll('#menuTabs .mtab').forEach(function(t,j){t.classList.toggle('on',j===i);});document.querySelectorAll('#menuCols > .mcat').forEach(function(c,j){c.classList.toggle('off',j!==i);});}
+$('#menuTabs').innerHTML=MENU.map(function(cat,i){return '<button class="mtab'+(i===menuCat?' on':'')+'" onclick="setMenuCat('+i+')">'+cat.c.replace('&#9889; ','')+'</button>';}).join('');
+$('#menuCols').innerHTML=MENU.map(function(cat,ci){return '<div class="mcat'+(ci===menuCat?'':' off')+'"><h3>'+cat.c+'</h3>'+cat.items.map(function(it,ii){
+ var szs=sizesFor(cat.c,it);
+ var szh=szs.length>1?'<div class="msizes">'+szs.map(function(sz,si){return '<button class="msz" onclick="event.stopPropagation();menuAdd('+ci+','+ii+','+si+',this)">'+(sz[0]||'One size')+' &middot; $'+priceDisp(sz[1])+'</button>';}).join('')+'</div>':'';
+ return '<div class="mrow" onclick="this.classList.toggle(\'open\')"><div class="top"><span class="n">'+it[0]+'</span><span class="lead"></span><span class="p">'+it[1]+'</span><button class="madd" onclick="menuPlus(event,'+ci+','+ii+',this)">+ Add</button></div><div class="eq">'+it[2]+'</div><div class="exp">'+it[3]+'</div>'+szh+'</div>';
+}).join('')+'</div>';}).join('');
 
 /* ===== MAKE IT YOURS ===== */
 var IC={
@@ -988,11 +1022,12 @@ function coErrShow(m){var e=$('#coErr');e.textContent=m;e.style.display='block';
 function coErrHide(){$('#coErr').style.display='none';}
 function denverNow(){return new Date(new Date().toLocaleString('en-US',{timeZone:'America/Denver'}));}
 function isOpen(){var d=denverNow(),w=d.getDay(),h=d.getHours()+d.getMinutes()/60;return w>=2&&w<=6&&h>=8&&h<14;}
-function updateOpen(){var el=$('#openStatus'),t=$('#openTxt');if(!el||!t)return;if(isOpen()){el.classList.remove('closed');t.innerHTML='Open now &middot; pickup ~10 min';}else{el.classList.add('closed');t.innerHTML='Closed &middot; open Tue&ndash;Sat 8am&ndash;2pm';}}
+var TESTMODE=/[?&]test=1/.test(location.search);
+function updateOpen(){var el=$('#openStatus'),t=$('#openTxt'),cn=$('#closedNote'),cb=$('#checkoutBtn'),op=isOpen();if(el&&t){if(op){el.classList.remove('closed');t.innerHTML='Open now &middot; pickup ~10 min';}else{el.classList.add('closed');t.innerHTML='Closed &middot; open Tue&ndash;Sat 8am&ndash;2pm';}}if(cn)cn.style.display=(op||TESTMODE)?'none':'block';if(cb)cb.style.opacity=(op||TESTMODE)?'':'0.45';}
 updateOpen();setInterval(updateOpen,60000);
 function checkout(){
  if(!cart.length)return;
- if(!isOpen()){toast('We\'re closed. Open Tue-Sat 8am-2pm.');return;}
+ if(!isOpen()&&!TESTMODE){toast('We\'re closed. Open Tue-Sat 8am-2pm.');return;}
  $('#cartMain').style.display='none';$('#coPanel').style.display='block';
  $('#coPay').textContent='Pay '+$('#tot').textContent;
  initSquare().catch(function(e){coErrShow(e.message);});

@@ -142,6 +142,21 @@ exports.handler = async function(event) {
 
   const idempotencyKey = crypto.randomUUID();
 
+  // If the card is declined after the order is created, cancel the order so it
+  // never shows on the POS as a ghost pickup ticket.
+  async function cancelOrder(order) {
+    if (!order || !order.id) return;
+    try {
+      await client.ordersApi.updateOrder(order.id, {
+        idempotencyKey: 'cancel-' + idempotencyKey,
+        order: { locationId, version: order.version, state: 'CANCELED' }
+      });
+    } catch (e) {
+      console.error('Failed to cancel order after payment failure', order.id, e && e.errors ? e.errors : e);
+    }
+  }
+
+  let createdOrder = null;
   try {
     // Create the order first — itemized for the receipt + POS
     const orderRes = await client.ordersApi.createOrder({
@@ -176,6 +191,7 @@ exports.handler = async function(event) {
       console.error('Order creation returned no order', orderRes);
       return json(500, { error: 'Failed to create order. Try again or call the shop.' });
     }
+    createdOrder = order;
 
     // Now charge the card, attaching the order so the payment lands on it
     const paymentRes = await client.paymentsApi.createPayment({
@@ -192,6 +208,7 @@ exports.handler = async function(event) {
     const payment = paymentRes.result && paymentRes.result.payment;
     if (!payment || payment.status !== 'COMPLETED') {
       console.error('Payment did not complete', payment);
+      await cancelOrder(createdOrder);
       return json(402, { error: 'Payment was declined. Try a different card.' });
     }
 
@@ -204,6 +221,7 @@ exports.handler = async function(event) {
     });
   } catch (err) {
     console.error('Square API error', err && err.errors ? err.errors : err);
+    await cancelOrder(createdOrder);
     // Surface a clean message but never leak token / internals
     const safeMessage = (err && err.errors && err.errors[0] && err.errors[0].detail) ||
                         (err && err.message) ||
