@@ -1133,7 +1133,8 @@ function render(){var box=$('#cartItems');var units=cart.reduce(function(a,c){re
  $('#discLn').style.display=disc>0?'flex':'none';$('#discv').textContent='-$'+disc.toFixed(2);
  if(typeof syncMenuQtys==='function')syncMenuQtys();
  var rw=$('#rewardWrap');if(sub>0){rw.style.display='block';var rb=$('#rewardBar');if(rb&&rb.parentNode)rb.parentNode.style.display='none';$('#rewardTxt').innerHTML='&#9889; Wired Rewards: spend $50, get $5 off. Points track by phone &middot; opt in at checkout.';}else rw.style.display='none';}
-function openCart(){$('#cart').classList.add('open');$('#scrim').classList.add('open');}
+/* A finished order leaves the confirmation showing and the cart body hidden. Closing the drawer with the X or the scrim skips coDoneClose(), so without this the next open lands back on the previous order's "Order in." screen with no way to shop. Every open normalizes the drawer. */
+function openCart(){var dnO=$('#coDone');if(dnO&&dnO.style.display==='block'){dnO.style.display='none';dnO.innerHTML='';$('#coPanel').style.display='none';var cmO=$('#cartMain');if(cmO)cmO.style.display='';}$('#cart').classList.add('open');$('#scrim').classList.add('open');}
 function closeCart(){$('#cart').classList.remove('open');$('#scrim').classList.remove('open');}
 var sqPayments=null,sqCard=null;
 async function initSquare(){
