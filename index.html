@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="theme-color" content="#1C1D22">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Wired Coffee Co. &mdash; coffee inside the Cortez Makerspace</title>
 <meta name="description" content="Coffee, smoothies, pizza, and bagels inside the Cortez Makerspace at 209 W Main St, Cortez CO. Order ahead for pickup, Tue-Sat 8am-2pm. Every cup funds Fundamental Needs programs.">
@@ -285,6 +286,12 @@ section{padding:130px 0;position:relative}
 .miy-card .opts .pl{color:var(--blue);font-family:var(--mono);font-size:11px}
 .miy-card .note{font-family:var(--mono);font-size:10.5px;color:var(--roast);margin-top:8px;letter-spacing:.02em;text-transform:uppercase}
 .miy-foot{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--roast);text-align:center}
+.allergen{font-family:var(--mono);font-size:11.5px;line-height:1.65;color:var(--roast);text-align:center;max-width:660px;margin:16px auto 0;opacity:.9}
+.ph-a{font-size:8pt;line-height:1.35;margin-top:6px}
+/* Tabbing through the menu and the checkout gave no indication of where you were. */
+:focus-visible{outline:2px solid var(--blue-hi);outline-offset:3px;border-radius:2px}
+.skip{position:absolute;left:-9999px;top:0;z-index:200;background:var(--blue);color:#fff;padding:12px 18px;font-family:var(--mono);font-size:13px;text-decoration:none}
+.skip:focus{left:8px;top:8px}
 #printHead{display:none}
 @media print{
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -416,6 +423,7 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
 </style>
 </head>
 <body>
+<a class="skip" href="#menu">Skip to the menu</a>
 <div id="grain"></div>
 <div id="perkbar">&#9889; Makerspace members save 10% on every cup. <a onclick="scrollTo2('#story')">Join</a> &middot; <a>Sign in at pickup</a><span class="xp" onclick="document.body.classList.add('noperk')">&times;</span></div>
 <div id="cond"><div id="condFill"></div></div><div id="condPulse"></div>
@@ -454,9 +462,9 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
     <div class="head"><span class="num">01 / <b>The craft</b></span><h2>From bean to cup.</h2></div>
     <div class="forms" id="forms">
       <div class="wire"><div class="fill" id="wireFill"></div></div>
-      <div class="form"><span class="dot"></span><div class="ph"><img src="img/Wired_Coffee_Beans_2.jpg" alt="Beans"></div><div class="n">01 &middot; BEAN</div><h3>Sourced</h3><p>Beans roasted by Fahrenheit Coffee Roasters in Mancos, Colorado.</p></div>
-      <div class="form"><span class="dot"></span><div class="ph"><img src="img/Wired_Coffee_Grounds_1.jpg" alt="Grounds"></div><div class="n">02 &middot; GRIND</div><h3>Dialed in</h3><p>Ground to order, extraction on point.</p></div>
-      <div class="form"><span class="dot"></span><div class="ph"><img src="img/Wired_Coffee_Steaming_Milk_1.jpg" alt="Pour"></div><div class="n">03 &middot; POUR</div><h3>Poured</h3><p>Micro-foam, steady hand. The spark.</p></div>
+      <div class="form"><span class="dot"></span><div class="ph"><img loading="lazy" decoding="async" src="img/Wired_Coffee_Beans_2.jpg" alt="Beans"></div><div class="n">01 &middot; BEAN</div><h3>Sourced</h3><p>Beans roasted by Fahrenheit Coffee Roasters in Mancos, Colorado.</p></div>
+      <div class="form"><span class="dot"></span><div class="ph"><img loading="lazy" decoding="async" src="img/Wired_Coffee_Grounds_1.jpg" alt="Grounds"></div><div class="n">02 &middot; GRIND</div><h3>Dialed in</h3><p>Ground to order, extraction on point.</p></div>
+      <div class="form"><span class="dot"></span><div class="ph"><img loading="lazy" decoding="async" src="img/Wired_Coffee_Steaming_Milk_1.jpg" alt="Pour"></div><div class="n">03 &middot; POUR</div><h3>Poured</h3><p>Micro-foam, steady hand. The spark.</p></div>
     </div>
   </div>
 </section>
@@ -540,7 +548,7 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
 
 <section class="menu power" id="menu">
   <div class="wrap">
-    <div id="printHead"><img src="img/logo.png" alt="Wired Coffee Co."><div class="ph-l">Wired Coffee Co. &mdash; Every cup, a current.</div><div class="ph-s">209 W Main St, Cortez CO &middot; inside the Cortez Makerspace &middot; Order at the counter or fundamentalneeds.net &middot; Members save 10% &middot; Every cup funds the makerspace</div></div>
+    <div id="printHead"><img loading="lazy" decoding="async" src="img/logo.png" alt="Wired Coffee Co."><div class="ph-l">Wired Coffee Co. &mdash; Every cup, a current.</div><div class="ph-s">209 W Main St, Cortez CO &middot; inside the Cortez Makerspace &middot; Order at the counter or wiredcoffee.org &middot; Members save 10% &middot; Every cup funds the makerspace</div><div class="ph-a">Allergens: we handle peanut butter, tree nuts, dairy, soy and gluten in one small shared space and cannot promise any item is free of a trace. Tell us about an allergy when you order.</div></div>
     <div class="head"><span class="num">03 / <b>Order ahead</b></span><h2>The menu.</h2></div>
     <div class="mtabs" id="menuTabs"></div>
     <div class="menu-cols" id="menuCols"></div>
@@ -548,6 +556,7 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
       <div class="miy-h"><span class="num" style="color:var(--roast);display:block;margin-bottom:8px">Make it yours</span><h3>Every drink, your way.</h3></div>
       <div class="miy-grid" id="miyGrid"></div>
       <div class="miy-foot">Not sure what to get? Find it on the screen or ask the counter. Members save 10%.</div>
+      <div class="allergen">Allergens: we handle peanut butter, tree nuts, dairy, soy and gluten in one small shared space, so we cannot promise any drink or food is free of a trace. Tell us about an allergy in your order notes or at the counter and we will do what we can.</div>
     </div>
     <div class="menu-foot">Tap a row for its spec &middot; <b style="color:var(--blue)">+ Add</b> puts it in your order &middot; pickup ~10 min &middot; tax included <button class="btn btn-line" id="printBtn" style="padding:10px 18px;margin-left:12px" onclick="window.print()">&#9113; Print this menu</button></div>
   </div>
@@ -561,7 +570,7 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
     </div>
 
     <div class="impact reveal">
-      <img class="impbg" src="img/fn/oasis2.jpg" alt="">
+      <img loading="lazy" decoding="async" class="impbg" src="img/fn/oasis2.jpg" alt="">
       <div class="impgrid">
         <div class="stat"><b data-count="240" data-suf="+">0</b><span>Dine homes with clean water</span></div>
         <div class="stat"><b data-count="200" data-suf="+">0</b><span>makerspace members</span></div>
@@ -571,18 +580,18 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
     </div>
 
     <div class="progs">
-      <div class="prog"><div class="ph"><img src="img/fn/oasis.jpg" alt="Oasis Project water install"></div><div class="k">Oasis Project &middot; Water &amp; solar</div><h3>Clean water on the Nation</h3><p>Off-grid solar water systems for Din&eacute; families across the Navajo Nation, built and installed by local high-school students under a teach, train, and hire model. 240+ homes served since 2021, from Rock Point to Shiprock and Kayenta.</p></div>
-      <div class="prog"><div class="ph"><img src="img/fn/makerspace.jpg" alt="Cortez Makerspace laser lab"></div><div class="k">Cortez Makerspace &middot; Make anything</div><h3>A shop for the whole town</h3><p>Laser lab, 3D printers, silkscreen, woodshop, and the new xTool MetalFab on Main Street. Opened January 2026, now 200+ members and 30+ workshops, with certification pathways in solar, fabrication, and the trades.</p></div>
-      <div class="prog"><div class="ph"><img src="img/fn/youth.jpg" alt="Youth entrepreneurship pitch"></div><div class="k">Youth Entrepreneurship &middot; Build a business</div><h3>Students who pitch, then run it</h3><p>The I.D.E.A. Lab at Southwest Open School lets students earn credit while launching real ventures, with pitch competitions at Kirtland Central too. Some of the students who pitched here now run this counter.</p></div>
+      <div class="prog"><div class="ph"><img loading="lazy" decoding="async" src="img/fn/oasis.jpg" alt="Oasis Project water install"></div><div class="k">Oasis Project &middot; Water &amp; solar</div><h3>Clean water on the Nation</h3><p>Off-grid solar water systems for Din&eacute; families across the Navajo Nation, built and installed by local high-school students under a teach, train, and hire model. 240+ homes served since 2021, from Rock Point to Shiprock and Kayenta.</p></div>
+      <div class="prog"><div class="ph"><img loading="lazy" decoding="async" src="img/fn/makerspace.jpg" alt="Cortez Makerspace laser lab"></div><div class="k">Cortez Makerspace &middot; Make anything</div><h3>A shop for the whole town</h3><p>Laser lab, 3D printers, silkscreen, woodshop, and the new xTool MetalFab on Main Street. Opened January 2026, now 200+ members and 30+ workshops, with certification pathways in solar, fabrication, and the trades.</p></div>
+      <div class="prog"><div class="ph"><img loading="lazy" decoding="async" src="img/fn/youth.jpg" alt="Youth entrepreneurship pitch"></div><div class="k">Youth Entrepreneurship &middot; Build a business</div><h3>Students who pitch, then run it</h3><p>The I.D.E.A. Lab at Southwest Open School lets students earn credit while launching real ventures, with pitch competitions at Kirtland Central too. Some of the students who pitched here now run this counter.</p></div>
     </div>
 
     <div class="cupflow reveal">
       <div class="cf-h"><span class="num" style="color:var(--blue-hi);display:block;margin-bottom:6px">The circuit</span><h3>Where your cup goes.</h3></div>
       <div class="cf-row" id="cfRow">
         <div class="cf-wire"><div class="cf-fill" id="cfFill"></div></div>
-        <div class="cf-node"><div class="cf-ph"><img src="img/Wired_Coffee_Small_Cinnamon_Latte_Blue.jpg" alt=""></div><div class="cf-n">01</div><p>Your $5 latte</p></div>
-        <div class="cf-node"><div class="cf-ph"><img src="img/fn/makerspace.jpg" alt=""></div><div class="cf-n">02</div><p>Keeps the lights, lasers, and doors open</p></div>
-        <div class="cf-node"><div class="cf-ph"><img src="img/fn/oasis.jpg" alt=""></div><div class="cf-n">03</div><p>So a student gets paid to install clean water on the Nation</p></div>
+        <div class="cf-node"><div class="cf-ph"><img loading="lazy" decoding="async" src="img/Wired_Coffee_Small_Cinnamon_Latte_Blue.jpg" alt=""></div><div class="cf-n">01</div><p>Your $5 latte</p></div>
+        <div class="cf-node"><div class="cf-ph"><img loading="lazy" decoding="async" src="img/fn/makerspace.jpg" alt=""></div><div class="cf-n">02</div><p>Keeps the lights, lasers, and doors open</p></div>
+        <div class="cf-node"><div class="cf-ph"><img loading="lazy" decoding="async" src="img/fn/oasis.jpg" alt=""></div><div class="cf-n">03</div><p>So a student gets paid to install clean water on the Nation</p></div>
       </div>
     </div>
 
@@ -606,7 +615,7 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
 
 <footer>
   <div class="wrap foot">
-    <div><img src="img/logo_white.png" class="lw" alt="Wired Coffee Co."><p>Every cup, a current.<br>Every sip, a spark.</p></div>
+    <div><img loading="lazy" decoding="async" src="img/logo_white.png" class="lw" alt="Wired Coffee Co."><p>Every cup, a current.<br>Every sip, a spark.</p></div>
     <div><h4>Visit</h4><p>209 W Main St<br>Cortez, CO 81321</p><p>Inside the Cortez Makerspace</p></div>
     <div><h4>Hours</h4><p>Tue&ndash;Sat 8a&ndash;2p</p><p>Closed Sun &amp; Mon</p></div>
     <div><h4>Order</h4><a onclick="scrollTo2('#current')">Wired to Order</a><a href="#build">Build a drink</a><a href="#menu">See the menu</a></div>
@@ -634,7 +643,9 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
    <div id="coPanel" style="display:none">
     <div style="font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--cream-dim);margin-bottom:10px">Pickup details</div>
     <input id="coName" placeholder="Name for the order" maxlength="60" style="width:100%;background:none;border:1px solid rgba(246,239,207,.25);color:var(--cream);font-family:var(--mono);font-size:13px;padding:11px;margin-bottom:8px">
-    <input id="coPhone" placeholder="Phone" maxlength="20" inputmode="tel" style="width:100%;background:none;border:1px solid rgba(246,239,207,.25);color:var(--cream);font-family:var(--mono);font-size:13px;padding:11px;margin-bottom:12px">
+    <input id="coPhone" placeholder="Phone" maxlength="20" inputmode="tel" style="width:100%;background:none;border:1px solid rgba(246,239,207,.25);color:var(--cream);font-family:var(--mono);font-size:13px;padding:11px;margin-bottom:8px">
+    <textarea id="coNote" maxlength="200" rows="2" aria-label="Notes for the barista, including any allergy" placeholder="Allergies, no ice, extra hot, anything the bar should know" style="width:100%;background:none;border:1px solid rgba(246,239,207,.25);color:var(--cream);font-family:var(--mono);font-size:13px;padding:11px;margin-bottom:4px;resize:vertical"></textarea>
+    <div style="font-family:var(--mono);font-size:10.5px;color:var(--cream-dim);margin-bottom:12px;line-height:1.5">Tell us about an allergy here and it prints at the top of the ticket. We work in one small space with peanut butter, tree nuts, dairy, soy and gluten on the same surfaces, so we cannot promise any drink or food is free of a trace.</div>
     <div id="card-container" style="background:rgba(246,239,207,.06);padding:6px;border-radius:4px"></div>
     <label style="display:flex;align-items:flex-start;gap:9px;margin-top:11px;font-family:var(--mono);font-size:11px;color:var(--cream-dim);cursor:pointer;line-height:1.5"><input type="checkbox" id="coLoyal" style="margin-top:2px;accent-color:#1F9AD6"><span>&#9889; <b style="color:var(--cream)">Wired Rewards</b>: earn points on this order. Square tracks them by your phone number.</span></label>
     <div id="coErr" style="display:none;font-family:var(--mono);font-size:11.5px;color:#e08a7a;margin:10px 0"></div>
@@ -1211,6 +1222,8 @@ async function initSquare(){
 function coErrShow(m){var e=$('#coErr');e.textContent=m;e.style.display='block';}
 function coErrHide(){$('#coErr').style.display='none';}
 function denverNow(){return new Date(new Date().toLocaleString('en-US',{timeZone:'America/Denver'}));}
+/* Written in two places before this, so one was always going to go stale. */
+var HOURS_TEXT='Tue-Sat 8am-2pm';
 function isOpen(){var d=denverNow(),w=d.getDay(),h=d.getHours()+d.getMinutes()/60;return w>=2&&w<=6&&h>=8&&h<14;}
 var TESTMODE=/[?&]test=1/.test(location.search);
 var OPEN_OVERRIDE=false; /* was true for the 8/16 Square connection test; ?test=1 still bypasses for testing */
@@ -1218,7 +1231,7 @@ function updateOpen(){var el=$('#openStatus'),t=$('#openTxt'),cn=$('#closedNote'
 updateOpen();setInterval(updateOpen,60000);
 function checkout(){
  if(!cart.length)return;
- if(!isOpen()&&!TESTMODE&&!OPEN_OVERRIDE){toast('We\'re closed. Open Tue-Sat 8am-2pm.');return;}
+ if(!isOpen()&&!TESTMODE&&!OPEN_OVERRIDE){toast('We\'re closed. Open '+HOURS_TEXT+'.');return;}
  $('#cartMain').style.display='none';var dn0=$('#coDone');if(dn0){dn0.style.display='none';dn0.innerHTML='';}$('#coPanel').style.display='block';
  var pb0=$('#coPay');pb0.style.pointerEvents='';pb0.textContent='Pay '+$('#tot').textContent;
  initSquare().catch(function(e){coErrShow(e.message);});
@@ -1237,7 +1250,8 @@ async function coSubmit(){
   var mult=memberOn?0.9:1,subD=sub*mult;
   var payload={sourceId:tok.token,customerName:nm,customerPhone:ph,
    items:cart.map(function(l){var mods=l.mod?[{name:l.mod,price:0}]:[];if(memberOn)mods.push({name:'Member 10% - verify at pickup',price:0});return{name:l.name,variant:'',qty:l.qty||1,unitPrice:+(l.price*mult).toFixed(2),modifiers:mods};}),
-   tipAmount:(subD*tipRate).toFixed(2),subtotalCheck:subD.toFixed(2),loyalty:!!($('#coLoyal')&&$('#coLoyal').checked)};
+   tipAmount:(subD*tipRate).toFixed(2),subtotalCheck:subD.toFixed(2),loyalty:!!($('#coLoyal')&&$('#coLoyal').checked),
+   customerNote:(($('#coNote')&&$('#coNote').value)||'').trim().slice(0,200)};
   var res=await fetch('/.netlify/functions/process-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
   var data=await res.json();
   if(!res.ok||!data.ok)throw new Error(data.error||'Order failed. Try again or order at the counter.');

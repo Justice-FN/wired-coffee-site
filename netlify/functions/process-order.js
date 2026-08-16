@@ -148,7 +148,8 @@ exports.handler = async function(event) {
     customerPhone,     // customer's phone (digits only or with formatting)
     items,             // array of { name, variant, qty, unitPrice, modifiers: [{name, price}] }
     tipAmount,         // dollars, e.g. "1.50"
-    subtotalCheck      // dollars, what the browser thinks the subtotal is — we recompute server-side
+    subtotalCheck,     // dollars, what the browser thinks the subtotal is — we recompute server-side
+    customerNote       // free text from the customer: allergies, no ice, extra hot
   } = payload;
 
   if (!sourceId) return json(400, { error: 'Missing payment information' });
@@ -159,6 +160,18 @@ exports.handler = async function(event) {
   if (!Array.isArray(items) || items.length === 0) {
     return json(400, { error: 'Cart is empty' });
   }
+
+  // The customer's note is printed on a ticket, so it is stripped of control
+  // characters and hard-capped rather than passed through. An allergy has to be the
+  // first thing the bar reads, not a sentence buried mid-line, so a note mentioning
+  // one is flagged in front. The word boundaries matter: a bare /nut/ matches
+  // "doughnut" and, more to the point, "Hazelnut", which is on the menu.
+  const noteRaw = typeof customerNote === 'string' ? customerNote : '';
+  const noteClean = noteRaw.replace(/[\x00-\x1f\x7f]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 200);
+  const ALLERGY_RE = /\b(allerg\w*|anaphyla\w*|epipen|peanuts?|tree ?nuts?|nuts?|dairy|lactose|gluten|celiac|coeliac|soy|sesame|shellfish)\b/i;
+  const ticketNote = noteClean
+    ? (ALLERGY_RE.test(noteClean) ? '** ALLERGY ** ' + noteClean : noteClean)
+    : '';
 
   // Recompute subtotal server-side from the items array — never trust the client
   let subtotalCents = 0;
@@ -265,9 +278,11 @@ exports.handler = async function(event) {
           pickupDetails: {
             recipient: { displayName: customerName.slice(0, 100), phoneNumber: customerPhone.slice(0, 30) },
             scheduleType: 'ASAP',
-            pickupAt: new Date(Date.now() + 10 * 60 * 1000).toISOString()
+            pickupAt: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
+            ...(ticketNote ? { note: ticketNote.slice(0, 500) } : {})
           }
         }],
+        ...(ticketNote ? { note: ticketNote.slice(0, 500) } : {}),
         ...(tipCents > 0 ? {
           serviceCharges: [{
             name: 'Tip',
