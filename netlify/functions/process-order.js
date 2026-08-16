@@ -72,6 +72,46 @@ function floorFor(name) {
   return FLOOR_PRICES[n] != null ? FLOOR_PRICES[n] : 2;
 }
 
+// Square Loyalty accrual for a paid order. Custom checkouts do not accrue
+// automatically, so after a completed payment we look up (or create) the
+// loyalty account by phone and accumulate points for the order. Every failure
+// here is swallowed: loyalty must never break a paid order.
+async function accrueLoyalty(client, locationId, orderId, phoneRaw) {
+  const digits = String(phoneRaw || '').replace(/\D/g, '');
+  if (digits.length < 10) return null;
+  const phone = '+1' + digits.slice(-10);
+
+  const progRes = await client.loyaltyApi.retrieveLoyaltyProgram('main');
+  const program = progRes.result && progRes.result.program;
+  if (!program || program.status !== 'ACTIVE') return null;
+
+  const searchRes = await client.loyaltyApi.searchLoyaltyAccounts({
+    query: { mappings: [{ phoneNumber: phone }] }, limit: 1
+  });
+  let account = searchRes.result && searchRes.result.loyaltyAccounts && searchRes.result.loyaltyAccounts[0];
+  if (!account) {
+    const createRes = await client.loyaltyApi.createLoyaltyAccount({
+      idempotencyKey: 'loy-' + orderId,
+      loyaltyAccount: { programId: program.id, mapping: { phoneNumber: phone } }
+    });
+    account = createRes.result && createRes.result.loyaltyAccount;
+  }
+  if (!account || !account.id) return null;
+
+  const accRes = await client.loyaltyApi.accumulateLoyaltyPoints(account.id, {
+    idempotencyKey: 'acc-' + orderId,
+    accumulatePoints: { orderId: orderId },
+    locationId: locationId
+  });
+  let pts = 0;
+  ((accRes.result && accRes.result.events) || []).forEach(function (e) {
+    if (e.accumulatePoints && e.accumulatePoints.points) pts += Number(e.accumulatePoints.points);
+  });
+  const prior = Number(account.balance || 0);
+  const term = program.terminology || {};
+  return { points: pts, balance: prior + pts, unit: pts === 1 ? (term.one || 'point') : (term.other || 'points') };
+}
+
 exports.handler = async function(event) {
   // CORS preflight
   if (event.httpMethod === 'OPTIONS') return json(200, {});
@@ -257,12 +297,23 @@ exports.handler = async function(event) {
       return json(402, { error: 'Payment was declined. Try a different card.' });
     }
 
+    // Loyalty accrual, opt-in from the checkout checkbox. Non-fatal.
+    let loyalty = null;
+    if (payload.loyalty === true) {
+      try {
+        loyalty = await accrueLoyalty(client, locationId, order.id, customerPhone);
+      } catch (e) {
+        console.error('Loyalty accrual failed (order is fine)', e && e.errors ? e.errors : e);
+      }
+    }
+
     return json(200, {
       ok: true,
       orderId: order.id,
       paymentId: payment.id,
       receiptUrl: payment.receiptUrl || null,
-      totalDollars: (totalCents / 100).toFixed(2)
+      totalDollars: (totalCents / 100).toFixed(2),
+      loyalty: loyalty
     });
   } catch (err) {
     console.error('Square API error', err && err.errors ? err.errors : err);
