@@ -468,7 +468,7 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
     <div class="copy">
       <span class="num">Your cup / <b>Wired to Order</b></span>
       <h2>Wired to order.<br>Find your drink.</h2>
-      <p>Six dials to your drink, smoothies and lemonade included. Go deeper and invent your own. Set what you feel and the needle finds it, no wrong answers.</p>
+      <p>Six dials to your coffee, five to your blend, and the wheel swaps them when you switch. Go deeper and invent your own. Set what you feel and the needle finds it, no wrong answers.</p>
       <p style="font-size:16px">The dials read <b style="color:var(--cream)">current</b> (energy), <b style="color:var(--cream)">roast</b> (smooth to dark &amp; bitter), <b style="color:var(--cream)">body</b> (milk), <b style="color:var(--cream)">sweet</b>, and <b style="color:var(--cream)">temp</b>, and <b style="color:var(--cream)">kind</b> (coffee bar or the blender). Hit <b style="color:var(--cream)">Go deeper</b> to add flavor and combine our ingredients into your own drink.</p>
     </div>
     <div class="wheelbox">
@@ -732,6 +732,14 @@ var FACTIONS_CORE=[
 var FACTIONS_ADV=[
  {key:'flavor',label:'FLAVOR', mode:'drill', bands:['tap to combine']},
  {key:'mode',  label:'MODE',   mode:'pick', bands:['Sprint','Deep flow','Social','Calm']}];
+/* A blend has no roast and is never served hot, but both dials stayed on the wheel and kept scoring, so two controls that cannot apply were still pushing the answer around. Picking Smoothie/lemonade swaps in a dial set that means something: FRUIT takes the ROAST slot, TEMP goes because every blend is iced, and BODY reads in blend language. FRUIT's four bands line up index-for-index with the builder's smoothie blends. */
+var FACTIONS_BLEND=[
+ {key:'energy',label:'CURRENT',mode:'level',bands:['Unplugged','Trickle','Steady','Live wire']},
+ {key:'fruit', label:'FRUIT',  mode:'pick', bands:['Berry','Mango','Peach','Green']},
+ {key:'milk',  label:'BODY',   mode:'level',bands:['Juice','Splash','Creamy','Rich']},
+ {key:'sweet', label:'SWEET',  mode:'level',bands:['None','A touch','Dessert']},
+ {key:'kind',  label:'KIND',   mode:'pick', bands:['Coffee & tea','Smoothie/lemonade']}];
+function coreSet(){return (typeof wsel!=='undefined'&&wsel&&wsel.kind===1?FACTIONS_BLEND:FACTIONS_CORE).slice();}
 var FACTIONS=FACTIONS_CORE.slice();
 var deep=false;
 var WP=function(en,ro,mi,sw,te,mo,fl){return {energy:en,roast:ro,milk:mi,sweet:sw,temp:te,mode:mo,flavor:fl};};
@@ -772,6 +780,8 @@ Object.assign(WHEEL_PROFILE,{
  'java-jolt':Object.assign(WP(2,1,2,2,'iced','flow','chocolate'),{subs:['Banana']})});
 if(SIGNATURES.indexOf('prickly-palmer')<0)SIGNATURES.push('prickly-palmer');
 ['prickly-palmer','lemonade','lemonade-prickly','circuit-berry','maker-mango','pink-prototype','peach-paradise','green-machine','java-jolt'].forEach(function(k){if(PRIORITY.indexOf(k)<0)PRIORITY.push(k);});
+/* Index-for-index with FACTIONS_BLEND FRUIT and with the builder's smoothie scale. The three lemonades stay absent on purpose: they have no fruit blend. */
+Object.keys({'circuit-berry':0,'pink-prototype':0,'java-jolt':0,'maker-mango':1,'peach-paradise':2,'green-machine':3}).forEach(function(k){WHEEL_PROFILE[k].fruit={'circuit-berry':0,'pink-prototype':0,'java-jolt':0,'maker-mango':1,'peach-paradise':2,'green-machine':3}[k];});
 /* Without a seed the "Tweak in builder" button hides itself, so every blend the wheel could name was a dead end. strength is the blend or style index into STRENGTH[base].scale. Prickly Palmer is deliberately absent: it is half lemonade and half tea, which the builder has no way to express, so it stays a fixed drink rather than seeding a wrong one. */
 Object.assign(SEED,{
  'lemonade':{base:'Lemonade',milk:'Black',syrup:null,temp:'iced',strength:0},
@@ -782,7 +792,7 @@ Object.assign(SEED,{
  'peach-paradise':{base:'Smoothie',milk:'Whole',syrup:null,temp:'iced',strength:2},
  'green-machine':{base:'Smoothie',milk:'Whole',syrup:null,temp:'iced',strength:3},
  'java-jolt':{base:'Smoothie',milk:'Whole',syrup:null,temp:'iced',strength:0,shot:1}});
-var wsel={energy:null,roast:null,milk:null,sweet:null,temp:null,kind:null,mode:null,flavor:null,flavors:[]};
+var wsel={energy:null,roast:null,milk:null,sweet:null,temp:null,kind:null,fruit:null,mode:null,flavor:null,flavors:[]};
 var BLEND_KIND=['lemonade','lemonade-prickly','prickly-palmer','circuit-berry','maker-mango','pink-prototype','peach-paradise','green-machine','java-jolt'];
 var WCX=200,WCY=200,RHUB=86,RRIM=178,RD0=192,RD1=236;
 function polar(cx,cy,r,deg){var a=(deg-90)*Math.PI/180;return[cx+r*Math.cos(a),cy+r*Math.sin(a)];}
@@ -813,7 +823,7 @@ function buildWheel(){
  $('#wheelRows').onclick=function(e){var b=e.target.closest('button');if(!b||!b.parentNode.dataset.fac)return;var f=+b.parentNode.dataset.fac;if(FACTIONS[f].mode==='drill')return;setWheel(f,+b.dataset.lvl);};
  paintWheel();
 }
-function setWheel(fac,lvl){wsel[FACTIONS[fac].key]=lvl;tick2();paintWheel();resolveWheel();}
+function setWheel(fac,lvl){var fkey=FACTIONS[fac].key;wsel[fkey]=lvl;/* KIND decides which dials exist at all, so the wheel is rebuilt and any value whose control just disappeared is dropped rather than left scoring invisibly. */if(fkey==='kind'){if(lvl===1){wsel.roast=null;wsel.temp=null;}else{wsel.fruit=null;}FACTIONS=deep?coreSet().concat(FACTIONS_ADV):coreSet();buildWheel();}tick2();paintWheel();resolveWheel();}
 function paintWheel(){
  var aw=AW(),bt=BT();
  document.querySelectorAll('#curWheel .wband').forEach(function(p){if(p.classList.contains('wdrill')){p.classList.toggle('on',!!wsel.flavor||(wsel.flavors&&wsel.flavors.length>0));return;}var f=+p.dataset.fac,l=+p.dataset.lvl,fk=FACTIONS[f];var sv=wsel[fk.key];var on=(sv==null)?false:(fk.mode==='level'?l<=sv:l===sv);p.classList.toggle('on',on);});
@@ -835,13 +845,16 @@ function drawDetail(){var ring=$('#detailRing');if(!ring)return;var opts=detailL
 function onDetailClick(el){if(el.classList.contains('dback')){detailLevel=1;detailFamily=null;drawDetail();return;}if(el.classList.contains('ddone')){closeDetail();return;}var o=el.dataset.opt;tick2();if(detailLevel===1){wsel.flavor=o;detailFamily=o;detailLevel=2;drawDetail();}else{var i=wsel.flavors.indexOf(o);if(i>-1)wsel.flavors.splice(i,1);else wsel.flavors.push(o);drawDetail();resolveWheel();}}
 function famFlavor(){return wsel.flavor?wsel.flavor.toLowerCase():null;}
 function distFor(k){var p=WHEEL_PROFILE[k],d=0;if(!p)return 999;
- if(wsel.energy!=null)d+=2.0*Math.abs(p.energy-wsel.energy);
- if(wsel.roast!=null)d+=2.0*Math.abs(p.roast-wsel.roast);
+ if(wsel.energy!=null)d+=(wsel.kind===1?1.0:2.0)*Math.abs(p.energy-wsel.energy);
+ var blend=(wsel.kind===1);
+ if(!blend&&wsel.roast!=null)d+=2.0*Math.abs(p.roast-wsel.roast);
  if(wsel.milk!=null)d+=1.5*Math.abs(p.milk-wsel.milk);
  if(wsel.sweet!=null)d+=1.0*Math.abs(p.sweet-wsel.sweet);
- if(wsel.temp!=null){var tw=wsel.temp===0?'hot':'iced';if(!(p.temp==='either'||p.temp===tw))d+=2.5;}
+ if(!blend&&wsel.temp!=null){var tw=wsel.temp===0?'hot':'iced';if(!(p.temp==='either'||p.temp===tw))d+=2.5;}
  if(wsel.mode!=null){var mm=['sprint','flow','social','calm'][wsel.mode];if(p.mode!==mm)d+=1.5;}
  if(wsel.kind!=null){var isB=BLEND_KIND.indexOf(k)>-1;if((wsel.kind===1)!==isB)d+=3.0;}
+ /* A picked fruit is the strongest signal a blend shopper gives. Lemonades carry no fruit index, so they fall away once one is chosen. */
+ if(blend&&wsel.fruit!=null)d+=(p.fruit===wsel.fruit)?0:(p.fruit==null?4.5:4.0);
  if(wsel.flavor!=null){var ff=famFlavor();if(p.flavor===ff)d+=0;else if(p.flavor==='any')d+=1.2;else d+=1.8;}
  if(p.subs&&wsel.flavors&&wsel.flavors.length){var hit2=false;for(var i2=0;i2<wsel.flavors.length;i2++){if(p.subs.indexOf(wsel.flavors[i2])>-1)hit2=true;}d+=hit2?-0.8:0.8;}
  return d;}
@@ -886,7 +899,7 @@ function renderHub(o){
 }
 var teaPick=null;
 function pickTea(t){teaPick=t;if(LASTHUB&&!LASTHUB.invent){LASTHUB.key=t;LASTHUB.drink=DRINKS[t];renderHub(LASTHUB);}tick2();}
-function clearWheel(){wsel={energy:null,roast:null,milk:null,sweet:null,temp:null,kind:null,mode:null,flavor:null,flavors:[]};closeDetail();paintWheel();resolveWheel();}
+function clearWheel(){wsel={energy:null,roast:null,milk:null,sweet:null,temp:null,kind:null,fruit:null,mode:null,flavor:null,flavors:[]};closeDetail();paintWheel();resolveWheel();}
 function surpriseSpin(){
  var pool=Math.random()<0.7?SIGNATURES:Object.keys(WHEEL_PROFILE);var k=pool[Math.floor(Math.random()*pool.length)];var p=WHEEL_PROFILE[k];
  wsel.energy=p.energy;wsel.roast=p.roast;wsel.milk=p.milk;wsel.sweet=p.sweet;wsel.temp=(p.temp==='either')?(Math.random()<0.5?0:1):(p.temp==='iced'?1:0);
@@ -897,10 +910,10 @@ function surpriseSpin(){
  var t0=null,dur=850,last=0;
  (function frame(t){if(!t0)t0=t;var el=Math.min((t-t0)/dur,1);if(t-last>90+el*160){last=t;bands.forEach(function(b){b.classList.remove('on');});var r=bands[Math.floor(Math.random()*bands.length)];if(r)r.classList.add('on');tick2();}if(el<1)requestAnimationFrame(frame);else{paintWheel();resolveWheel();}})(0);
 }
-function dialLink(){var enc=[wsel.energy,wsel.roast,wsel.milk,wsel.sweet,wsel.temp,wsel.mode,wsel.kind].map(function(v){return v==null?'x':v;}).join(',');if(wsel.flavors&&wsel.flavors.length)enc+='|'+wsel.flavors.join('.');return location.origin+location.pathname+'?dial='+enc;}
+function dialLink(){var enc=[wsel.energy,wsel.roast,wsel.milk,wsel.sweet,wsel.temp,wsel.mode,wsel.kind,wsel.fruit].map(function(v){return v==null?'x':v;}).join(',');if(wsel.flavors&&wsel.flavors.length)enc+='|'+wsel.flavors.join('.');return location.origin+location.pathname+'?dial='+enc;}
 function patchIt(){var url=dialLink();var nm=($('#hubName')&&$('#hubName').textContent)||'my current';if(navigator.share){navigator.share({title:'My Wired current',text:nm+' at Wired Coffee',url:url}).catch(function(){});}else if(navigator.clipboard){navigator.clipboard.writeText(url);toast('Link copied');}else{toast('Copy: '+url);}}
 function toast(msg){var t=document.createElement('div');t.className='proto';t.style.left='50%';t.style.transform='translateX(-50%)';t.style.bottom='60px';t.textContent='⚡ '+msg;document.body.appendChild(t);setTimeout(function(){t.remove();},1900);}
-function toggleDeep(){deep=!deep;FACTIONS=deep?FACTIONS_CORE.concat(FACTIONS_ADV):FACTIONS_CORE.slice();if(!deep){wsel.flavor=null;wsel.flavors=[];wsel.mode=null;}buildWheel();resolveWheel();var b=$('#deeperBtn');if(b)b.textContent=deep?'− Keep it simple':'+ Go deeper';}
+function toggleDeep(){deep=!deep;FACTIONS=deep?coreSet().concat(FACTIONS_ADV):coreSet();if(!deep){wsel.flavor=null;wsel.flavors=[];wsel.mode=null;}buildWheel();resolveWheel();var b=$('#deeperBtn');if(b)b.textContent=deep?'− Keep it simple':'+ Go deeper';}
 
 /* Barista build for every wheel drink that is not on the menu boards.
    This string prints on the Square ticket, so it is the recipe. */
@@ -966,6 +979,7 @@ function inventComp(){
   var fruity=hasF('Berry')||hasF('Mango')||hasF('Peach')||hasF('Banana');
   if(!fruity&&(hasF('Prickly Pear')||hasF('Lemon')||(wsel.milk!=null&&wsel.milk<=0)))
    return {base:'Lemonade',milk:'Black',syrup:null,temp:'iced',strength:hasF('Prickly Pear')?1:0};
+  if(wsel.fruit!=null)return {base:'Smoothie',milk:['Black','Almond','Oat','Whole'][wsel.milk==null?3:wsel.milk],syrup:null,temp:'iced',strength:wsel.fruit};
   var bi=hasF('Mango')?1:(hasF('Peach')?2:0);
   return {base:'Smoothie',milk:['Black','Almond','Oat','Whole'][wsel.milk==null?3:wsel.milk],syrup:null,temp:'iced',strength:bi};
  }
@@ -1231,7 +1245,7 @@ async function coSubmit(){
 /* demo hooks */
 (function(){try{var qp=new URLSearchParams(location.search);
  if(qp.get('base')){sel.base=qp.get('base');selectBaseStrength(sel.base,qp.get('temp'));if(qp.get('milk'))sel.milk=qp.get('milk');if(qp.get('str'))sel.strength=+qp.get('str');if(qp.get('shot'))sel.shot=+qp.get('shot');if(qp.get('size'))sel.size=qp.get('size');if(qp.get('pump'))sel.pump=+qp.get('pump');if(qp.get('syrup'))sel.syrup=qp.get('syrup');if(qp.get('temp'))sel.temp=qp.get('temp');paint();}
- if(qp.get('dial')){var pt=qp.get('dial').split('|'),dv=pt[0].split(','),kk=['energy','roast','milk','sweet','temp','mode','kind'];kk.forEach(function(k,i){wsel[k]=(dv[i]==='x'||dv[i]==null||dv[i]==='')?null:+dv[i];});if(pt[1]){wsel.flavors=pt[1].split('.');}var nd=(wsel.mode!=null)||(wsel.flavors&&wsel.flavors.length);if(nd&&!deep)toggleDeep();buildWheel();paintWheel();resolveWheel();scrollTo2('#current');}
+ if(qp.get('dial')){var pt=qp.get('dial').split('|'),dv=pt[0].split(','),kk=['energy','roast','milk','sweet','temp','mode','kind','fruit'];kk.forEach(function(k,i){wsel[k]=(dv[i]==='x'||dv[i]==null||dv[i]==='')?null:+dv[i];});if(pt[1]){wsel.flavors=pt[1].split('.');}if(wsel.kind===1){FACTIONS=deep?coreSet().concat(FACTIONS_ADV):coreSet();buildWheel();}var nd=(wsel.mode!=null)||(wsel.flavors&&wsel.flavors.length);if(nd&&!deep)toggleDeep();buildWheel();paintWheel();resolveWheel();scrollTo2('#current');}
  if(qp.get('wheeldemo')){wsel={energy:3,roast:3,milk:0,sweet:0,temp:0,mode:null,flavor:null,flavors:[]};paintWheel();resolveWheel();}
  if(qp.get('deep')){toggleDeep();}
  if(qp.get('drill')){if(!deep)toggleDeep();openDetail();if(qp.get('drill')==='2'){onDetailClick({classList:{contains:function(){return false;}},dataset:{opt:'Chocolate'}});}}
