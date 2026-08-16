@@ -26,18 +26,50 @@ function toCents(amount) {
   return Math.round(amount * 100);
 }
 
-// Helper: build a clean JSON response
+// Helper: build a clean JSON response.
+// CORS is locked to the site's own origin — the checkout runs same-origin, so
+// nothing else legitimately calls this from a browser.
 function json(statusCode, body) {
   return {
     statusCode,
     headers: {
       'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': 'https://wiredcoffee.org',
       'Access-Control-Allow-Headers': 'Content-Type',
       'Access-Control-Allow-Methods': 'POST, OPTIONS'
     },
     body: JSON.stringify(body)
   };
+}
+
+// Server-side floor prices (12oz / smallest size, in dollars) for every named
+// item the site can send. The client's unitPrice arrives already member-
+// discounted (x0.9 at most), so an item is rejected if it prices below
+// 90% of its floor. Custom builder / invented drinks are not in this list and
+// fall back to the $2 house floor. Never trust the client's arithmetic.
+const FLOOR_PRICES = {
+  'nutty professor': 5, 'maple byte': 5, 'flow state': 5, 'prickly palmer': 5,
+  'house brew': 3, 'cold brew': 4, 'latte': 4, 'mocha': 4, 'breve': 4.5,
+  'americano': 3.5, 'cappuccino': 4, 'cortado': 4, 'espresso': 2,
+  'tea': 2, 'navajo tea': 2, 'green tea': 2, 'black tea': 2,
+  'herbal lemon': 2, 'herbal peppermint': 2, 'matcha': 4, 'chai': 4,
+  'lemonade': 2.5, 'prickly pear lemonade': 2.5, 'soda': 2.5, 'rize fuel energy': 2.5,
+  'circuit berry smoothie': 5.5, 'maker mango smoothie': 5.5, 'pink prototype smoothie': 5.5,
+  'peach paradise smoothie': 5.5, 'green machine smoothie': 5.5, 'java jolt smoothie': 6,
+  'circuit berry': 5.5, 'maker mango': 5.5, 'pink prototype': 5.5,
+  'peach paradise': 5.5, 'green machine': 5.5, 'java jolt': 6,
+  'cheese': 3.5, 'pepperoni': 4, 'specialty': 5,
+  'bagel & cream cheese': 3.5, 'breakfast bagel': 6.5,
+  'double chocolate espresso cookie': 3, 'chocolate chip cookie': 3,
+  "maker's lunch": 10, 'jump start': 8, 'quick byte': 5,
+  'dark circuit': 7, 'the kernel': 6, 'black box': 6, 'burnt signal': 5,
+  'white noise': 8, 'honeycomb': 7, 'caramel cache': 7, 'golden hour': 8,
+  'green volt': 7, 'chai charge': 7, 'nut cluster': 8, 'cinnamon toast': 8,
+  'vanilla sky': 8, 'root access': 8, 'cold circuit': 8, 'static': 4
+};
+function floorFor(name) {
+  const n = String(name || '').toLowerCase().replace(/^the /, '').replace(/’/g, "'").trim();
+  return FLOOR_PRICES[n] != null ? FLOOR_PRICES[n] : 2;
 }
 
 exports.handler = async function(event) {
@@ -97,7 +129,20 @@ exports.handler = async function(event) {
         if (m.name) modNames.push(m.name);
       }
     }
-    const lineCents = (baseCents + modsCents) * qty;
+    // Price-floor check: reject any line priced below 90% (max member
+    // discount) of the item's known smallest-size price, minus a penny of
+    // float slack. Upward is allowed (sizes, shots, syrups add cost).
+    const unitCents = baseCents + modsCents;
+    const floorCents = Math.round(floorFor(item.name) * 100 * 0.9) - 1;
+    if (unitCents < floorCents) {
+      console.warn('Price floor rejection', { name: item.name, unitCents, floorCents });
+      return json(400, { error: 'Price check failed for ' + (item.name || 'an item') + '. Refresh the page and try again.' });
+    }
+    if (unitCents > 2500) {
+      return json(400, { error: 'Item price out of range for ' + (item.name || 'an item') });
+    }
+
+    const lineCents = unitCents * qty;
     subtotalCents += lineCents;
 
     // Build a Square line item — using ad-hoc items rather than catalog references

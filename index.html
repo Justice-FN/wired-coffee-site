@@ -739,13 +739,37 @@ var WHEEL_PROFILE={
  'chai-charge':WP(2,2,2,2,'hot','sprint','spiced'),'nut-cluster':WP(2,2,2,2,'hot','flow','nutty'),'cinnamon-toast':WP(2,1,3,2,'hot','social','spiced'),
  'vanilla-sky':WP(2,1,3,2,'iced','flow','vanilla'),'root-access':WP(2,1,3,2,'hot','calm','caramel'),'cold-circuit':WP(2,2,2,2,'iced','flow','chocolate'),
  'static':WP(1,1,1,0,'either','calm','any')};
+
+/* Sippers + smoothies from the 2026 menu boards */
+Object.assign(DRINKS,{
+ 'prickly-palmer':{name:'Prickly Palmer',persona:'The Desert Volt',aura:'#D95A8F',tagline:'Prickly pear, lemonade, Navajo black tea.',spec:['Caffeine-light','Iced','12/16/20oz'],addPrice:5},
+ 'lemonade':{name:'Lemonade',persona:'The Recharger',aura:'#E8D24C',tagline:'Fresh squeeze, zero volts.',spec:['Caffeine-free','Iced','Regular or prickly pear'],addPrice:2.5},
+ 'lemonade-prickly':{name:'Prickly Pear Lemonade',persona:'The Pink Signal',aura:'#E06A9F',tagline:'Desert-pink and cold.',spec:['Caffeine-free','Iced','12/16/20oz'],addPrice:2.5},
+ 'circuit-berry':{name:'Circuit Berry Smoothie',persona:'The Full Spectrum',aura:'#B04A8F',tagline:'Strawberry, blueberry, raspberry, banana.',spec:['Caffeine-free','Iced','Dairy-free on request'],addPrice:5.5},
+ 'maker-mango':{name:'Maker Mango Smoothie',persona:'The Tropic Current',aura:'#E8A24C',tagline:'Mango, pineapple, peach.',spec:['Caffeine-free','Iced','Dairy-free on request'],addPrice:5.5},
+ 'pink-prototype':{name:'Pink Prototype Smoothie',persona:'The Prototype',aura:'#E58FB4',tagline:'Strawberry and banana, version one.',spec:['Caffeine-free','Iced','Dairy-free on request'],addPrice:5.5},
+ 'peach-paradise':{name:'Peach Paradise Smoothie',persona:'The Soft Glow',aura:'#F0A868',tagline:'Peach, mango, orange.',spec:['Caffeine-free','Iced','Dairy-free on request'],addPrice:5.5},
+ 'green-machine':{name:'Green Machine Smoothie',persona:'The Clean Build',aura:'#5FBF6A',tagline:'Spinach, mango, pineapple, banana.',spec:['Caffeine-free','Iced','Dairy-free on request'],addPrice:5.5},
+ 'java-jolt':{name:'Java Jolt Smoothie',persona:'The Hybrid Engine',aura:'#7A4A2E',tagline:'Espresso, banana, chocolate, peanut butter.',spec:['~75mg','Iced','The caffeinated one'],addPrice:6}});
+Object.assign(WHEEL_PROFILE,{
+ 'prickly-palmer':Object.assign(WP(1,0,0,2,'iced','social','fruit'),{subs:['Prickly Pear','Lemon']}),
+ 'lemonade':Object.assign(WP(0,0,0,2,'iced','social','fruit'),{subs:['Lemon']}),
+ 'lemonade-prickly':Object.assign(WP(0,0,0,2,'iced','social','fruit'),{subs:['Prickly Pear']}),
+ 'circuit-berry':Object.assign(WP(0,0,2,2,'iced','social','fruit'),{subs:['Berry','Banana']}),
+ 'maker-mango':Object.assign(WP(0,0,2,2,'iced','flow','fruit'),{subs:['Mango','Peach']}),
+ 'pink-prototype':Object.assign(WP(0,0,2,1,'iced','calm','fruit'),{subs:['Berry','Banana']}),
+ 'peach-paradise':Object.assign(WP(0,0,2,2,'iced','calm','fruit'),{subs:['Peach','Mango']}),
+ 'green-machine':Object.assign(WP(1,0,1,1,'iced','flow','fruit'),{subs:['Mango','Banana']}),
+ 'java-jolt':Object.assign(WP(2,1,2,2,'iced','flow','chocolate'),{subs:['Banana']})});
+if(SIGNATURES.indexOf('prickly-palmer')<0)SIGNATURES.push('prickly-palmer');
+['prickly-palmer','lemonade','lemonade-prickly','circuit-berry','maker-mango','pink-prototype','peach-paradise','green-machine','java-jolt'].forEach(function(k){if(PRIORITY.indexOf(k)<0)PRIORITY.push(k);});
 var wsel={energy:null,roast:null,milk:null,sweet:null,temp:null,mode:null,flavor:null,flavors:[]};
 var WCX=200,WCY=200,RHUB=86,RRIM=178,RD0=192,RD1=236;
 function polar(cx,cy,r,deg){var a=(deg-90)*Math.PI/180;return[cx+r*Math.cos(a),cy+r*Math.sin(a)];}
 function sector(rIn,rOut,a0,a1){var A=polar(WCX,WCY,rOut,a0),B=polar(WCX,WCY,rOut,a1),C=polar(WCX,WCY,rIn,a1),D=polar(WCX,WCY,rIn,a0);var big=(a1-a0)>180?1:0;return 'M'+A[0]+' '+A[1]+' A'+rOut+' '+rOut+' 0 '+big+' 1 '+B[0]+' '+B[1]+' L'+C[0]+' '+C[1]+' A'+rIn+' '+rIn+' 0 '+big+' 0 '+D[0]+' '+D[1]+' Z';}
 function AW(){return 360/FACTIONS.length;}
 function BT(){var mb=Math.max.apply(null,FACTIONS.map(function(f){return f.mode==='level'?f.bands.length:1;}));return (RRIM-RHUB)/mb;}
-var FLAVOR_TREE={Nutty:['Hazelnut','Almond','Cocoa'],Chocolate:['Dark Chocolate','White Chocolate','Mocha'],Caramel:['Caramel','Maple','Honey'],Vanilla:['Vanilla','Banana Bread'],Spiced:['Cinnamon','Chai spice'],Herbal:['Peppermint','Lemon','Navajo']};
+var FLAVOR_TREE={Nutty:['Hazelnut','Almond','Cocoa'],Chocolate:['Dark Chocolate','White Chocolate','Mocha'],Caramel:['Caramel','Maple','Honey'],Vanilla:['Vanilla','Banana Bread'],Spiced:['Cinnamon','Chai spice'],Herbal:['Peppermint','Lemon','Navajo'],Fruit:['Prickly Pear','Berry','Mango','Peach','Banana']};
 var detailLevel=1,detailFamily=null;
 function buildWheel(){
  var svg=$('#curWheel'),g='',aw=AW(),bt=BT();
@@ -796,6 +820,7 @@ function distFor(k){var p=WHEEL_PROFILE[k],d=0;if(!p)return 999;
  if(wsel.temp!=null){var tw=wsel.temp===0?'hot':'iced';if(!(p.temp==='either'||p.temp===tw))d+=2.5;}
  if(wsel.mode!=null){var mm=['sprint','flow','social','calm'][wsel.mode];if(p.mode!==mm)d+=1.5;}
  if(wsel.flavor!=null){var ff=famFlavor();if(p.flavor===ff)d+=0;else if(p.flavor==='any')d+=1.2;else d+=1.8;}
+ if(p.subs&&wsel.flavors&&wsel.flavors.length){var hit2=false;for(var i2=0;i2<wsel.flavors.length;i2++){if(p.subs.indexOf(wsel.flavors[i2])>-1)hit2=true;}d+=hit2?-0.8:0.8;}
  return d;}
 function wheelScore(){var s={};Object.keys(WHEEL_PROFILE).forEach(function(k){s[k]=100-distFor(k);});return s;}
 function wheelReasons(w){var r=[];if(wsel.energy!=null)r.push(['unplugged','a low trickle','a steady current','a live-wire current'][wsel.energy]);if(wsel.roast!=null&&wsel.roast>1)r.push(['','','a bold roast','it dark and bitter'][wsel.roast]);if(wsel.milk!=null)r.push(['it black','a splash','it creamy','it rich'][wsel.milk]);if(wsel.sweet!=null&&wsel.sweet>0)r.push(['','a touch of sweet','dessert-sweet'][wsel.sweet]);if(wsel.flavors&&wsel.flavors.length)r.push(wsel.flavors.join(' + ').toLowerCase());else if(wsel.flavor)r.push(wsel.flavor.toLowerCase());if(wsel.temp!=null)r.push(wsel.temp===1?'iced':'hot');if(wsel.mode!=null)r.push(['a sprint','deep flow','something social','something calm'][wsel.mode]);return r.filter(Boolean);}
@@ -829,7 +854,7 @@ function renderHub(o){
  html+='<div class="persona">'+d.persona+'</div><div class="drink">Your current: '+d.name+' &middot; '+o.pct+'% match</div>';
  html+='<div class="why">'+why+'</div>';
  if(w.indexOf('tea-')===0||w==='tea'){html+='<div class="teastrip">Which tea? '+TEA_VARS.map(function(t){return '<button class="teachip'+(w===t?' on':'')+'" onclick="pickTea(\''+t+'\')">'+DRINKS[t].name.replace(' Tea','')+'</button>';}).join('')+'</div>';}
- if(showCta){html+='<div class="hcta"><button class="btn btn-blue" onclick="quizAdd(\''+w+'\',this)">Order this</button><button class="btn btn-line" onclick="quizTweak(\''+w+'\')">Tweak in builder</button><button class="btn btn-line" onclick="patchIt()">&#9889; Patch it</button></div>';}
+ if(showCta){html+='<div class="hcta"><button class="btn btn-blue" onclick="quizAdd(\''+w+'\',this)">Order this</button>'+(SEED[w]?'<button class="btn btn-line" onclick="quizTweak(\''+w+'\')">Tweak in builder</button>':'')+'<button class="btn btn-line" onclick="patchIt()">&#9889; Patch it</button></div>';}
  else{html+='<div style="font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.6);letter-spacing:.08em">Set one more dial to lock it in</div>';}
  html+='<button class="clear" onclick="clearWheel()">Clear the board</button>';
  $('#hubcard').innerHTML=html;
