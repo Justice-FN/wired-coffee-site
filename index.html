@@ -772,6 +772,16 @@ Object.assign(WHEEL_PROFILE,{
  'java-jolt':Object.assign(WP(2,1,2,2,'iced','flow','chocolate'),{subs:['Banana']})});
 if(SIGNATURES.indexOf('prickly-palmer')<0)SIGNATURES.push('prickly-palmer');
 ['prickly-palmer','lemonade','lemonade-prickly','circuit-berry','maker-mango','pink-prototype','peach-paradise','green-machine','java-jolt'].forEach(function(k){if(PRIORITY.indexOf(k)<0)PRIORITY.push(k);});
+/* Without a seed the "Tweak in builder" button hides itself, so every blend the wheel could name was a dead end. strength is the blend or style index into STRENGTH[base].scale. Prickly Palmer is deliberately absent: it is half lemonade and half tea, which the builder has no way to express, so it stays a fixed drink rather than seeding a wrong one. */
+Object.assign(SEED,{
+ 'lemonade':{base:'Lemonade',milk:'Black',syrup:null,temp:'iced',strength:0},
+ 'lemonade-prickly':{base:'Lemonade',milk:'Black',syrup:null,temp:'iced',strength:1},
+ 'circuit-berry':{base:'Smoothie',milk:'Whole',syrup:null,temp:'iced',strength:0},
+ 'maker-mango':{base:'Smoothie',milk:'Whole',syrup:null,temp:'iced',strength:1},
+ 'pink-prototype':{base:'Smoothie',milk:'Whole',syrup:null,temp:'iced',strength:0},
+ 'peach-paradise':{base:'Smoothie',milk:'Whole',syrup:null,temp:'iced',strength:2},
+ 'green-machine':{base:'Smoothie',milk:'Whole',syrup:null,temp:'iced',strength:3},
+ 'java-jolt':{base:'Smoothie',milk:'Whole',syrup:null,temp:'iced',strength:0,shot:1}});
 var wsel={energy:null,roast:null,milk:null,sweet:null,temp:null,kind:null,mode:null,flavor:null,flavors:[]};
 var BLEND_KIND=['lemonade','lemonade-prickly','prickly-palmer','circuit-berry','maker-mango','pink-prototype','peach-paradise','green-machine','java-jolt'];
 var WCX=200,WCY=200,RHUB=86,RRIM=178,RD0=192,RD1=236;
@@ -910,7 +920,17 @@ var RECIPE={
  'vanilla-sky':'12 oz latte, whole milk, vanilla + white chocolate, iced',
  'root-access':'12 oz breve, maple + cinnamon, hot',
  'cold-circuit':'12 oz mocha, peppermint + dark chocolate, iced',
- 'static':'12 oz house brew, half-caff, whole milk, hot'};
+ 'static':'12 oz house brew, half-caff, whole milk, hot',
+ /* The nine blends reached the wheel with no recipe, so a smoothie printed on the ticket as bare "16 oz, iced" and the bar had to guess which one. Ingredients follow the menu boards. */
+ 'prickly-palmer':'12 oz half prickly pear lemonade, half Navajo black tea, iced',
+ 'lemonade':'12 oz classic lemonade, no milk, iced',
+ 'lemonade-prickly':'12 oz prickly pear lemonade, no milk, iced',
+ 'circuit-berry':'12 oz berry blend smoothie: strawberry, blueberry, raspberry, banana, iced',
+ 'maker-mango':'12 oz mango blend smoothie: mango, pineapple, peach, iced',
+ 'pink-prototype':'12 oz smoothie: strawberry and banana, iced',
+ 'peach-paradise':'12 oz peach blend smoothie: peach, mango, orange, iced',
+ 'green-machine':'12 oz green blend smoothie: spinach, mango, pineapple, banana, iced',
+ 'java-jolt':'12 oz smoothie: espresso, banana, chocolate, peanut butter, iced'};
 function wheelTicketNote(w,size){
  size=size||'12 oz';
  if(RECIPE[w])return RECIPE[w].replace('12 oz',size);
@@ -923,19 +943,33 @@ function wheelSizes(w){
  if(w==='lemonade'||w==='lemonade-prickly')return [['12 oz',0],['16 oz',0.5],['20 oz',1]];
  return [['12 oz',0],['16 oz',1],['20 oz',2]];
 }
-function inventSizes(){var b=inventComp().base;if(b==='Espresso'||b==='Cortado')return [['12 oz',0]];return [['12 oz',0],['16 oz',1],['20 oz',2]];}
+function inventSizes(){var b=inventComp().base;if(b==='Espresso'||b==='Cortado')return [['12 oz',0]];if(b==='Lemonade')return [['12 oz',0],['16 oz',0.5],['20 oz',1]];return [['12 oz',0],['16 oz',1],['20 oz',2]];}
 function inventTicketNote(size){
- var c=inventComp(),parts=[(size||'12 oz')+' '+c.base];
- parts.push(c.milk==='Black'?'black':(c.milk+' milk'));
+ var c=inventComp(),sc=STRENGTH[c.base];
+ /* A blend has to say WHICH blend on the ticket, or the barista is guessing between four smoothies. */
+ var lab=(c.strength!=null&&sc&&sc.scale[c.strength])?sc.scale[c.strength]:null;
+ var parts=[lab?((size||'12 oz')+' '+lab+' '+c.base.toLowerCase()):((size||'12 oz')+' '+c.base)];
+ parts.push(c.milk==='Black'?(c.base==='Lemonade'?'no milk':'black'):(c.milk+' milk'));
  if(c.syrup)parts.push((wsel.sweet?wsel.sweet+' pump'+(wsel.sweet>1?'s':'')+' ':'')+c.syrup);
- if(wsel.energy>=3&&STRENGTH[c.base]&&STRENGTH[c.base].unit!=='shots')parts.push('+1 espresso shot');
+ /* canShot, not the unit test: lemonade has unit 'style', so the old check bolted an espresso shot onto a lemonade. */
+ if(wsel.energy>=3&&canShot(c.base))parts.push('+1 espresso shot'+(c.base==='Smoothie'?' (Java Jolt style)':''));
  parts.push(c.temp);
  if(wsel.flavors&&wsel.flavors.length)parts.push('mix: '+joinNicely(wsel.flavors));
  return parts.join(', ');
 }
 function quizAdd(w,el,delta,label){var d=DRINKS[w];add(d.name,wheelTicketNote(w,label||'12 oz'),d.addPrice+(delta||0),el);openCart();}
-function quizTweak(w){var seed=SEED[w]||{base:'Latte',milk:'Whole',syrup:null,temp:'hot'};if(BASES[seed.base]===undefined)seed.base='Latte';sel.base=seed.base;sel.milk=seed.milk;sel.syrup=seed.syrup;sel.temp=seed.temp;sel.pump=0;selectBaseStrength(seed.base,seed.temp);paint();scrollTo2('#build');var inst=document.querySelector('.inst');if(inst&&inst.animate)inst.animate([{boxShadow:'0 0 0 rgba(31,154,214,0)'},{boxShadow:'0 0 40px rgba(31,154,214,.6)'},{boxShadow:'0 0 0 rgba(31,154,214,0)'}],{duration:1200});}
-function inventComp(){var b=(wsel.roast>=3&&(wsel.milk==null||wsel.milk<=1))?((wsel.energy>=3&&wsel.temp===1)?'Cold Brew':'Espresso'):(wsel.milk>=3?'Breve':(wsel.milk>=2?(hasFlav('chocolate')?'Mocha':'Latte'):(wsel.roast<=1?'House Brew':'Cortado')));var milk=['Black','Almond','Oat','Whole'][wsel.milk==null?2:wsel.milk];var syr=null;var sm={'Hazelnut':'Hazelnut','Almond':null,'Cocoa':'Dark Chocolate','Dark Chocolate':'Dark Chocolate','White Chocolate':'White Chocolate','Mocha':'Dark Chocolate','Caramel':'Caramel','Maple':'Maple','Honey':'Honey','Vanilla':'Vanilla','Banana Bread':'Vanilla','Cinnamon':'Maple','Chai spice':null,'Peppermint':'Dark Chocolate','Lemon':null,'Navajo':null};(wsel.flavors||[]).forEach(function(f){if(!syr&&sm[f])syr=sm[f];});return {base:b,milk:milk,syrup:syr,temp:wsel.temp===1?'iced':'hot'};}
+function quizTweak(w){var seed=SEED[w]||{base:'Latte',milk:'Whole',syrup:null,temp:'hot'};if(BASES[seed.base]===undefined)seed.base='Latte';sel.base=seed.base;sel.milk=seed.milk;sel.syrup=seed.syrup;sel.temp=seed.temp;sel.pump=0;selectBaseStrength(seed.base,seed.temp);if(seed.strength!=null)sel.strength=seed.strength;if(seed.shot!=null)sel.shot=seed.shot;paint();scrollTo2('#build');var inst=document.querySelector('.inst');if(inst&&inst.animate)inst.animate([{boxShadow:'0 0 0 rgba(31,154,214,0)'},{boxShadow:'0 0 40px rgba(31,154,214,.6)'},{boxShadow:'0 0 0 rgba(31,154,214,0)'}],{duration:1200});}
+/* The KIND dial only biased which NAMED drink won. When the dials landed off every named drink the wheel invented one, and this composer knew nothing but coffee, so "Smoothie/lemonade" could still hand back a latte. Blends are composed here now, and strength carries the blend or style index so the ticket and the builder can both name it. */
+function inventComp(){
+ if(wsel.kind===1){
+  var fv=wsel.flavors||[],hasF=function(x){return fv.indexOf(x)>-1;};
+  var fruity=hasF('Berry')||hasF('Mango')||hasF('Peach')||hasF('Banana');
+  if(!fruity&&(hasF('Prickly Pear')||hasF('Lemon')||(wsel.milk!=null&&wsel.milk<=0)))
+   return {base:'Lemonade',milk:'Black',syrup:null,temp:'iced',strength:hasF('Prickly Pear')?1:0};
+  var bi=hasF('Mango')?1:(hasF('Peach')?2:0);
+  return {base:'Smoothie',milk:['Black','Almond','Oat','Whole'][wsel.milk==null?3:wsel.milk],syrup:null,temp:'iced',strength:bi};
+ }
+ var b=(wsel.roast>=3&&(wsel.milk==null||wsel.milk<=1))?((wsel.energy>=3&&wsel.temp===1)?'Cold Brew':'Espresso'):(wsel.milk>=3?'Breve':(wsel.milk>=2?(hasFlav('chocolate')?'Mocha':'Latte'):(wsel.roast<=1?'House Brew':'Cortado')));var milk=['Black','Almond','Oat','Whole'][wsel.milk==null?2:wsel.milk];var syr=null;var sm={'Hazelnut':'Hazelnut','Almond':null,'Cocoa':'Dark Chocolate','Dark Chocolate':'Dark Chocolate','White Chocolate':'White Chocolate','Mocha':'Dark Chocolate','Caramel':'Caramel','Maple':'Maple','Honey':'Honey','Vanilla':'Vanilla','Banana Bread':'Vanilla','Cinnamon':'Maple','Chai spice':null,'Peppermint':'Dark Chocolate','Lemon':null,'Navajo':null};(wsel.flavors||[]).forEach(function(f){if(!syr&&sm[f])syr=sm[f];});return {base:b,milk:milk,syrup:syr,temp:wsel.temp===1?'iced':'hot'};}
 function hasFlav(x){return (wsel.flavors||[]).join(',').toLowerCase().indexOf(x)>-1||famFlavor()===x;}
 function inventAdd(el,delta,label){add(inventName(),inventTicketNote(label),inventPrice()+(delta||0),el);openCart();}
 function inventTweak(){var c=inventComp();sel.base=c.base;sel.milk=c.milk;sel.syrup=c.syrup;sel.temp=c.temp;sel.pump=(wsel.sweet||0);selectBaseStrength(c.base,c.temp);if(wsel.energy>=3)sel.strength=Math.min((STRENGTH[c.base]||{scale:['']}).scale.length-1,sel.strength+1);paint();scrollTo2('#build');}
