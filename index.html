@@ -423,11 +423,11 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
 <header id="hdr">
   <div class="wrap">
     <a href="#top"><img src="img/logo_white.png" class="logo" alt="Wired Coffee Co."></a>
-    <nav><a onclick="scrollTo2('#current')">Dial in</a><a href="#craft">Craft</a><a href="#build">Build</a><a href="#menu">Menu</a><a href="#story">Story</a></nav>
+    <nav><a onclick="scrollTo2('#current')">Wired to Order</a><a href="#craft">Craft</a><a href="#build">Build</a><a href="#menu">Menu</a><a href="#story">Story</a></nav>
     <div class="nav-cta"><div id="cartBtn" onclick="openCart()">Cart <span id="cartDot">0</span></div><a class="btn btn-blue" href="#menu">Order</a><div id="burger" onclick="document.getElementById('mnav').classList.add('open')"><span></span><span></span><span></span></div></div>
   </div>
 </header>
-<div id="mnav"><div class="x" onclick="this.parentNode.classList.remove('open')">&times;</div><a onclick="mnav('#current')">Dial in</a><a onclick="mnav('#build')">Build</a><a onclick="mnav('#menu')">Menu</a><a onclick="mnav('#story')">Story</a><a onclick="mnav('#menu')">Order</a></div>
+<div id="mnav"><div class="x" onclick="this.parentNode.classList.remove('open')">&times;</div><a onclick="mnav('#current')">Wired to Order</a><a onclick="mnav('#build')">Build</a><a onclick="mnav('#menu')">Menu</a><a onclick="mnav('#story')">Story</a><a onclick="mnav('#menu')">Order</a></div>
 
 <section class="hero" id="top">
   <img class="bg" src="img/Wired_Coffee_Steamy_Espresso_1.jpg" alt="">
@@ -440,7 +440,7 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
     <p class="sub">Top-tier coffee that powers ideas and fuels the local workforce. Pulled fresh, all day, inside the makerspace.</p>
     <div class="cta">
       <a class="btn btn-blue" href="#menu">Order ahead</a>
-      <a class="btn btn-line" onclick="scrollTo2('#current')">Dial in your cup</a>
+      <a class="btn btn-line" onclick="scrollTo2('#current')">Find your drink</a>
       <a class="btn btn-line" href="#build">Build your drink</a>
     </div>
   </div></div>
@@ -466,13 +466,13 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
 <section class="current power" id="current">
   <div class="wrap"><div class="cur-grid">
     <div class="copy">
-      <span class="num">Dial in / <b>The Dial-In</b></span>
-      <h2>Dial it in.<br>Find your drink.</h2>
+      <span class="num">Your cup / <b>Wired to Order</b></span>
+      <h2>Wired to order.<br>Find your drink.</h2>
       <p>Six dials to your drink, smoothies and lemonade included. Go deeper and invent your own. Set what you feel and the needle finds it, no wrong answers.</p>
       <p style="font-size:16px">The dials read <b style="color:var(--cream)">current</b> (energy), <b style="color:var(--cream)">roast</b> (smooth to dark &amp; bitter), <b style="color:var(--cream)">body</b> (milk), <b style="color:var(--cream)">sweet</b>, and <b style="color:var(--cream)">temp</b>, and <b style="color:var(--cream)">kind</b> (coffee bar or the blender). Hit <b style="color:var(--cream)">Go deeper</b> to add flavor and combine our ingredients into your own drink.</p>
     </div>
     <div class="wheelbox">
-      <svg id="curWheel" viewBox="-60 -54 520 520" aria-label="The Dial-In"></svg>
+      <svg id="curWheel" viewBox="-60 -54 520 520" aria-label="Wired to Order"></svg>
       <div class="wheel-rows" id="wheelRows"></div>
       <div style="display:flex;gap:12px;justify-content:center;margin-top:16px;flex-wrap:wrap"><button class="deeper" id="deeperBtn" onclick="toggleDeep()">+ Go deeper</button><button class="deeper" onclick="surpriseSpin()">&#9889; Surprise me</button></div>
       <div class="hubcard" id="hubcard"><div class="aura" id="hubAura"></div><div class="empty">Tap the dials. We read your cup live.</div></div>
@@ -518,9 +518,9 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
     <div class="inst">
       <div class="glabel">Base</div><div class="chips" id="gBase"></div>
       <div class="faders">
-        <div class="fader"><div class="lbl"><span>Strength</span><b id="shotCap2" style="font-size:9.5px;opacity:.7"></b></div>
+        <div class="fader"><div class="lbl"><span id="shotLbl">Strength</span><b id="shotCap2" style="font-size:9.5px;opacity:.7"></b></div>
           <div class="stepper"><button onclick="step('shot',-1)">&minus;</button><span class="v" id="shotN">--</span><button onclick="step('shot',1)">+</button></div><div class="meter" id="shotM"></div><div class="cap" id="shotCap">pick a base</div></div>
-        <div class="fader"><div class="lbl"><span>Sweet</span></div>
+        <div class="fader" id="sweetRow"><div class="lbl"><span>Sweet</span></div>
           <div class="stepper"><button onclick="step('pump',-1)">&minus;</button><span class="v" id="pumpN">0</span><button onclick="step('pump',1)">+</button></div><div class="meter" id="pumpM"></div><div class="cap" id="sweetCap">syrup pumps</div></div>
       </div>
       <div id="xshotRow" style="display:none;margin-bottom:16px">
@@ -530,7 +530,7 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
       <div class="glabel">Temp <div class="toggle"><button id="tHot" onclick="setTemp('hot')">Hot</button><button id="tIced" onclick="setTemp('iced')">Iced</button></div></div>
       <div class="glabel">Size <div class="toggle"><button id="s12" onclick="setSize('Regular')">12 oz</button><button id="s16" onclick="setSize('Large')">16 oz +$1</button><button id="s20" onclick="setSize('XL')">20 oz +$2</button></div></div>
       <div class="glabel">Milk</div><div class="chips" id="gMilk"></div>
-      <div class="glabel">Syrup flavor</div><div class="chips" id="gSyrup"></div>
+      <div id="syrupRow"><div class="glabel">Syrup flavor</div><div class="chips" id="gSyrup"></div></div>
       <div class="out"><div><div class="num" style="margin-bottom:6px">Your build</div><div class="recipe" id="recipe">Pick a base to begin</div></div><div class="price" id="bPrice">$&ndash;.&ndash;&ndash;</div></div>
       <div style="margin-top:14px;font-family:var(--mono);font-size:11px;color:var(--cream-dim);display:flex;align-items:center;gap:8px">&#9889; Name on the cup <input id="cupName" placeholder="type it here" maxlength="16" style="background:rgba(246,239,207,.07);border:1px solid rgba(246,239,207,.35);border-radius:3px;color:var(--cream);font-family:var(--mono);font-size:13px;padding:7px 10px;flex:1"></div>
       <div class="btn btn-blue" id="addBuild" style="width:100%;text-align:center;margin-top:16px;opacity:.5;pointer-events:none" onclick="addBuild(this)">Assemble &amp; add to order</div>
@@ -547,7 +547,7 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
     <div class="miy">
       <div class="miy-h"><span class="num" style="color:var(--roast);display:block;margin-bottom:8px">Make it yours</span><h3>Every drink, your way.</h3></div>
       <div class="miy-grid" id="miyGrid"></div>
-      <div class="miy-foot">Not sure what to get? Dial it in on the screen or ask the counter. Members save 10%.</div>
+      <div class="miy-foot">Not sure what to get? Find it on the screen or ask the counter. Members save 10%.</div>
     </div>
     <div class="menu-foot">Tap a row for its spec &middot; <b style="color:var(--blue)">+ Add</b> puts it in your order &middot; pickup ~10 min &middot; tax included <button class="btn btn-line" id="printBtn" style="padding:10px 18px;margin-left:12px" onclick="window.print()">&#9113; Print this menu</button></div>
   </div>
@@ -609,7 +609,7 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
     <div><img src="img/logo_white.png" class="lw" alt="Wired Coffee Co."><p>Every cup, a current.<br>Every sip, a spark.</p></div>
     <div><h4>Visit</h4><p>209 W Main St<br>Cortez, CO 81321</p><p>Inside the Cortez Makerspace</p></div>
     <div><h4>Hours</h4><p>Tue&ndash;Sat 8a&ndash;2p</p><p>Closed Sun &amp; Mon</p></div>
-    <div><h4>Order</h4><a onclick="scrollTo2('#current')">Dial in</a><a href="#build">Build a drink</a><a href="#menu">See the menu</a></div>
+    <div><h4>Order</h4><a onclick="scrollTo2('#current')">Wired to Order</a><a href="#build">Build a drink</a><a href="#menu">See the menu</a></div>
   </div>
   <div class="wrap fbot"><span>&copy; 2026 Wired Coffee Co. &middot; a Fundamental Needs project</span><span>Prototype &middot; ordering powered by Wix</span></div>
 </footer>
@@ -1002,6 +1002,8 @@ var STRENGTH={
  'Cappuccino':{unit:'shots',scale:['1 shot','2 shots'],def:0,priceStep:1.00,mg:[75,150],cup:'tallmilk'},
  'Smoothie':{unit:'blend',scale:['Berry blend','Mango blend','Peach blend','Green blend'],def:0,priceStep:0,mg:[0,0,0,0],cup:'blender'},
  'Lemonade':{unit:'style',scale:['Classic','Prickly pear'],def:0,priceStep:0,mg:[0,0],cup:'icedtall'}};
+/* Every base already declared its own unit and the control never read it, so a lemonade showed a "Strength" meter reading "Classic" with the real word buried in grey fine print. The label and the caption both come from the unit now. */
+var UNITLBL={shots:['Shots','espresso shots'],concentration:['Concentration','how bold the brew'],strength:['Strength','how strong the pour'],scoops:['Scoops','matcha scoops'],steep:['Steep','how long it steeps'],blend:['Blend','which fruit blend'],style:['Style','which lemonade']};
 var FORCE_TEMP={'Cold Brew':'iced','Espresso':'hot','Cortado':'hot','Breve':'hot','Chai':'hot','Matcha':'iced','Cappuccino':'hot','Smoothie':'iced','Lemonade':'iced'};
 var MILK_TINT={'Black':null,'Whole':'#E7D6A8','Half n\' Half':'#EFE3BE','Oat':'#DFC9A0','Almond':'#D9CDB0','Soy':'#E3D8B4'};
 var MILK_FOAM={'Black':0,'Whole':12,'Half n\' Half':16,'Oat':12,'Almond':9,'Soy':9};
@@ -1014,7 +1016,7 @@ function hx(h){h=h.replace('#','');return[parseInt(h.substr(0,2),16),parseInt(h.
 function mixHex(a,b,f){if(!b||f<=0)return a;if(f>1)f=1;var x=hx(a),y=hx(b);return '#'+[0,1,2].map(function(i){var v=Math.round(x[i]+(y[i]-x[i])*f);return('0'+v.toString(16)).slice(-2);}).join('');}
 function chip(t,on,dl){return '<button class="chip'+(on?' on':'')+'">'+t+(dl?' <span class="dl">'+dl+'</span>':'')+'</button>';}
 function meter(id,val,max){var h='';for(var i=0;i<max;i++)h+='<span class="'+(i<val?'on':'')+'"></span>';$(id).innerHTML=h;}
-function selectBaseStrength(v,temp){var cfg=STRENGTH[v];if(cfg)sel.strength=cfg.def;sel.shot=0;var forced=FORCE_TEMP[v];sel.temp=forced?forced:(temp||'hot');if(v==='Espresso'||v==='Tea'||v==='Lemonade')sel.milk='Black';}
+function selectBaseStrength(v,temp){var cfg=STRENGTH[v];if(cfg)sel.strength=cfg.def;sel.shot=0;var forced=FORCE_TEMP[v];sel.temp=forced?forced:(temp||'hot');if(v==='Espresso'||v==='Tea'||v==='Lemonade')sel.milk='Black';if(v==='Lemonade'){sel.syrup=null;sel.pump=0;}}
 function setSize(s){sel.size=s;paint();}
 function paint(){
  $('#gBase').innerHTML=Object.keys(BASES).map(function(b){return chip(b,sel.base===b,'$'+BASES[b]);}).join('');
@@ -1025,15 +1027,21 @@ function paint(){
  if(sel.base==='Lemonade'){document.querySelectorAll('#gMilk .chip').forEach(function(b){if(b.textContent.indexOf('Black')!==0){b.disabled=true;}});}
  bindGroup('#gSyrup',['None'].concat(SYRUPS),function(v){sel.syrup=v==='None'?null:v;if(sel.syrup&&sel.pump===0)sel.pump=1;if(!sel.syrup)sel.pump=0;tick2();});
  var cfg=sel.base?STRENGTH[sel.base]:null;
- if(cfg){$('#shotN').textContent=cfg.scale[sel.strength];meter('#shotM',sel.strength+1,cfg.scale.length);$('#shotCap').textContent=cfg.unit;}
- else{$('#shotN').textContent='--';$('#shotM').innerHTML='';$('#shotCap').textContent='pick a base';}
+ if(cfg){var ul=UNITLBL[cfg.unit]||['Strength',cfg.unit];$('#shotLbl').textContent=ul[0];$('#shotN').textContent=cfg.scale[sel.strength];meter('#shotM',sel.strength+1,cfg.scale.length);$('#shotCap').textContent=ul[1];$('#shotCap2').textContent=cfg.priceStep?('+$'+cfg.priceStep.toFixed(2)+' each'):'';}
+ else{$('#shotLbl').textContent='Strength';$('#shotN').textContent='--';$('#shotM').innerHTML='';$('#shotCap').textContent='pick a base';$('#shotCap2').textContent='';}
+ /* Coffee syrups in a lemonade is not a drink anyone sells, so both syrup controls leave rather than sit there offering Dark Chocolate. */
+ var noSyr=(sel.base==='Lemonade'),srR=$('#sweetRow'),syR=$('#syrupRow');
+ if(srR)srR.style.display=noSyr?'none':'';
+ if(syR)syR.style.display=noSyr?'none':'';
  $('#pumpN').textContent=sel.pump;meter('#pumpM',sel.pump,4);
  var sc=$('#sweetCap');if(sc)sc.textContent=(sel.pump>0)?'1st free, +50¢ each':'syrup pumps';
  var xr=$('#xshotRow');if(xr){if(canShot(sel.base)){xr.style.display='';$('#xshotN').textContent=sel.shot;$('#xshotName').textContent=shotName(sel.base,sel.shot)||'';}else xr.style.display='none';}
  if($('#s12')){$('#s12').classList.toggle('on',sel.size==='Regular');$('#s16').classList.toggle('on',sel.size==='Large');var s20=$('#s20');if(s20)s20.classList.toggle('on',sel.size==='XL');}
  var forced=sel.base&&FORCE_TEMP[sel.base];
  $('#tHot').classList.toggle('on',sel.temp==='hot');$('#tIced').classList.toggle('on',sel.temp==='iced');
+ /* Nine of the fourteen bases force their own temperature. The buttons were already disabled but looked identical to live ones, so the lock now reads visually too. */
  $('#tHot').disabled=(forced==='iced');$('#tIced').disabled=(forced==='hot');
+ $('#tHot').style.opacity=(forced==='iced')?'.3':'';$('#tIced').style.opacity=(forced==='hot')?'.3':'';
  calc();renderCup();
 }
 function bindGroup(id,vals,set){var c=$(id).children;for(var i=0;i<c.length;i++){(function(i){c[i].onclick=function(){set(vals[i]);paint();};})(i);}}
