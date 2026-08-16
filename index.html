@@ -1052,14 +1052,28 @@ function sizesFor(catName,it){
  var lb=['12 oz','16 oz','20 oz'];
  return ps.map(function(p,i){return [lb[i]||'',p];});
 }
-function menuAdd(ci,ii,si,el){var it=MENU[ci].items[ii],sz=sizesFor(MENU[ci].c,it)[si];add(menuPlain(it[0]),menuPlain(sz[0]),sz[1],el);var row=el&&el.closest?el.closest('.mrow'):null;if(row)row.classList.remove('szopen');}
+function menuQtyFor(name,szLabel){var n=0;for(var i=0;i<cart.length;i++){if(cart[i].name===name&&(szLabel==null||cart[i].mod===szLabel))n+=(cart[i].qty||1);}return n;}
+function menuAdd(ci,ii,si,el){var it=MENU[ci].items[ii],sz=sizesFor(MENU[ci].c,it)[si];add(menuPlain(it[0]),menuPlain(sz[0]),sz[1],el);}
+function syncMenuQtys(){
+ document.querySelectorAll('#menuCols .mrow').forEach(function(row){
+  var ci=+row.dataset.ci,ii=+row.dataset.ii;if(isNaN(ci)||isNaN(ii))return;
+  var it=MENU[ci].items[ii],nm=menuPlain(it[0]),szs=sizesFor(MENU[ci].c,it);
+  var total=menuQtyFor(nm,null);
+  var btn=row.querySelector('.madd');
+  if(btn)btn.innerHTML=total>0?('+ Add &middot; '+total+' in cart'):'+ Add';
+  row.querySelectorAll('.msz').forEach(function(b,si){
+   var sz=szs[si];if(!sz)return;var q=menuQtyFor(nm,menuPlain(sz[0]));
+   b.innerHTML=(sz[0]||'One size')+' &middot; $'+priceDisp(sz[1])+(q>0?' &times;'+q:'');
+  });
+ });
+}
 function menuPlus(ev,ci,ii,el){ev.stopPropagation();var it=MENU[ci].items[ii],szs=sizesFor(MENU[ci].c,it);if(szs.length===1){menuAdd(ci,ii,0,el);return;}var row=el.closest('.mrow');document.querySelectorAll('.mrow.szopen').forEach(function(r){if(r!==row)r.classList.remove('szopen');});row.classList.toggle('szopen');}
 function setMenuCat(i){menuCat=i;document.querySelectorAll('#menuTabs .mtab').forEach(function(t,j){t.classList.toggle('on',j===i);});document.querySelectorAll('#menuCols > .mcat').forEach(function(c,j){c.classList.toggle('off',j!==i);});}
 $('#menuTabs').innerHTML=MENU.map(function(cat,i){return '<button class="mtab'+(i===menuCat?' on':'')+'" onclick="setMenuCat('+i+')">'+cat.c.replace('&#9889; ','')+'</button>';}).join('');
 $('#menuCols').innerHTML=MENU.map(function(cat,ci){return '<div class="mcat'+(ci===menuCat?'':' off')+'"><h3>'+cat.c+'</h3>'+cat.items.map(function(it,ii){
  var szs=sizesFor(cat.c,it);
  var szh=szs.length>1?'<div class="msizes">'+szs.map(function(sz,si){return '<button class="msz" onclick="event.stopPropagation();menuAdd('+ci+','+ii+','+si+',this)">'+(sz[0]||'One size')+' &middot; $'+priceDisp(sz[1])+'</button>';}).join('')+'</div>':'';
- return '<div class="mrow" onclick="this.classList.toggle(\'open\')"><div class="top"><span class="n">'+it[0]+'</span><span class="lead"></span><span class="p">'+it[1]+'</span><button class="madd" onclick="menuPlus(event,'+ci+','+ii+',this)">+ Add</button></div><div class="eq">'+it[2]+'</div><div class="exp">'+it[3]+'</div>'+szh+'</div>';
+ return '<div class="mrow" data-ci="'+ci+'" data-ii="'+ii+'" onclick="this.classList.toggle(\'open\')"><div class="top"><span class="n">'+it[0]+'</span><span class="lead"></span><span class="p">'+it[1]+'</span><button class="madd" onclick="menuPlus(event,'+ci+','+ii+',this)">+ Add</button></div><div class="eq">'+it[2]+'</div><div class="exp">'+it[3]+'</div>'+szh+'</div>';
 }).join('')+'</div>';}).join('');
 
 /* ===== MAKE IT YOURS ===== */
@@ -1106,6 +1120,7 @@ function render(){var box=$('#cartItems');var units=cart.reduce(function(a,c){re
  var sub=cart.reduce(function(a,c){return a+c.price*(c.qty||1);},0);var disc=memberOn?sub*0.10:0;var tp=(sub-disc)*tipRate;
  $('#sub').textContent='$'+sub.toFixed(2);$('#tipv').textContent='$'+tp.toFixed(2);$('#tot').textContent='$'+(sub-disc+tp).toFixed(2);
  $('#discLn').style.display=disc>0?'flex':'none';$('#discv').textContent='-$'+disc.toFixed(2);
+ if(typeof syncMenuQtys==='function')syncMenuQtys();
  var rw=$('#rewardWrap');if(sub>0){rw.style.display='block';var rb=$('#rewardBar');if(rb&&rb.parentNode)rb.parentNode.style.display='none';$('#rewardTxt').innerHTML='&#9889; Wired Rewards: spend $50, get $5 off. Points track by phone &middot; opt in at checkout.';}else rw.style.display='none';}
 function openCart(){$('#cart').classList.add('open');$('#scrim').classList.add('open');}
 function closeCart(){$('#cart').classList.remove('open');$('#scrim').classList.remove('open');}
@@ -1120,7 +1135,7 @@ function coErrHide(){$('#coErr').style.display='none';}
 function denverNow(){return new Date(new Date().toLocaleString('en-US',{timeZone:'America/Denver'}));}
 function isOpen(){var d=denverNow(),w=d.getDay(),h=d.getHours()+d.getMinutes()/60;return w>=2&&w<=6&&h>=8&&h<14;}
 var TESTMODE=/[?&]test=1/.test(location.search);
-var OPEN_OVERRIDE=true; /* TEMPORARY: ordering forced open for the Square connection test. Set to false after the test. */
+var OPEN_OVERRIDE=false; /* was true for the 8/16 Square connection test; ?test=1 still bypasses for testing */
 function updateOpen(){var el=$('#openStatus'),t=$('#openTxt'),cn=$('#closedNote'),cb=$('#checkoutBtn'),op=isOpen();if(el&&t){if(op){el.classList.remove('closed');t.innerHTML='Open now &middot; pickup ~10 min';}else{el.classList.add('closed');t.innerHTML='Closed &middot; open Tue&ndash;Sat 8am&ndash;2pm';}}if(cn)cn.style.display=(op||TESTMODE||OPEN_OVERRIDE)?'none':'block';if(cb)cb.style.opacity=(op||TESTMODE||OPEN_OVERRIDE)?'':'0.45';}
 updateOpen();setInterval(updateOpen,60000);
 function checkout(){

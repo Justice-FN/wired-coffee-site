@@ -142,34 +142,6 @@ exports.handler = async function(event) {
     return json(400, { error: 'Invalid request body' });
   }
 
-  // TEMPORARY connection diagnostic: reports which environment the function
-  // runs against and which locations the token can see. No secrets returned.
-  // Remove after the Square connection is confirmed.
-  if (payload.diag === true) {
-    const diagClient = new Client({
-      accessToken: accessToken,
-      environment: environment === 'production' ? Environment.Production : Environment.Sandbox
-    });
-    const out = {
-      environmentVar: process.env.SQUARE_ENVIRONMENT || '(unset, defaulting to sandbox)',
-      usingBase: environment === 'production' ? 'production' : 'sandbox',
-      tokenLength: accessToken.length,
-      configuredLocation: locationId
-    };
-    try {
-      const locRes = await diagClient.locationsApi.listLocations();
-      out.tokenWorks = true;
-      out.locationsVisible = (locRes.result.locations || []).map(function (l) {
-        return l.id + ' (' + (l.name || '') + ', ' + (l.status || '') + ')';
-      });
-      out.configuredLocationVisible = (locRes.result.locations || []).some(function (l) { return l.id === locationId; });
-    } catch (e) {
-      out.tokenWorks = false;
-      out.squareError = (e && e.errors && e.errors[0]) || (e && e.message) || 'unknown';
-    }
-    return json(200, out);
-  }
-
   const {
     sourceId,          // payment token from Square Web Payments SDK
     customerName,      // customer's name
