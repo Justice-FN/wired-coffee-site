@@ -373,7 +373,9 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
 .cart.open{transform:none}
 .cart .top{padding:24px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(246,239,207,.12)}
 .cart .top h3{font-size:25px;color:var(--cream)}.cart .x{cursor:pointer;font-size:28px;opacity:.7}
-.cart .items{flex:1;overflow:auto;padding:6px 24px}
+.cart /* min-height:0 lets this flex child actually shrink. Without it the item list holds
+   its content height and shoves the checkout footer off the bottom of the drawer. */
+.items{flex:1;min-height:0;overflow:auto;padding:6px 24px}
 .ci{display:flex;justify-content:space-between;gap:10px;padding:16px 0;border-bottom:1px solid rgba(246,239,207,.08)}
 .ci .nm{font-family:var(--disp);font-size:19px;color:var(--cream)}
 .ci .mod{font-family:var(--mono);font-size:11px;color:var(--cream-dim);margin-top:3px}
@@ -385,7 +387,13 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
 .cart .rewardbar{margin:12px 24px 0;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--cream-dim)}
 .cart .rb{height:5px;background:rgba(246,239,207,.12);margin-top:7px;overflow:hidden}
 .cart .rb i{display:block;height:100%;width:0;background:var(--blue-hi);box-shadow:0 0 8px var(--glow);transition:.4s}
-.cart .f{padding:18px 24px;border-top:1px solid rgba(246,239,207,.12)}
+.cart /* The checkout lives in here, and it grew past a short phone: at 375x667 the panel
+   ran 64px past the drawer and at 360x640 the Pay button itself sat below the fold,
+   with the drawer set to overflow:visible so there was nothing to scroll. The footer
+   scrolls on its own now, and the drawer scrolls as a backstop, so Pay is always
+   reachable no matter how tall this panel gets later. */
+.f{padding:18px 24px;border-top:1px solid rgba(246,239,207,.12);flex:0 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.cart{overflow-y:auto}
 .memrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;font-family:var(--mono);font-size:11.5px;color:var(--cream);letter-spacing:.04em}
 .sw{width:42px;height:22px;border-radius:20px;border:1px solid rgba(246,239,207,.3);position:relative;cursor:pointer;transition:.2s;flex:0 0 42px}
 .sw i{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--cream-dim);transition:.2s}
@@ -420,12 +428,39 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
   section{padding:84px 0}
 }
 @media(max-width:560px){ #curWheel{display:none} .wheel-rows{display:block} }
+/* Phone layout, measured at 375x812 rather than guessed.
+   The header is fixed and the hero cleared it by only 40px, so the "Cortez
+   Makerspace / Specialty Coffee" line printed straight through the logo. And
+   #perkbar is a FIXED-height bar whose text wraps to two lines on a phone, so the
+   copy spilled out of it and collided with the close X. */
+@media(max-width:960px){
+  .hero{align-items:flex-start;height:auto;min-height:100vh;max-height:none}
+  .hero .wrap{padding-top:150px;padding-bottom:44px}
+}
+@media(max-width:560px){
+  /* The hero is bottom-anchored, and on a phone its content is taller than the hero
+     can hold, so the block spilled UPWARD and the co-brand line printed through the
+     logo. Padding on the wrap could never fix that: bottom-anchored, it just grows
+     further up. Top-anchoring it, and letting the section grow instead of clipping,
+     is what actually moves the content clear of the fixed header. */
+  .hero{align-items:flex-start;height:auto;min-height:100vh;max-height:none}
+  .hero .wrap{padding-top:164px;padding-bottom:40px}
+  /* On a phone the copy lands over the busiest part of the espresso photo, where
+     the body text all but disappeared. A shadow keeps the photograph intact
+     instead of flattening it behind a scrim. */
+  .hero .lead p,.hero .lead .num,.hero .lead .status{text-shadow:0 2px 14px rgba(0,0,0,.9),0 1px 3px rgba(0,0,0,.8)}
+  .hero h1{text-shadow:0 3px 18px rgba(0,0,0,.75)}
+  #perkbar{font-size:10.5px;gap:8px;padding:0 36px 0 12px;text-align:center;line-height:1.35}
+  #perkbar .psignin,#perkbar .psep{display:none}
+  .info{padding:28px 20px}
+  iframe{max-width:100%}
+}
 </style>
 </head>
 <body>
 <a class="skip" href="#menu">Skip to the menu</a>
 <div id="grain"></div>
-<div id="perkbar">&#9889; Makerspace members save 10% on every cup. <a onclick="scrollTo2('#story')">Join</a> &middot; <a>Sign in at pickup</a><span class="xp" onclick="document.body.classList.add('noperk')">&times;</span></div>
+<div id="perkbar">&#9889; Makerspace members save 10% on every cup. <a onclick="scrollTo2('#story')">Join</a> <span class="psep">&middot;</span> <a class="psignin">Sign in at pickup</a><span class="xp" onclick="document.body.classList.add('noperk')">&times;</span></div>
 <div id="cond"><div id="condFill"></div></div><div id="condPulse"></div>
 
 <header id="hdr">
@@ -645,7 +680,7 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
     <input id="coName" placeholder="Name for the order" maxlength="60" style="width:100%;background:none;border:1px solid rgba(246,239,207,.25);color:var(--cream);font-family:var(--mono);font-size:13px;padding:11px;margin-bottom:8px">
     <input id="coPhone" placeholder="Phone" maxlength="20" inputmode="tel" style="width:100%;background:none;border:1px solid rgba(246,239,207,.25);color:var(--cream);font-family:var(--mono);font-size:13px;padding:11px;margin-bottom:8px">
     <textarea id="coNote" maxlength="200" rows="2" aria-label="Notes for the barista, including any allergy" placeholder="Allergies, no ice, extra hot, anything the bar should know" style="width:100%;background:none;border:1px solid rgba(246,239,207,.25);color:var(--cream);font-family:var(--mono);font-size:13px;padding:11px;margin-bottom:4px;resize:vertical"></textarea>
-    <div style="font-family:var(--mono);font-size:10.5px;color:var(--cream-dim);margin-bottom:12px;line-height:1.5">Tell us about an allergy here and it prints at the top of the ticket. We work in one small space with peanut butter, tree nuts, dairy, soy and gluten on the same surfaces, so we cannot promise any drink or food is free of a trace.</div>
+    <div style="font-family:var(--mono);font-size:10.5px;color:var(--cream-dim);margin-bottom:12px;line-height:1.5">An allergy noted here prints at the top of the ticket. Shared space, so no item is guaranteed trace-free.</div>
     <div id="card-container" style="background:rgba(246,239,207,.06);padding:6px;border-radius:4px"></div>
     <label style="display:flex;align-items:flex-start;gap:9px;margin-top:11px;font-family:var(--mono);font-size:11px;color:var(--cream-dim);cursor:pointer;line-height:1.5"><input type="checkbox" id="coLoyal" style="margin-top:2px;accent-color:#1F9AD6"><span>&#9889; <b style="color:var(--cream)">Wired Rewards</b>: earn points on this order. Square tracks them by your phone number.</span></label>
     <div id="coErr" style="display:none;font-family:var(--mono);font-size:11.5px;color:#e08a7a;margin:10px 0"></div>
