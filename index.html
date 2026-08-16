@@ -55,7 +55,7 @@ h1,h2,h3,h4{font-family:var(--disp);font-weight:800;line-height:.98;letter-spaci
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 
 /* perk bar */
-#perkbar{position:fixed;top:0;left:0;right:0;height:var(--perk);z-index:56;display:flex;align-items:center;justify-content:center;gap:14px;background:rgba(31,154,214,.13);border-bottom:1px solid rgba(31,154,214,.45);font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--cream)}
+#perkbar{position:fixed;top:0;left:0;right:0;height:var(--perk);z-index:56;display:flex;align-items:center;justify-content:center;gap:14px;background:linear-gradient(rgba(31,154,214,.16),rgba(31,154,214,.16)) #04121c;border-bottom:1px solid rgba(31,154,214,.45);font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--cream)}
 #perkbar a{color:var(--blue-hi);border-bottom:1px solid rgba(92,197,242,.5);cursor:pointer}
 #perkbar .xp{position:absolute;right:16px;cursor:pointer;opacity:.6;font-size:14px}
 .noperk #perkbar{display:none}
@@ -171,6 +171,8 @@ section{padding:130px 0;position:relative}
 .wband{stroke:#0c0703;stroke-width:1.5;cursor:pointer;transition:fill .16s,filter .16s;fill:#1c0f07}
 .wband:hover{fill:#2a1810}
 .wband.on{fill:var(--blue);filter:drop-shadow(0 0 5px var(--glow))}
+.wbandtxt{font-family:var(--mono);font-size:8px;letter-spacing:.08em;text-transform:uppercase;fill:rgba(246,239,207,.55);pointer-events:none}
+.wband.on+path+.wbandtxt{fill:#04121c;font-weight:700}
 .wlabel{font-family:var(--mono);font-size:11px;letter-spacing:.14em;fill:var(--cream-dim);text-transform:uppercase}
 #curTrace{fill:rgba(31,154,214,.10);stroke:var(--blue-hi);stroke-width:2;stroke-linejoin:round;filter:drop-shadow(0 0 8px var(--glow));pointer-events:none}
 #curNeedle{stroke:var(--blue-hi);stroke-width:2;opacity:.8;pointer-events:none}
@@ -484,6 +486,7 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
       <h2>Build your drink.</h2>
       <p>This is a makerspace. Naturally, you build your own. Set the base and dial the strength; the strength reads in the right unit for each drink.</p>
       <p style="font-size:15px;opacity:.8">Current means strength and body, not just caffeine.</p>
+      <p style="font-size:14px;opacity:.78;border-left:2px solid var(--blue);padding-left:12px;margin-top:10px">Why a coffee bar in a makerspace? Wired keeps the building open longer: four extra open hours three days a week, plus an extra hour on Friday and Saturday, with no added staff. As the shop grows, so do the hours.</p>
     </div>
     <div class="cupwrap">
       <span class="bpnum bp-tl">WIRED / SPEC</span><span class="bpnum bp-tr" id="cupSize">12 OZ</span><span class="bpnum bp-br">REV. B</span>
@@ -505,7 +508,7 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
         <path id="cupFront" d="M70 104 H230 L216 388 H84 Z" fill="none" stroke="rgba(246,239,207,.5)" stroke-width="2"/>
         <ellipse cx="150" cy="104" rx="80" ry="12" fill="none" stroke="rgba(246,239,207,.55)" stroke-width="2"/>
         <rect x="86" y="270" width="128" height="66" fill="rgba(31,154,214,.14)" stroke="var(--blue)" stroke-width="1.5"/>
-        <text id="sleeveName" x="150" y="309" text-anchor="middle" font-family="Space Mono, monospace" font-size="15" fill="#F6EFCF" letter-spacing="1">YOUR NAME</text>
+        <text id="sleeveName" x="150" y="309" text-anchor="middle" font-family="Space Mono, monospace" font-size="15" fill="#F6EFCF" letter-spacing="1" style="cursor:text" onclick="var c=document.getElementById('cupName');if(c){c.focus();}">YOUR NAME</text>
         <text id="calMg" x="252" y="150" font-family="Space Mono, monospace" font-size="10" fill="rgba(246,239,207,.6)">--</text>
         <line x1="214" y1="150" x2="248" y2="150" stroke="rgba(92,197,242,.5)" stroke-width="1"/>
       </svg>
@@ -527,7 +530,7 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
       <div class="glabel">Milk</div><div class="chips" id="gMilk"></div>
       <div class="glabel">Syrup flavor</div><div class="chips" id="gSyrup"></div>
       <div class="out"><div><div class="num" style="margin-bottom:6px">Your build</div><div class="recipe" id="recipe">Pick a base to begin</div></div><div class="price" id="bPrice">$&ndash;.&ndash;&ndash;</div></div>
-      <div style="margin-top:14px;font-family:var(--mono);font-size:11px;color:var(--cream-dim);display:flex;align-items:center;gap:8px">&#9889; Cup sleeve <input id="cupName" placeholder="your name" maxlength="16" style="background:none;border:none;border-bottom:1px solid rgba(246,239,207,.3);color:var(--cream);font-family:var(--mono);font-size:12px;padding:3px 4px;flex:1"></div>
+      <div style="margin-top:14px;font-family:var(--mono);font-size:11px;color:var(--cream-dim);display:flex;align-items:center;gap:8px">&#9889; Name on the cup <input id="cupName" placeholder="type it here" maxlength="16" style="background:rgba(246,239,207,.07);border:1px solid rgba(246,239,207,.35);border-radius:3px;color:var(--cream);font-family:var(--mono);font-size:13px;padding:7px 10px;flex:1"></div>
       <div class="btn btn-blue" id="addBuild" style="width:100%;text-align:center;margin-top:16px;opacity:.5;pointer-events:none" onclick="addBuild(this)">Assemble &amp; add to order</div>
     </div>
   </div></div>
@@ -774,8 +777,8 @@ var detailLevel=1,detailFamily=null;
 function buildWheel(){
  var svg=$('#curWheel'),g='',aw=AW(),bt=BT();
  FACTIONS.forEach(function(f,i){var a0=i*aw+1.6,a1=(i+1)*aw-1.6;
-   if(f.mode==='drill'){g+='<path class="wband wdrill" data-fac="'+i+'" d="'+sector(RHUB,RRIM,a0,a1)+'"></path>';}
-   else{f.bands.forEach(function(bn,j){var rIn=RHUB+j*bt,rOut=RHUB+(j+1)*bt;g+='<path class="wband" data-fac="'+i+'" data-lvl="'+j+'" d="'+sector(rIn,rOut,a0,a1)+'"></path>';});}
+   if(f.mode==='drill'){g+='<path class="wband wdrill" data-fac="'+i+'" d="'+sector(RHUB,RRIM,a0,a1)+'"></path>';var rmD=(RHUB+RRIM)/2,midD=(a0+a1)/2,flipD=(midD>95&&midD<265),AD=polar(WCX,WCY,rmD,flipD?a1:a0),BD=polar(WCX,WCY,rmD,flipD?a0:a1),aidD='barcD'+i;g+='<path id="'+aidD+'" d="M'+AD[0]+' '+AD[1]+' A'+rmD+' '+rmD+' 0 0 '+(flipD?0:1)+' '+BD[0]+' '+BD[1]+'" fill="none"></path>';g+='<text class="wbandtxt" dominant-baseline="central"><textPath href="#'+aidD+'" startOffset="50%" text-anchor="middle">tap to mix</textPath></text>';}
+   else{f.bands.forEach(function(bn,j){var rIn=RHUB+j*bt,rOut=RHUB+(j+1)*bt;g+='<path class="wband" data-fac="'+i+'" data-lvl="'+j+'" d="'+sector(rIn,rOut,a0,a1)+'"></path>';var rm=(rIn+rOut)/2,mid2=(a0+a1)/2,flip=(mid2>95&&mid2<265),A2=polar(WCX,WCY,rm,flip?a1:a0),B2=polar(WCX,WCY,rm,flip?a0:a1),aid='barc'+i+'_'+j;g+='<path id="'+aid+'" d="M'+A2[0]+' '+A2[1]+' A'+rm+' '+rm+' 0 0 '+(flip?0:1)+' '+B2[0]+' '+B2[1]+'" fill="none"></path>';g+='<text class="wbandtxt" dominant-baseline="central"><textPath href="#'+aid+'" startOffset="50%" text-anchor="middle">'+bn+'</textPath></text>';});}
    var mid=i*aw+aw/2,lp=polar(WCX,WCY,RRIM+13,mid);g+='<text class="wlabel" x="'+lp[0]+'" y="'+lp[1]+'" text-anchor="middle">'+f.label+'</text>';
  });
  g+='<polygon id="curTrace" points=""></polygon>';
@@ -785,6 +788,8 @@ function buildWheel(){
  g+='<text id="hubHint" class="hubtxt" x="200" y="204" font-family="Space Mono,monospace" font-size="9" letter-spacing="1.5" fill="rgba(246,239,207,.5)">TUNE</text>';
  g+='<g id="detailRing"></g>';
  svg.innerHTML=g;
+ svg.onmousemove=function(e){var pb=e.target.closest('.wband');var hh2=$('#hubHint');if(!hh2)return;if(pb){var fk2=FACTIONS[+pb.dataset.fac];hh2.textContent=fk2.mode==='drill'?'FLAVOR: TAP TO MIX':(fk2.label+': '+String(fk2.bands[+pb.dataset.lvl]).toUpperCase());}else{hh2.textContent=setCountFn()===0?'TUNE':'';}};
+ svg.onmouseleave=function(){var hh2=$('#hubHint');if(hh2)hh2.textContent=setCountFn()===0?'TUNE':'';};
  svg.onclick=function(e){var dd=e.target.closest('.dband,.ddone,.dback');if(dd){onDetailClick(dd);return;}var p=e.target.closest('.wband');if(!p)return;var f=+p.dataset.fac;if(FACTIONS[f].mode==='drill'){openDetail();return;}setWheel(f,+p.dataset.lvl);};
  var rows='';FACTIONS.forEach(function(f,i){if(f.mode==='drill'){rows+='<div class="wrow"><div class="wl">'+f.label+' (tap to combine)</div><div class="wseg wflav" data-fac="'+i+'"></div></div>';}else{rows+='<div class="wrow"><div class="wl">'+f.label+'</div><div class="wseg" data-fac="'+i+'">'+f.bands.map(function(bn,j){return '<button data-lvl="'+j+'">'+bn+'</button>';}).join('')+'</div></div>';}});
  $('#wheelRows').innerHTML=rows;
@@ -844,7 +849,7 @@ function renderHub(o){
   var html='<div class="aura" style="background:radial-gradient(120% 90% at 50% 0,'+o.aura+' 0,transparent 70%);opacity:.85"></div>';
   html+='<div class="persona">'+o.name+'</div><div class="drink">You invented this &middot; a Wired original</div>';
   html+='<div class="why">You patched '+joinNicely(wsel.flavors)+' over your own base. Nobody else is drinking this.</div>';
-  html+='<div class="hcta"><button class="btn btn-blue" onclick="inventAdd(this)">Order my invention</button><button class="btn btn-line" onclick="inventTweak()">Tweak in builder</button><button class="btn btn-line" onclick="patchIt()">&#9889; Patch it</button></div>';
+  html+='<div class="hcta"><button class="btn btn-blue" onclick="inventAdd(this)">Order my invention</button><button class="btn btn-line" onclick="inventTweak()">Tweak in builder</button><button class="btn btn-line" onclick="patchIt()">&#9889; Share it</button></div>';
   html+='<button class="clear" onclick="clearWheel()">Clear the board</button>';
   $('#hubcard').innerHTML=html;return;
  }
@@ -854,7 +859,7 @@ function renderHub(o){
  html+='<div class="persona">'+d.persona+'</div><div class="drink">Your current: '+d.name+' &middot; '+o.pct+'% match</div>';
  html+='<div class="why">'+why+'</div>';
  if(w.indexOf('tea-')===0||w==='tea'){html+='<div class="teastrip">Which tea? '+TEA_VARS.map(function(t){return '<button class="teachip'+(w===t?' on':'')+'" onclick="pickTea(\''+t+'\')">'+DRINKS[t].name.replace(' Tea','')+'</button>';}).join('')+'</div>';}
- if(showCta){html+='<div class="hcta"><button class="btn btn-blue" onclick="quizAdd(\''+w+'\',this)">Order this</button>'+(SEED[w]?'<button class="btn btn-line" onclick="quizTweak(\''+w+'\')">Tweak in builder</button>':'')+'<button class="btn btn-line" onclick="patchIt()">&#9889; Patch it</button></div>';}
+ if(showCta){html+='<div class="hcta"><button class="btn btn-blue" onclick="quizAdd(\''+w+'\',this)">Order this</button>'+(SEED[w]?'<button class="btn btn-line" onclick="quizTweak(\''+w+'\')">Tweak in builder</button>':'')+'<button class="btn btn-line" onclick="patchIt()">&#9889; Share it</button></div>';}
  else{html+='<div style="font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.6);letter-spacing:.08em">Set one more dial to lock it in</div>';}
  html+='<button class="clear" onclick="clearWheel()">Clear the board</button>';
  $('#hubcard').innerHTML=html;
@@ -1052,7 +1057,7 @@ function render(){var box=$('#cartItems');$('#cartDot').textContent=cart.length;
  var sub=cart.reduce(function(a,c){return a+c.price;},0);var disc=memberOn?sub*0.10:0;var tp=(sub-disc)*tipRate;
  $('#sub').textContent='$'+sub.toFixed(2);$('#tipv').textContent='$'+tp.toFixed(2);$('#tot').textContent='$'+(sub-disc+tp).toFixed(2);
  $('#discLn').style.display=disc>0?'flex':'none';$('#discv').textContent='-$'+disc.toFixed(2);
- var rw=$('#rewardWrap');if(sub>0){rw.style.display='block';var goal=25,left=Math.max(0,goal-sub);$('#rewardBar').style.width=Math.min(100,sub/goal*100)+'%';$('#rewardTxt').innerHTML=left>0?('$'+left.toFixed(2)+' from a free makerspace day-pass'):'⚡ Free day-pass unlocked';}else rw.style.display='none';}
+ var rw=$('#rewardWrap');if(sub>0){rw.style.display='block';var goal=50,left=Math.max(0,goal-sub);$('#rewardBar').style.width=Math.min(100,sub/goal*100)+'%';$('#rewardTxt').innerHTML=left>0?('$'+left.toFixed(2)+' from a free makerspace day-pass'):'⚡ Free day-pass unlocked, issued at pickup';}else rw.style.display='none';}
 function openCart(){$('#cart').classList.add('open');$('#scrim').classList.add('open');}
 function closeCart(){$('#cart').classList.remove('open');$('#scrim').classList.remove('open');}
 var sqPayments=null,sqCard=null;
@@ -1066,11 +1071,12 @@ function coErrHide(){$('#coErr').style.display='none';}
 function denverNow(){return new Date(new Date().toLocaleString('en-US',{timeZone:'America/Denver'}));}
 function isOpen(){var d=denverNow(),w=d.getDay(),h=d.getHours()+d.getMinutes()/60;return w>=2&&w<=6&&h>=8&&h<14;}
 var TESTMODE=/[?&]test=1/.test(location.search);
-function updateOpen(){var el=$('#openStatus'),t=$('#openTxt'),cn=$('#closedNote'),cb=$('#checkoutBtn'),op=isOpen();if(el&&t){if(op){el.classList.remove('closed');t.innerHTML='Open now &middot; pickup ~10 min';}else{el.classList.add('closed');t.innerHTML='Closed &middot; open Tue&ndash;Sat 8am&ndash;2pm';}}if(cn)cn.style.display=(op||TESTMODE)?'none':'block';if(cb)cb.style.opacity=(op||TESTMODE)?'':'0.45';}
+var OPEN_OVERRIDE=true; /* TEMPORARY: ordering forced open for the Square connection test. Set to false after the test. */
+function updateOpen(){var el=$('#openStatus'),t=$('#openTxt'),cn=$('#closedNote'),cb=$('#checkoutBtn'),op=isOpen();if(el&&t){if(op){el.classList.remove('closed');t.innerHTML='Open now &middot; pickup ~10 min';}else{el.classList.add('closed');t.innerHTML='Closed &middot; open Tue&ndash;Sat 8am&ndash;2pm';}}if(cn)cn.style.display=(op||TESTMODE||OPEN_OVERRIDE)?'none':'block';if(cb)cb.style.opacity=(op||TESTMODE||OPEN_OVERRIDE)?'':'0.45';}
 updateOpen();setInterval(updateOpen,60000);
 function checkout(){
  if(!cart.length)return;
- if(!isOpen()&&!TESTMODE){toast('We\'re closed. Open Tue-Sat 8am-2pm.');return;}
+ if(!isOpen()&&!TESTMODE&&!OPEN_OVERRIDE){toast('We\'re closed. Open Tue-Sat 8am-2pm.');return;}
  $('#cartMain').style.display='none';$('#coPanel').style.display='block';
  $('#coPay').textContent='Pay '+$('#tot').textContent;
  initSquare().catch(function(e){coErrShow(e.message);});
@@ -1089,6 +1095,7 @@ async function coSubmit(){
   var payload={sourceId:tok.token,customerName:nm,customerPhone:ph,
    items:cart.map(function(l){var mods=l.mod?[{name:l.mod,price:0}]:[];if(memberOn)mods.push({name:'Member 10% - verify at pickup',price:0});return{name:l.name,variant:'',qty:1,unitPrice:+(l.price*mult).toFixed(2),modifiers:mods};}),
    tipAmount:(subD*tipRate).toFixed(2),subtotalCheck:subD.toFixed(2)};
+  if(sub>=50&&payload.items.length){payload.items[0].modifiers.push({name:'FREE DAY PASS EARNED - issue at pickup',price:0});}
   var res=await fetch('/.netlify/functions/process-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
   var data=await res.json();
   if(!res.ok||!data.ok)throw new Error(data.error||'Order failed. Try again or order at the counter.');
