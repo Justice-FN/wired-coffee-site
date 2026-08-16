@@ -171,7 +171,7 @@ section{padding:130px 0;position:relative}
 .wband{stroke:#0c0703;stroke-width:1.5;cursor:pointer;transition:fill .16s,filter .16s;fill:#1c0f07}
 .wband:hover{fill:#2a1810}
 .wband.on{fill:var(--blue);filter:drop-shadow(0 0 5px var(--glow))}
-.wbandtxt{font-family:var(--mono);font-size:7.5px;letter-spacing:.06em;text-transform:uppercase;fill:rgba(246,239,207,.5);pointer-events:none}
+.wbandtxt{font-family:var(--mono);font-size:8px;letter-spacing:.08em;text-transform:uppercase;fill:rgba(246,239,207,.55);pointer-events:none}
 .wband.on+path+.wbandtxt{fill:#04121c;font-weight:700}
 .wlabel{font-family:var(--mono);font-size:11px;letter-spacing:.14em;fill:var(--cream-dim);text-transform:uppercase}
 #curTrace{fill:rgba(31,154,214,.10);stroke:var(--blue-hi);stroke-width:2;stroke-linejoin:round;filter:drop-shadow(0 0 8px var(--glow));pointer-events:none}
@@ -414,7 +414,7 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
 }
 @media(max-width:560px){ #curWheel{display:none} .wheel-rows{display:block} }
 </style>
-</head>
+<style>.hero,.ticker,.craft{display:none!important}header{position:static!important}#perkbar{position:static!important}</style></head>
 <body>
 <div id="grain"></div>
 <div id="perkbar">&#9889; Makerspace members save 10% on every cup. <a onclick="scrollTo2('#story')">Join</a> &middot; <a>Sign in at pickup</a><span class="xp" onclick="document.body.classList.add('noperk')">&times;</span></div>
@@ -622,7 +622,7 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
   <div class="f">
    <div id="cartMain">
     <div class="memrow"><span>Makerspace member? Save 10%</span><div class="sw" id="memSw" onclick="toggleMem()"><i></i></div></div>
-    <div class="tips"><div class="tip" onclick="setTip(this,0)">None</div><div class="tip" onclick="setTip(this,.15)">15%</div><div class="tip on" onclick="setTip(this,.18)">18%</div><div class="tip" onclick="setTip(this,.2)">20%</div></div>
+    <div class="tips"><div class="tip" onclick="setTip(this,.15)">15%</div><div class="tip on" onclick="setTip(this,.18)">18%</div><div class="tip" onclick="setTip(this,.2)">20%</div></div>
     <div class="ln"><span>Subtotal</span><span id="sub">$0.00</span></div>
     <div class="ln disc" id="discLn" style="display:none"><span>Member 10%</span><span id="discv">-$0.00</span></div>
     <div class="ln"><span>Tip</span><span id="tipv">$0.00</span></div>
@@ -641,8 +641,6 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
     <div class="btn btn-blue" id="coPay" style="width:100%;text-align:center;margin-top:12px" onclick="coSubmit()">Pay</div>
     <button onclick="coBack()" style="display:block;margin:12px auto 0;background:none;border:none;color:var(--cream-dim);font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer">&lt; Back to cart</button>
     <div class="note">Secure payment by Square &middot; pickup at the counter in ~10 min</div>
-   </div>
-   <div id="coDone" style="display:none">
    </div>
   </div>
 </div>
@@ -784,7 +782,7 @@ function buildWheel(){
  FACTIONS.forEach(function(f,i){var a0=i*aw+1.6,a1=(i+1)*aw-1.6;
    if(f.mode==='drill'){g+='<path class="wband wdrill" data-fac="'+i+'" d="'+sector(RHUB,RRIM,a0,a1)+'"></path>';var rmD=(RHUB+RRIM)/2,midD=(a0+a1)/2,flipD=(midD>95&&midD<265),AD=polar(WCX,WCY,rmD,flipD?a1:a0),BD=polar(WCX,WCY,rmD,flipD?a0:a1),aidD='barcD'+i;g+='<path id="'+aidD+'" d="M'+AD[0]+' '+AD[1]+' A'+rmD+' '+rmD+' 0 0 '+(flipD?0:1)+' '+BD[0]+' '+BD[1]+'" fill="none"></path>';g+='<text class="wbandtxt" dominant-baseline="central"><textPath href="#'+aidD+'" startOffset="50%" text-anchor="middle">tap to mix</textPath></text>';}
    else{f.bands.forEach(function(bn,j){var rIn=RHUB+j*bt,rOut=RHUB+(j+1)*bt;g+='<path class="wband" data-fac="'+i+'" data-lvl="'+j+'" d="'+sector(rIn,rOut,a0,a1)+'"></path>';var rm=(rIn+rOut)/2,mid2=(a0+a1)/2,flip=(mid2>95&&mid2<265),A2=polar(WCX,WCY,rm,flip?a1:a0),B2=polar(WCX,WCY,rm,flip?a0:a1),aid='barc'+i+'_'+j;g+='<path id="'+aid+'" d="M'+A2[0]+' '+A2[1]+' A'+rm+' '+rm+' 0 0 '+(flip?0:1)+' '+B2[0]+' '+B2[1]+'" fill="none"></path>';g+='<text class="wbandtxt" dominant-baseline="central"><textPath href="#'+aid+'" startOffset="50%" text-anchor="middle">'+bn+'</textPath></text>';});}
-   var mid=i*aw+aw/2,lp=polar(WCX,WCY,RRIM+26,mid);g+='<text class="wlabel" x="'+lp[0]+'" y="'+lp[1]+'" text-anchor="middle">'+f.label+'</text>';
+   var mid=i*aw+aw/2,lp=polar(WCX,WCY,RRIM+13,mid);g+='<text class="wlabel" x="'+lp[0]+'" y="'+lp[1]+'" text-anchor="middle">'+f.label+'</text>';
  });
  g+='<polygon id="curTrace" points=""></polygon>';
  g+='<circle cx="200" cy="200" r="80" fill="#160a04" stroke="rgba(246,239,207,.18)"></circle>';
@@ -1111,7 +1109,7 @@ var io2=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isInt
 
 /* ===== CART ===== */
 var cart=[],tipRate=.18,memberOn=false;
-function add(name,mod,pr,srcEl){var dnA=document.getElementById('coDone');if(dnA&&dnA.style.display==='block'){dnA.style.display='none';dnA.innerHTML='';var cmA=document.getElementById('cartMain');if(cmA)cmA.style.display='';}var ex=null;for(var i=0;i<cart.length;i++){if(cart[i].name===name&&cart[i].mod===mod&&cart[i].price===pr){ex=cart[i];break;}}if(ex){ex.qty=Math.min(20,(ex.qty||1)+1);}else{cart.push({name:name,mod:mod,price:pr,qty:1});}render();fly(srcEl);}
+function add(name,mod,pr,srcEl){var ex=null;for(var i=0;i<cart.length;i++){if(cart[i].name===name&&cart[i].mod===mod&&cart[i].price===pr){ex=cart[i];break;}}if(ex){ex.qty=Math.min(20,(ex.qty||1)+1);}else{cart.push({name:name,mod:mod,price:pr,qty:1});}render();fly(srcEl);}
 function fly(srcEl){var cb=$('#cartDot');if(!cb)return;var to=cb.getBoundingClientRect(),from=srcEl?srcEl.getBoundingClientRect():{left:innerWidth/2,top:innerHeight/2,width:0,height:0};var s=document.createElement('div');s.className='spark';document.body.appendChild(s);var x0=from.left+from.width/2,y0=from.top+from.height/2,x1=to.left+to.width/2,y1=to.top+to.height/2,t0=null,dur=640;function fr(t){if(!t0)t0=t;var p=Math.min((t-t0)/dur,1),e=1-Math.pow(1-p,3),x=x0+(x1-x0)*e,y=y0+(y1-y0)*e-Math.sin(p*Math.PI)*130;s.style.left=x+'px';s.style.top=y+'px';s.style.transform='translate(-50%,-50%) scale('+(1-p*0.5)+')';s.style.opacity=1-p*0.3;if(p<1)requestAnimationFrame(fr);else{s.remove();cb.classList.add('hot');if(cb.animate)cb.animate([{transform:'scale(1)'},{transform:'scale(1.5)'},{transform:'scale(1)'}],{duration:340});}}requestAnimationFrame(fr);}
 function rm(i){cart.splice(i,1);render();}
 function qinc(i){var c=cart[i];if(!c)return;c.qty=Math.min(20,(c.qty||1)+1);render();}
@@ -1143,12 +1141,11 @@ updateOpen();setInterval(updateOpen,60000);
 function checkout(){
  if(!cart.length)return;
  if(!isOpen()&&!TESTMODE&&!OPEN_OVERRIDE){toast('We\'re closed. Open Tue-Sat 8am-2pm.');return;}
- $('#cartMain').style.display='none';var dn0=$('#coDone');if(dn0){dn0.style.display='none';dn0.innerHTML='';}$('#coPanel').style.display='block';
- var pb0=$('#coPay');pb0.style.pointerEvents='';pb0.textContent='Pay '+$('#tot').textContent;
+ $('#cartMain').style.display='none';$('#coPanel').style.display='block';
+ $('#coPay').textContent='Pay '+$('#tot').textContent;
  initSquare().catch(function(e){coErrShow(e.message);});
 }
 function coBack(){$('#coPanel').style.display='none';$('#cartMain').style.display='';coErrHide();}
-function coDoneClose(){var dn=$('#coDone');if(dn){dn.style.display='none';dn.innerHTML='';}$('#cartMain').style.display='';closeCart();}
 async function coSubmit(){
  var nm=$('#coName').value.trim(),ph=$('#coPhone').value.trim();
  if(!nm){coErrShow('Please enter a name for the order.');return;}
@@ -1167,11 +1164,7 @@ async function coSubmit(){
   if(!res.ok||!data.ok)throw new Error(data.error||'Order failed. Try again or order at the counter.');
   var loyLn='';
   if(data.loyalty&&data.loyalty.points>0){loyLn='<div style="font-family:var(--mono);font-size:11.5px;color:#5CC5F2;margin-top:8px">&#9889; +'+data.loyalty.points+' '+(data.loyalty.unit||'points')+' &middot; balance '+data.loyalty.balance+'</div>';if(data.loyalty.tierPoints){var need=data.loyalty.tierPoints-data.loyalty.balance;loyLn+='<div style="font-family:var(--mono);font-size:10.5px;color:var(--cream-dim);margin-top:4px">'+(need>0?(need+' '+(data.loyalty.unit||'points')+' to '+(data.loyalty.tierName||'your next reward')):((data.loyalty.tierName||'Your reward')+' is ready &middot; redeem at the counter'))+'</div>';}}
-  $('#coPanel').style.display='none';
-  var dn=$('#coDone');dn.style.display='block';
-  dn.innerHTML='<div style="text-align:center;padding:26px 6px"><div style="font-family:var(--disp);font-size:26px;color:var(--cream)">&#9889; Order in.</div><div style="font-family:var(--mono);font-size:12px;color:var(--blue-hi);margin:10px 0">Order #'+String(data.orderId||'').slice(-6).toUpperCase()+' &middot; total $'+data.totalDollars+'</div><div style="font-family:var(--body);font-size:16px;color:var(--cream-dim)">Ready at the counter in about 10 minutes.</div>'+loyLn+'<div class="btn btn-line" style="width:100%;text-align:center;margin-top:16px" onclick="coDoneClose()">Start another order</div></div>';
-  try{if(sqCard){sqCard.destroy();}}catch(e2){}
-  sqCard=null;
+  $('#coPanel').innerHTML='<div style="text-align:center;padding:26px 6px"><div style="font-family:var(--disp);font-size:26px;color:var(--cream)">&#9889; Order in.</div><div style="font-family:var(--mono);font-size:12px;color:var(--blue-hi);margin:10px 0">Order #'+String(data.orderId||'').slice(-6).toUpperCase()+' &middot; total $'+data.totalDollars+'</div><div style="font-family:var(--body);font-size:16px;color:var(--cream-dim)">Ready at the counter in about 10 minutes.</div>'+loyLn+'</div>';
   cart=[];render();
  }catch(e){coErrShow(e.message||'Something went wrong.');btn.style.pointerEvents='';btn.textContent='Pay '+$('#tot').textContent;}
 }
