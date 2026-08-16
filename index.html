@@ -31,7 +31,7 @@ h1,h2,h3,h4{font-family:var(--disp);font-weight:800;line-height:.98;letter-spaci
 .btn-blue:hover{background:var(--blue-hi);transform:translateY(-3px)}
 .btn-line{border-color:rgba(246,239,207,.35);color:var(--cream)}
 .btn-line:hover{border-color:var(--cream);background:var(--cream);color:var(--ink)}
-.ctaperk{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--blue-hi);margin-top:12px}
+.ctaperk{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--blue-hi);margin-top:14px;background:rgba(4,18,28,.85);padding:9px 15px;border-radius:2px}
 
 #grain{position:fixed;inset:0;z-index:100;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
@@ -75,6 +75,7 @@ header.scrolled .logo{height:60px}
 .hero .lead{grid-column:1/9}
 .status{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--blue-hi);margin-bottom:28px}
 .status i{width:8px;height:8px;border-radius:50%;background:#57e08a;box-shadow:0 0 10px #57e08a;font-style:normal;animation:beat 2.4s infinite}
+.status.closed i{background:#e08a7a;box-shadow:0 0 10px #e08a7a}
 @keyframes beat{0%,100%{opacity:1}50%{opacity:.35}}
 .hero h1{font-size:clamp(46px,6.6vw,104px);color:var(--cream);letter-spacing:-.035em;font-weight:900}
 .hero h1 em{font-style:italic;font-weight:600;color:var(--blue-hi)}
@@ -387,17 +388,17 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
 <header id="hdr">
   <div class="wrap">
     <a href="#top"><img src="img/logo_white.png" class="logo" alt="Wired Coffee Co."></a>
-    <nav><a onclick="scrollTo2('#current')">Dial in</a><a href="#specials">Specials</a><a href="#craft">Craft</a><a href="#build">Build</a><a href="#menu">Menu</a><a href="#story">Story</a></nav>
+    <nav><a onclick="scrollTo2('#current')">Dial in</a><a href="#craft">Craft</a><a href="#build">Build</a><a href="#menu">Menu</a><a href="#story">Story</a></nav>
     <div class="nav-cta"><div id="cartBtn" onclick="openCart()">Cart <span id="cartDot">0</span></div><a class="btn btn-blue" href="#menu">Order</a><div id="burger" onclick="document.getElementById('mnav').classList.add('open')"><span></span><span></span><span></span></div></div>
   </div>
 </header>
-<div id="mnav"><div class="x" onclick="this.parentNode.classList.remove('open')">&times;</div><a onclick="mnav('#current')">Dial in</a><a onclick="mnav('#specials')">Specials</a><a onclick="mnav('#build')">Build</a><a onclick="mnav('#menu')">Menu</a><a onclick="mnav('#story')">Story</a><a onclick="mnav('#menu')">Order</a></div>
+<div id="mnav"><div class="x" onclick="this.parentNode.classList.remove('open')">&times;</div><a onclick="mnav('#current')">Dial in</a><a onclick="mnav('#build')">Build</a><a onclick="mnav('#menu')">Menu</a><a onclick="mnav('#story')">Story</a><a onclick="mnav('#menu')">Order</a></div>
 
 <section class="hero" id="top">
   <img class="bg" src="img/Wired_Coffee_Steamy_Espresso_1.jpg" alt="">
   <div class="wrap"><div class="grid">
     <div class="lead">
-      <div class="status"><i></i> Open now &middot; pickup ~10 min</div>
+      <div class="status" id="openStatus"><i></i> <span id="openTxt">&hellip;</span></div>
       <div class="num">Cortez Makerspace &nbsp;/&nbsp; Specialty Coffee</div>
       <h1 style="margin-top:18px">Every cup,<br>a current.<br><em>Every sip, a spark.</em></h1>
     </div>
@@ -412,43 +413,19 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
 
 <div class="ticker"><div class="t" id="tick"></div></div>
 
-<section class="specials power" id="specials">
-  <div class="wrap">
-    <div class="head"><span class="num">01 / <b>The signatures</b></span><h2>Three drinks you won&rsquo;t find anywhere else.</h2></div>
-    <div class="sp-grid">
-      <div class="sp-card"><span class="node"></span><div class="ph"><img src="img/Wired_Coffee_Small_Cinnamon_Latte_Blue.jpg" alt="The Flow State"></div>
-        <div class="eq">2x Espresso + Oat + Banana Bread</div><h3>The Flow State</h3><div class="d">Our strongest signature. Double shot, cinnamon on top.</div>
-        <div class="spec"><span class="chip">Current <b>High</b></span><span class="chip">Caffeine <b>150mg</b></span><span class="chip">Temp <b>Hot/Iced</b></span></div>
-        <div class="row"><span class="pr">$5 / $6 / $7</span><span class="add" onclick="add('Flow State','signature',5,this)">Add +</span></div></div>
-      <div class="sp-card"><span class="node"></span><div class="ph"><img src="img/Wired_Coffee_Cinnamon_Latte_Sun_1.jpg" alt="Maple Byte"></div>
-        <div class="eq">Espresso + Whole + Maple + Cinnamon</div><h3>Maple Byte</h3><div class="d">Real maple and cinnamon. The everyday favorite.</div>
-        <div class="spec"><span class="chip">Current <b>Med</b></span><span class="chip">Caffeine <b>75mg</b></span><span class="chip">Temp <b>Hot</b></span></div>
-        <div class="row"><span class="pr">$5 / $6 / $7</span><span class="add" onclick="add('Maple Byte','signature',5,this)">Add +</span></div></div>
-      <div class="sp-card"><span class="node"></span><div class="ph"><img src="img/Wired_Coffee_Small_Cinnamon_Latte_2.jpg" alt="Nutty Professor"></div>
-        <div class="eq">Espresso + Almond + Hazelnut + Cocoa</div><h3>Nutty Professor</h3><div class="d">Almond milk, hazelnut, and a dust of cocoa.</div>
-        <div class="spec"><span class="chip">Current <b>Med</b></span><span class="chip">Caffeine <b>75mg</b></span><span class="chip">Temp <b>Hot</b></span></div>
-        <div class="row"><span class="pr">$5 / $6 / $7</span><span class="add" onclick="add('Nutty Professor','signature',5,this)">Add +</span></div></div>
-    </div>
-  </div>
-</section>
 
 <section class="craft power" id="craft">
   <div class="wrap">
-    <div class="head"><span class="num">02 / <b>The craft</b></span><h2>From bean to cup.</h2></div>
+    <div class="head"><span class="num">01 / <b>The craft</b></span><h2>From bean to cup.</h2></div>
     <div class="forms" id="forms">
       <div class="wire"><div class="fill" id="wireFill"></div></div>
-      <div class="form"><span class="dot"></span><div class="ph"><img src="img/Wired_Coffee_Beans_2.jpg" alt="Beans"></div><div class="n">01 &middot; BEAN</div><h3>Sourced</h3><p>Small-lot beans, roasted for balance.</p></div>
+      <div class="form"><span class="dot"></span><div class="ph"><img src="img/Wired_Coffee_Beans_2.jpg" alt="Beans"></div><div class="n">01 &middot; BEAN</div><h3>Sourced</h3><p>Beans roasted by Fahrenheit Coffee Roasters in Mancos, Colorado.</p></div>
       <div class="form"><span class="dot"></span><div class="ph"><img src="img/Wired_Coffee_Grounds_1.jpg" alt="Grounds"></div><div class="n">02 &middot; GRIND</div><h3>Dialed in</h3><p>Ground to order, extraction on point.</p></div>
       <div class="form"><span class="dot"></span><div class="ph"><img src="img/Wired_Coffee_Steaming_Milk_1.jpg" alt="Pour"></div><div class="n">03 &middot; POUR</div><h3>Poured</h3><p>Micro-foam, steady hand. The spark.</p></div>
     </div>
   </div>
 </section>
 
-<section class="pow power">
-  <img class="bg" src="img/Wired_Coffee_Cracked_Coffee_Sun_1.jpg" alt="">
-  <div class="wrap"><div class="num">Pour of the week</div><h2>The Flow State</h2><div class="tw">Oat &middot; banana bread &middot; double shot</div>
-    <span class="btn btn-blue" onclick="add('Flow State','pour of the week',5,this)">Add to order &mdash; $5</span></div>
-</section>
 
 <!-- CURRENT WHEEL -->
 <section class="current power" id="current">
@@ -472,7 +449,7 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
 <section class="build power" id="build">
   <div class="wrap"><div class="bg-grid">
     <div class="copy">
-      <span class="num">03 / <b>Made here</b></span>
+      <span class="num">02 / <b>Made here</b></span>
       <h2>Build your drink.</h2>
       <p>This is a makerspace. Naturally, you build your own. Set the base and dial the strength; the strength reads in the right unit for each drink.</p>
       <p style="font-size:15px;opacity:.8">Current means strength and body, not just caffeine.</p>
@@ -528,7 +505,7 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
 <section class="menu power" id="menu">
   <div class="wrap">
     <div id="printHead"><img src="img/logo.png" alt="Wired Coffee Co."><div class="ph-l">Wired Coffee Co. &mdash; Every cup, a current.</div><div class="ph-s">209 W Main St, Cortez CO &middot; inside the Cortez Makerspace &middot; Order at the counter or fundamentalneeds.net &middot; Members save 10% &middot; Every cup funds the makerspace</div></div>
-    <div class="head"><span class="num">04 / <b>Order ahead</b></span><h2>The menu.</h2></div>
+    <div class="head"><span class="num">03 / <b>Order ahead</b></span><h2>The menu.</h2></div>
     <div class="menu-cols" id="menuCols"></div>
     <div class="miy">
       <div class="miy-h"><span class="num" style="color:var(--roast);display:block;margin-bottom:8px">Make it yours</span><h3>Every drink, your way.</h3></div>
@@ -542,8 +519,8 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
 <section class="story power" id="story">
   <div class="wrap">
     <div class="lead-grid">
-      <div><span class="num">05 / <b>Our story</b></span><h2>A coffee shop that funds a mission.</h2></div>
-      <div><p>Wired Coffee Co. is the cafe inside the <b style="color:var(--cream)">Cortez Makerspace</b>, one of three programs run by <b style="color:var(--cream)">Fundamental Needs</b>, a 501(c)(3) public charity. Sit down with a latte and you are steps from a laser lab, an off-grid solar-water workshop, and a room of students building their futures.</p><p>Coffee revenue helps keep the space running and seeds the programs next door.</p></div>
+      <div><span class="num">04 / <b>Our story</b></span><h2>A coffee shop that funds a mission.</h2></div>
+      <div><p>Wired Coffee Co. is the cafe inside the <b style="color:var(--cream)">Cortez Makerspace</b>, one of three programs run by <b style="color:var(--cream)">Fundamental Needs</b>, a 501(c)(3) public charity. Sit down with a latte and you are steps from a laser lab, an off-grid solar-water workshop, and a room of students building their futures.</p><p>We give <b style="color:var(--cream)">10% of profits</b> to the Fundamental Needs programs next door, and the shop itself helps keep the makerspace running.</p></div>
     </div>
 
     <div class="impact reveal">
@@ -566,7 +543,7 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
       <div class="cf-h"><span class="num" style="color:var(--blue-hi);display:block;margin-bottom:6px">The circuit</span><h3>Where your cup goes.</h3></div>
       <div class="cf-row" id="cfRow">
         <div class="cf-wire"><div class="cf-fill" id="cfFill"></div></div>
-        <div class="cf-node"><div class="cf-ph"><img src="img/Wired_Coffee_Small_Cinnamon_Latte_Blue.jpg" alt=""></div><div class="cf-n">01</div><p>Your $7 latte</p></div>
+        <div class="cf-node"><div class="cf-ph"><img src="img/Wired_Coffee_Small_Cinnamon_Latte_Blue.jpg" alt=""></div><div class="cf-n">01</div><p>Your $5 latte</p></div>
         <div class="cf-node"><div class="cf-ph"><img src="img/fn/makerspace.jpg" alt=""></div><div class="cf-n">02</div><p>Keeps the lights, lasers, and doors open</p></div>
         <div class="cf-node"><div class="cf-ph"><img src="img/fn/oasis.jpg" alt=""></div><div class="cf-n">03</div><p>So a student gets paid to install clean water on the Nation</p></div>
       </div>
@@ -583,8 +560,8 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
 
 <section class="map power" id="visit" style="padding-top:0">
   <div class="wrap"><div class="mgrid">
-    <div class="info"><span class="num">06 / <b>Find us</b></span><h3>Inside the Cortez Makerspace</h3>
-      <p>209 W Main St<br>Cortez, CO 81321</p><p>Mon&ndash;Sat 7a&ndash;4p &middot; Sun 8a&ndash;2p<br><span style="opacity:.5">(hours placeholder)</span></p>
+    <div class="info"><span class="num">05 / <b>Find us</b></span><h3>Inside the Cortez Makerspace</h3>
+      <p>209 W Main St<br>Cortez, CO 81321</p><p>Tue&ndash;Sat 8a&ndash;2p<br>Closed Sun &amp; Mon</p>
       <a class="btn btn-line" href="https://www.google.com/maps/dir/?api=1&destination=209+W+Main+St+Cortez+CO+81321" target="_blank" style="margin-top:10px">Get directions</a></div>
     <iframe title="Wired Coffee location" loading="lazy" src="https://www.google.com/maps?q=209%20W%20Main%20St,%20Cortez,%20CO%2081321&output=embed"></iframe>
   </div></div>
@@ -594,7 +571,7 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
   <div class="wrap foot">
     <div><img src="img/logo_white.png" class="lw" alt="Wired Coffee Co."><p>Every cup, a current.<br>Every sip, a spark.</p></div>
     <div><h4>Visit</h4><p>209 W Main St<br>Cortez, CO 81321</p><p>Inside the Cortez Makerspace</p></div>
-    <div><h4>Hours</h4><p>Mon&ndash;Sat 7a&ndash;4p</p><p>Sun 8a&ndash;2p</p></div>
+    <div><h4>Hours</h4><p>Tue&ndash;Sat 8a&ndash;2p</p><p>Closed Sun &amp; Mon</p></div>
     <div><h4>Order</h4><a onclick="scrollTo2('#current')">Dial in</a><a href="#build">Build a drink</a><a href="#menu">See the menu</a></div>
   </div>
   <div class="wrap fbot"><span>&copy; 2026 Wired Coffee Co. &middot; a Fundamental Needs project</span><span>Prototype &middot; ordering powered by Wix</span></div>
@@ -607,7 +584,7 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
   <div class="rewardbar" id="rewardWrap" style="display:none"><span id="rewardTxt"></span><div class="rb"><i id="rewardBar"></i></div></div>
   <div class="f">
    <div id="cartMain">
-    <div class="memrow"><span>Makerspace member? 10% off at pickup</span><div class="sw" id="memSw" onclick="toggleMem()"><i></i></div></div>
+    <div class="memrow"><span>Makerspace member? Save 10%</span><div class="sw" id="memSw" onclick="toggleMem()"><i></i></div></div>
     <div class="tips"><div class="tip" onclick="setTip(this,.15)">15%</div><div class="tip on" onclick="setTip(this,.18)">18%</div><div class="tip" onclick="setTip(this,.2)">20%</div></div>
     <div class="ln"><span>Subtotal</span><span id="sub">$0.00</span></div>
     <div class="ln disc" id="discLn" style="display:none"><span>Member 10%</span><span id="discv">-$0.00</span></div>
@@ -995,7 +972,7 @@ function rm(i){cart.splice(i,1);render();}
 function setTip(el,r){tipRate=r;document.querySelectorAll('.tip').forEach(function(t){t.classList.remove('on');});el.classList.add('on');render();}
 function toggleMem(){memberOn=!memberOn;$('#memSw').classList.toggle('on',memberOn);render();}
 function render(){var box=$('#cartItems');$('#cartDot').textContent=cart.length;if(!cart.length){box.innerHTML='<div class="empty">Empty cart. Low voltage.<br>Add something with a spark.</div>';$('#cartDot').classList.remove('hot');}else box.innerHTML=cart.map(function(c,i){return '<div class="ci"><div><div class="nm">'+c.name+'</div>'+(c.mod?'<div class="mod">'+c.mod+'</div>':'')+'<div class="rm" onclick="rm('+i+')">Remove</div></div><div class="pr">$'+c.price.toFixed(2)+'</div></div>';}).join('');
- var sub=cart.reduce(function(a,c){return a+c.price;},0);var disc=0;var tp=sub*tipRate;
+ var sub=cart.reduce(function(a,c){return a+c.price;},0);var disc=memberOn?sub*0.10:0;var tp=(sub-disc)*tipRate;
  $('#sub').textContent='$'+sub.toFixed(2);$('#tipv').textContent='$'+tp.toFixed(2);$('#tot').textContent='$'+(sub-disc+tp).toFixed(2);
  $('#discLn').style.display=disc>0?'flex':'none';$('#discv').textContent='-$'+disc.toFixed(2);
  var rw=$('#rewardWrap');if(sub>0){rw.style.display='block';var goal=25,left=Math.max(0,goal-sub);$('#rewardBar').style.width=Math.min(100,sub/goal*100)+'%';$('#rewardTxt').innerHTML=left>0?('$'+left.toFixed(2)+' from a free makerspace day-pass'):'⚡ Free day-pass unlocked';}else rw.style.display='none';}
@@ -1009,8 +986,13 @@ async function initSquare(){
 }
 function coErrShow(m){var e=$('#coErr');e.textContent=m;e.style.display='block';}
 function coErrHide(){$('#coErr').style.display='none';}
+function denverNow(){return new Date(new Date().toLocaleString('en-US',{timeZone:'America/Denver'}));}
+function isOpen(){var d=denverNow(),w=d.getDay(),h=d.getHours()+d.getMinutes()/60;return w>=2&&w<=6&&h>=8&&h<14;}
+function updateOpen(){var el=$('#openStatus'),t=$('#openTxt');if(!el||!t)return;if(isOpen()){el.classList.remove('closed');t.innerHTML='Open now &middot; pickup ~10 min';}else{el.classList.add('closed');t.innerHTML='Closed &middot; open Tue&ndash;Sat 8am&ndash;2pm';}}
+updateOpen();setInterval(updateOpen,60000);
 function checkout(){
  if(!cart.length)return;
+ if(!isOpen()){toast('We\'re closed. Open Tue-Sat 8am-2pm.');return;}
  $('#cartMain').style.display='none';$('#coPanel').style.display='block';
  $('#coPay').textContent='Pay '+$('#tot').textContent;
  initSquare().catch(function(e){coErrShow(e.message);});
@@ -1025,9 +1007,10 @@ async function coSubmit(){
   var tok=await sqCard.tokenize();
   if(tok.status!=='OK')throw new Error((tok.errors&&tok.errors[0]&&tok.errors[0].message)||'Card details are not valid.');
   var sub=cart.reduce(function(a,c){return a+c.price;},0);
+  var mult=memberOn?0.9:1,subD=sub*mult;
   var payload={sourceId:tok.token,customerName:nm,customerPhone:ph,
-   items:cart.map(function(l){return{name:l.name,variant:'',qty:1,unitPrice:l.price,modifiers:l.mod?[{name:l.mod,price:0}]:[]};}),
-   tipAmount:(sub*tipRate).toFixed(2),subtotalCheck:sub.toFixed(2)};
+   items:cart.map(function(l){var mods=l.mod?[{name:l.mod,price:0}]:[];if(memberOn)mods.push({name:'Member 10% - verify at pickup',price:0});return{name:l.name,variant:'',qty:1,unitPrice:+(l.price*mult).toFixed(2),modifiers:mods};}),
+   tipAmount:(subD*tipRate).toFixed(2),subtotalCheck:subD.toFixed(2)};
   var res=await fetch('/.netlify/functions/process-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
   var data=await res.json();
   if(!res.ok||!data.ok)throw new Error(data.error||'Order failed. Try again or order at the counter.');
