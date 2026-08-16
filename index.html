@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wired Coffee Co.</title>
+<script>document.documentElement.className='js';</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,800;0,900;1,600;1,800&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#1F9AD6; --blue-hi:#5CC5F2; --glow:rgba(31,154,214,.65);
+  --ink:#140803; --ink2:#1e0d05; --espresso:#2a1206; --roast:#8C4722;
+  --cream:#F6EFCF; --cream-dim:rgba(246,239,207,.58); --tan:#EEE1C0;
+  --disp:"Playfair Display",Georgia,serif; --body:"EB Garamond",Georgia,serif; --mono:"Space Mono",ui-monospace,monospace;
+  --perk:38px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--ink);color:var(--cream);font-size:19px;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4{font-family:var(--disp);font-weight:800;line-height:.98;letter-spacing:-.02em}
+.wrap{max-width:1280px;margin:0 auto;padding:0 40px}
+.mono{font-family:var(--mono)}
+.num{font-family:var(--mono);font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--cream-dim)}
+.num b{color:var(--blue-hi);font-weight:400}
+.btn{font-family:var(--mono);font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;padding:17px 30px;cursor:pointer;border:1.5px solid transparent;transition:.28s cubic-bezier(.16,1,.3,1);display:inline-block}
+.btn-blue{background:var(--blue);color:#04121c;font-weight:700;box-shadow:0 8px 34px var(--glow)}
+.btn-blue:hover{background:var(--blue-hi);transform:translateY(-3px)}
+.btn-line{border-color:rgba(246,239,207,.35);color:var(--cream)}
+.btn-line:hover{border-color:var(--cream);background:var(--cream);color:var(--ink)}
+.ctaperk{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--blue-hi);margin-top:12px}
+
+#grain{position:fixed;inset:0;z-index:100;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* perk bar */
+#perkbar{position:fixed;top:0;left:0;right:0;height:var(--perk);z-index:56;display:flex;align-items:center;justify-content:center;gap:14px;background:rgba(31,154,214,.13);border-bottom:1px solid rgba(31,154,214,.45);font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--cream)}
+#perkbar a{color:var(--blue-hi);border-bottom:1px solid rgba(92,197,242,.5);cursor:pointer}
+#perkbar .xp{position:absolute;right:16px;cursor:pointer;opacity:.6;font-size:14px}
+.noperk #perkbar{display:none}
+
+#cond{position:fixed;top:0;left:38px;width:2px;height:100vh;z-index:40;background:rgba(246,239,207,.09)}
+#condFill{position:absolute;top:0;left:0;width:100%;height:0;background:linear-gradient(var(--blue-hi),var(--blue))}
+#condPulse{position:fixed;left:35px;top:0;width:8px;height:8px;border-radius:50%;background:var(--blue-hi);box-shadow:0 0 16px 4px var(--glow);z-index:41;transform:translateY(-4px)}
+@media(max-width:960px){#cond,#condPulse{display:none}}
+
+header{position:fixed;top:var(--perk);left:0;right:0;z-index:50;padding:30px 0;transition:.35s}
+.noperk header{top:0}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px}
+header .logo{height:78px;transition:.35s;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5))}
+header nav{display:flex;gap:34px;font-family:var(--mono);font-size:14px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+header nav a{opacity:.86;transition:.2s;cursor:pointer;position:relative;padding-bottom:4px}
+header nav a::after{content:"";position:absolute;left:0;bottom:0;width:0;height:2px;background:var(--blue-hi);transition:.28s}
+header nav a:hover{opacity:1}header nav a:hover::after{width:100%}
+header.scrolled{background:rgba(20,8,3,.9);backdrop-filter:blur(16px);padding:14px 0;border-bottom:1px solid rgba(246,239,207,.07)}
+header.scrolled .logo{height:60px}
+.nav-cta{display:flex;align-items:center;gap:22px}
+#cartBtn{font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.1em;cursor:pointer;display:flex;align-items:center;gap:8px;text-transform:uppercase;opacity:.9}
+#cartBtn:hover{opacity:1}
+#cartDot{min-width:22px;height:22px;padding:0 7px;display:grid;place-items:center;border-radius:20px;border:1px solid rgba(246,239,207,.3);font-size:12px;transition:.2s}
+#cartDot.hot{background:var(--blue);color:#04121c;border-color:var(--blue);box-shadow:0 0 14px var(--glow)}
+.nav-cta .btn-blue{padding:16px 34px;font-size:13px}
+#burger{display:none;flex-direction:column;gap:5px;cursor:pointer}
+#burger span{width:26px;height:2px;background:var(--cream)}
+
+.hero{position:relative;height:100vh;min-height:660px;max-height:1000px;display:flex;align-items:flex-end;overflow:hidden}
+.hero .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(15,6,2,.96) 0%,rgba(15,6,2,.7) 34%,rgba(15,6,2,.28) 62%,rgba(15,6,2,.55) 100%)}
+.hero::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(0deg,rgba(15,6,2,.85),transparent 45%)}
+.hero .wrap{position:relative;z-index:2;width:100%;padding-bottom:58px;padding-top:40px}
+.hero .grid{display:grid;grid-template-columns:repeat(12,1fr)}
+.hero .lead{grid-column:1/9}
+.status{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--blue-hi);margin-bottom:28px}
+.status i{width:8px;height:8px;border-radius:50%;background:#57e08a;box-shadow:0 0 10px #57e08a;font-style:normal;animation:beat 2.4s infinite}
+@keyframes beat{0%,100%{opacity:1}50%{opacity:.35}}
+.hero h1{font-size:clamp(46px,6.6vw,104px);color:var(--cream);letter-spacing:-.035em;font-weight:900}
+.hero h1 em{font-style:italic;font-weight:600;color:var(--blue-hi)}
+.hero p.sub{font-size:clamp(19px,1.9vw,24px);max-width:44ch;margin:26px 0 32px;color:var(--cream-dim);grid-column:1/8}
+.hero .cta{display:flex;gap:14px;flex-wrap:wrap;grid-column:1/13;align-items:center}
+
+.reveal{opacity:1}
+.js .reveal{opacity:0;transform:translateY(38px);transition:.9s cubic-bezier(.16,1,.3,1)}
+.js .reveal.in{opacity:1;transform:none}
+.js .hero .status,.js .hero h1,.js .hero p.sub,.js .hero .cta{opacity:0;transform:translateY(26px);animation:rise .9s cubic-bezier(.16,1,.3,1) forwards}
+.js .hero h1{animation-delay:.16s}.js .hero p.sub{animation-delay:.4s}.js .hero .cta{animation-delay:.54s}
+@keyframes rise{to{opacity:1;transform:none}}
+.js .power{filter:saturate(.62) brightness(.9);transition:filter 1.1s ease}
+.js .power.lit{filter:none}
+
+section{padding:130px 0;position:relative}
+.head{margin-bottom:70px}
+.head .num{display:block;margin-bottom:20px}
+.head h2{font-size:clamp(40px,6vw,86px);color:var(--cream);max-width:16ch}
+
+.ticker{background:var(--ink2);border-top:1px solid rgba(31,154,214,.28);border-bottom:1px solid rgba(31,154,214,.28);overflow:hidden;white-space:nowrap;padding:15px 0}
+.ticker .t{display:inline-block;font-family:var(--mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--cream-dim);will-change:transform}
+.ticker .z{color:var(--blue-hi);margin:0 22px}
+
+.specials{background:var(--ink)}
+.sp-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:30px;align-items:start}
+.sp-card{grid-column:span 4;position:relative}
+.sp-card:nth-child(2){transform:translateY(46px)}
+.sp-card .ph{aspect-ratio:4/5;overflow:hidden;position:relative;border:1px solid rgba(246,239,207,.09)}
+.sp-card .ph img{width:100%;height:100%;object-fit:cover;transition:.6s}
+.sp-card:hover .ph img{transform:scale(1.05)}
+.sp-card .node{position:absolute;top:-5px;left:-5px;width:10px;height:10px;border-radius:50%;background:rgba(246,239,207,.25);transition:.5s}
+.sp-card.lit .node{background:var(--blue-hi);box-shadow:0 0 16px 3px var(--glow)}
+.sp-card .eq{font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--blue-hi);margin:20px 0 8px;text-transform:uppercase}
+.sp-card h3{font-size:32px;color:var(--cream);margin-bottom:12px}
+.sp-card .d{color:var(--cream-dim);font-size:16.5px}
+.sp-card .row{display:flex;align-items:center;justify-content:space-between;margin-top:18px;border-top:1px solid rgba(246,239,207,.1);padding-top:16px}
+.sp-card .pr{font-family:var(--mono);font-size:15px}
+.sp-card .add{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;border:1.5px solid rgba(246,239,207,.3);color:var(--cream);padding:10px 18px;cursor:pointer;transition:.22s;background:none}
+.sp-card .add:hover{border-color:var(--blue);color:var(--blue-hi)}
+.spec{margin-top:14px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--cream-dim)}
+.spec .chip{display:inline-block;border:1px solid rgba(246,239,207,.16);padding:5px 9px;margin:0 5px 6px 0;border-radius:2px}
+.spec .chip b{color:var(--blue-hi);font-weight:400}
+
+.craft{background:var(--ink2)}
+.forms{display:grid;grid-template-columns:repeat(3,1fr);position:relative;gap:0;max-width:1080px;margin:0 auto}
+.wire{position:absolute;top:96px;left:16.6%;right:16.6%;height:2px;background:rgba(246,239,207,.14);z-index:0}
+.wire .fill{position:absolute;inset:0;width:0;background:linear-gradient(90deg,var(--blue),var(--blue-hi));box-shadow:0 0 10px var(--glow)}
+.form{text-align:center;padding:0 24px;position:relative;z-index:1}
+.form .ph{width:192px;height:192px;margin:0 auto 26px;border-radius:50%;overflow:hidden;border:2px solid rgba(246,239,207,.15);transition:.6s;filter:grayscale(.85) brightness(.8)}
+.form.lit .ph{filter:none;border-color:var(--blue)}
+.form .ph img{width:100%;height:100%;object-fit:cover}
+.form .n{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--cream-dim);margin-bottom:14px}
+.form.lit .n{color:var(--blue-hi)}
+.form h3{font-size:27px;color:var(--cream);margin-bottom:8px}
+.form p{color:var(--cream-dim);font-size:16px}
+.form .dot{position:absolute;top:90px;left:50%;transform:translateX(-50%);width:12px;height:12px;border-radius:50%;background:rgba(246,239,207,.22);transition:.4s;z-index:2}
+.form.lit .dot{background:var(--blue-hi);box-shadow:0 0 16px 4px var(--glow)}
+
+.pow{height:78vh;min-height:460px;max-height:680px;display:flex;align-items:center;position:relative;overflow:hidden}
+.pow .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pow::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,8,3,.9),rgba(20,8,3,.2))}
+.pow .wrap{position:relative;z-index:2}.pow .num{color:var(--blue-hi)}
+.pow h2{font-size:clamp(40px,6.5vw,92px);color:var(--cream);margin:16px 0 10px;max-width:14ch}
+.pow .tw{font-family:var(--mono);font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cream-dim);margin-bottom:30px}
+
+/* CURRENT WHEEL */
+.current{background:radial-gradient(120% 80% at 50% -10%,#25120820 0,var(--ink) 60%)}
+.cur-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.current .copy .num{color:var(--blue-hi)}
+.current .copy h2{font-size:clamp(38px,4.6vw,68px);color:var(--cream);margin:16px 0 18px}
+.current .copy p{color:var(--cream-dim);font-size:19px;margin-bottom:14px}
+.wheelbox{position:relative;display:flex;flex-direction:column;align-items:center}
+#curWheel{width:100%;max-width:460px}
+.wband{stroke:#0c0703;stroke-width:1.5;cursor:pointer;transition:fill .16s,filter .16s;fill:#1c0f07}
+.wband:hover{fill:#2a1810}
+.wband.on{fill:var(--blue);filter:drop-shadow(0 0 5px var(--glow))}
+.wlabel{font-family:var(--mono);font-size:11px;letter-spacing:.14em;fill:var(--cream-dim);text-transform:uppercase}
+#curTrace{fill:rgba(31,154,214,.10);stroke:var(--blue-hi);stroke-width:2;stroke-linejoin:round;filter:drop-shadow(0 0 8px var(--glow));pointer-events:none}
+#curNeedle{stroke:var(--blue-hi);stroke-width:2;opacity:.8;pointer-events:none}
+.hubtxt{text-anchor:middle}
+.wheel-rows{display:none;width:100%;max-width:460px}
+.wrow{margin-bottom:14px}
+.wrow .wl{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--cream-dim);margin-bottom:7px}
+.wseg{display:flex;gap:6px}
+.wseg button{flex:1;font-family:var(--mono);font-size:11px;padding:9px 4px;border:1px solid rgba(246,239,207,.2);background:none;color:var(--cream-dim);cursor:pointer}
+.wseg button.on{background:var(--blue);color:#04121c;border-color:var(--blue);font-weight:700}
+.hubcard{margin-top:26px;text-align:center;min-height:150px;position:relative;padding:22px;border:1px solid rgba(246,239,207,.12);width:100%;max-width:460px;overflow:hidden}
+.hubcard .aura{position:absolute;inset:-40px;opacity:0;transition:.6s;z-index:0}
+.hubcard>*{position:relative;z-index:1}
+.hubcard .empty{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--cream-dim);text-transform:uppercase;padding:30px 0}
+.hubcard .persona{font-family:var(--disp);font-style:italic;font-weight:700;font-size:34px;color:#fff}
+.hubcard .drink{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#fff;opacity:.85;margin:4px 0 12px}
+.hubcard .match{font-family:var(--disp);font-size:40px;color:#fff}
+.hubcard .why{font-size:16px;font-style:italic;color:rgba(255,255,255,.9);margin:10px auto;max-width:34ch}
+.hubcard .hcta{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.hubcard .hcta .btn-line{border-color:rgba(255,255,255,.6);color:#fff;background:rgba(8,3,1,.3)}
+.hubcard .clear{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--cream-dim);cursor:pointer;background:none;border:none;margin-top:12px}
+.deeper{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--blue-hi);background:none;border:1px solid rgba(31,154,214,.45);padding:11px 20px;cursor:pointer;transition:.2s}
+.deeper:hover{background:rgba(31,154,214,.12)}
+.wdrill{fill:#160c06}
+.wdrill.on{fill:var(--blue);filter:drop-shadow(0 0 6px var(--glow))}
+.dband{fill:#160c06;stroke:#0c0703;stroke-width:1;cursor:pointer;transition:fill .16s}
+.dband:hover{fill:#241408}
+.dband.on{fill:var(--blue);filter:drop-shadow(0 0 6px var(--glow))}
+.dlabel{font-family:var(--mono);font-size:8px;fill:var(--cream-dim);pointer-events:none;text-transform:uppercase;letter-spacing:.02em}
+.current.drilling .wband:not(.wdrill){opacity:.28;transition:.3s}
+.current.drilling #curTrace{opacity:.12}
+.current.drilling .wlabel{opacity:.12}
+.teastrip{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.85);margin:8px 0 2px;letter-spacing:.03em}
+.teachip{font-family:var(--mono);font-size:10.5px;margin:5px 3px 0;padding:6px 9px;border:1px solid rgba(255,255,255,.4);background:none;color:#fff;cursor:pointer;border-radius:2px}
+.teachip.on{background:rgba(255,255,255,.92);color:var(--ink);border-color:#fff}
+.wseg.wflav{flex-wrap:wrap}
+
+/* build workbench */
+.build{background:radial-gradient(130% 90% at 88% 0,#33170a 0,var(--ink) 62%)}
+.bg-grid{display:grid;grid-template-columns:4fr 4.4fr 4fr;gap:40px;align-items:center}
+.build .copy .num{color:var(--blue-hi)}
+.build .copy h2{font-size:clamp(38px,4.4vw,64px);color:var(--cream);margin:18px 0 20px}
+.build .copy p{color:var(--cream-dim);margin-bottom:14px;font-size:18px}
+.cupwrap{position:relative;border:1px solid rgba(246,239,207,.12);background:
+  linear-gradient(rgba(92,197,242,.05) 1px,transparent 1px) 0 0/26px 26px,
+  linear-gradient(90deg,rgba(92,197,242,.05) 1px,transparent 1px) 0 0/26px 26px, #12070330;padding:22px;overflow:hidden}
+.cupwrap .bpnum{position:absolute;font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--cream-dim);opacity:.7}
+.cupwrap .bp-tl{top:10px;left:12px}.cupwrap .bp-tr{top:10px;right:12px}.cupwrap .bp-br{bottom:10px;right:12px}
+#cupSvg{width:100%;max-width:300px;margin:0 auto;display:block;overflow:visible}
+.inst{background:linear-gradient(180deg,#241206,#180b04);border:1px solid rgba(246,239,207,.1);padding:28px}
+.chip{font-family:var(--mono);font-size:12px;padding:9px 13px;border:1.5px solid rgba(246,239,207,.22);color:var(--cream-dim);cursor:pointer;transition:.2s;background:none}
+.chip:hover{border-color:var(--blue-hi);color:var(--cream)}
+.chip.on{background:var(--blue);border-color:var(--blue);color:#04121c;font-weight:700}
+.chip .dl{opacity:.7;font-size:10.5px}
+.faders{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:4px 0 18px}
+.fader{background:rgba(246,239,207,.03);border:1px solid rgba(246,239,207,.08);padding:14px}
+.fader .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--cream-dim);display:flex;justify-content:space-between;margin-bottom:12px}
+.fader .lbl b{color:var(--blue-hi);font-weight:400}
+.stepper{display:flex;align-items:center;border:1px solid rgba(246,239,207,.16)}
+.stepper button{flex:0 0 36px;height:38px;background:none;border:none;color:var(--cream);font-family:var(--mono);font-size:18px;cursor:pointer}
+.stepper button:hover{background:rgba(31,154,214,.18);color:var(--blue-hi)}
+.stepper .v{flex:1;text-align:center;font-family:var(--mono);font-size:13px}
+.fader .cap{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--cream-dim);opacity:.6;margin-top:8px;text-align:center}
+.meter{display:flex;gap:4px;margin-top:10px}
+.meter span{flex:1;height:7px;background:rgba(246,239,207,.12);transition:.2s}
+.meter span.on{background:var(--blue-hi);box-shadow:0 0 8px var(--glow)}
+.inst .glabel{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--cream-dim);margin:16px 0 10px;display:flex;justify-content:space-between;align-items:center}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.toggle{display:inline-flex;border:1px solid rgba(246,239,207,.2)}
+.toggle button{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.1em;padding:8px 16px;background:none;border:none;color:var(--cream-dim);cursor:pointer}
+.toggle button.on{background:var(--blue);color:#04121c;font-weight:700}
+.toggle button:disabled{opacity:.3;cursor:not-allowed}
+.inst .out{margin-top:22px;padding-top:20px;border-top:1px solid rgba(246,239,207,.12);display:flex;align-items:flex-end;justify-content:space-between;gap:16px}
+.inst .recipe{font-family:var(--body);font-size:18px;font-style:italic;color:var(--cream);max-width:62%}
+.inst .price{font-family:var(--disp);font-size:44px;color:var(--blue-hi);line-height:.9}
+
+.menu{background:var(--cream);color:var(--ink)}
+.menu .head h2{color:var(--ink)}.menu .num{color:var(--roast)}
+.menu-cols{display:grid;grid-template-columns:1fr 1fr;gap:8px 76px;max-width:1040px}
+.mcat h3{font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--blue);border-bottom:2px solid rgba(31,154,214,.4);padding-bottom:11px;margin:34px 0 12px}
+.mcat:first-child h3{margin-top:0}
+.mrow{padding:11px 0;border-bottom:1px solid rgba(76,26,5,.08);cursor:pointer}
+.mrow .top{display:flex;align-items:baseline;gap:11px}
+.mrow .n{font-family:var(--disp);font-size:22px;font-weight:700}
+.mrow .lead{flex:1;border-bottom:1px dotted rgba(76,26,5,.35);transform:translateY(-6px)}
+.mrow .p{font-family:var(--mono);font-size:15px;color:var(--espresso)}
+.mrow .eq{font-family:var(--mono);font-size:12.5px;color:var(--roast);margin-top:4px}
+.mrow .exp{max-height:0;overflow:hidden;transition:.35s;font-family:var(--mono);font-size:11.5px;color:var(--roast)}
+.mrow.open .exp{max-height:60px;margin-top:8px}.mrow .exp b{color:var(--blue)}
+.menu-foot{margin-top:52px;font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--roast);display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.miy{margin-top:58px;border-top:1px solid rgba(76,26,5,.2);padding-top:36px}
+.miy-h h3{font-size:clamp(26px,3vw,42px);color:var(--ink)}
+.miy-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin:28px 0}
+.miy-card{border:1px solid rgba(76,26,5,.18);padding:16px 18px;background:rgba(255,255,255,.35)}
+.miy-card .ic{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.miy-card .ic svg{color:var(--roast);flex:0 0 22px}
+.miy-card .ic b{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+.miy-card .opts{font-family:var(--body);font-size:16px;color:var(--espresso);line-height:1.55}
+.miy-card .opts .pl{color:var(--blue);font-family:var(--mono);font-size:11px}
+.miy-card .note{font-family:var(--mono);font-size:10.5px;color:var(--roast);margin-top:8px;letter-spacing:.02em;text-transform:uppercase}
+.miy-foot{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--roast);text-align:center}
+#printHead{display:none}
+@media print{
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  @page{size:Letter portrait;margin:.5in}
+  body{background:#fff!important;color:#1a0f08!important;font-size:11pt;overflow:visible}
+  #grain,#perkbar,#cond,#condPulse,header,#mnav,.hero,.ticker,.specials,.craft,.pow,.current,.build,.story,.order,.map,footer,.proto,.scrim,.cart,#burger,.impact,.cupflow{display:none!important}
+  .menu{background:#fff!important;color:#000!important;padding:0!important;display:block}
+  .menu .head{margin-bottom:12px}.menu .head h2,.menu .num{color:#000!important}
+  #printHead{display:block!important;text-align:center;margin-bottom:16px;border-bottom:2px solid #1F9AD6;padding-bottom:12px}
+  #printHead img{height:52px;margin:0 auto 8px}
+  #printHead .ph-l{font-family:var(--disp);font-size:15pt;color:#1a0f08}
+  #printHead .ph-s{font-family:var(--mono);font-size:8pt;color:#4c1a05;margin-top:4px}
+  .menu-cols{grid-template-columns:1fr 1fr!important;gap:0 34px!important}
+  .mcat h3{color:#1F9AD6!important}
+  .mcat,.mrow,.miy-card{break-inside:avoid}
+  .mrow .exp{max-height:none!important;overflow:visible!important;margin-top:3px!important;color:#4c1a05!important}
+  .mrow .lead{border-bottom:1px dotted #999}
+  .miy{border:1px solid #000;padding:12px;margin-top:20px}
+  .miy-grid{grid-template-columns:repeat(3,1fr)!important;gap:10px!important}
+  .btn,#printBtn{display:none!important}
+  a[href]:after{content:""!important}
+}
+
+.story{background:var(--ink)}
+.story .lead-grid{display:grid;grid-template-columns:7fr 5fr;gap:60px;align-items:end;margin-bottom:70px}
+.story h2{font-size:clamp(38px,5vw,72px);color:var(--cream);margin:18px 0 20px;max-width:15ch}
+.story .lead-grid p{color:var(--cream-dim);font-size:20px;margin-bottom:14px}
+.progs{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.prog .ph{aspect-ratio:3/4;overflow:hidden;border:1px solid rgba(246,239,207,.1)}
+.prog .ph img{width:100%;height:100%;object-fit:cover;transition:.6s}.prog:hover .ph img{transform:scale(1.05)}
+.prog .k{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue-hi);margin:18px 0 8px}
+.prog h3{font-size:26px;color:var(--cream);margin-bottom:8px}.prog p{color:var(--cream-dim);font-size:16px}
+.fund{margin-top:64px;border-top:1px solid rgba(246,239,207,.12);padding-top:40px;display:flex;gap:40px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+.fund p{font-family:var(--disp);font-size:clamp(22px,2.4vw,32px);font-style:italic;color:var(--cream);max-width:22ch}
+.fund .badge{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--cream-dim);text-align:right;line-height:2}
+.impact{position:relative;margin:56px 0 66px;border:1px solid rgba(246,239,207,.12);overflow:hidden}
+.impact .impbg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.12}
+.impgrid{position:relative;display:grid;grid-template-columns:repeat(4,1fr)}
+.impgrid .stat{padding:34px 20px;text-align:center;border-left:1px solid rgba(246,239,207,.1)}
+.impgrid .stat:first-child{border-left:none}
+.impgrid .stat b{font-family:var(--disp);font-size:clamp(38px,4.6vw,60px);color:var(--blue-hi);line-height:1;display:block}
+.impgrid .stat span{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--cream-dim);margin-top:8px;display:block}
+.cupflow{margin-top:10px}
+.cupflow .cf-h{text-align:center;margin-bottom:46px}
+.cupflow .cf-h h3{font-size:clamp(30px,4vw,52px);color:var(--cream)}
+.cf-row{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;position:relative;max-width:1000px;margin:0 auto}
+.cf-wire{position:absolute;top:70px;left:16.6%;right:16.6%;height:2px;background:rgba(246,239,207,.14);z-index:0}
+.cf-fill{position:absolute;inset:0;width:0;background:linear-gradient(90deg,var(--blue),var(--blue-hi));box-shadow:0 0 10px var(--glow);transition:width 1.3s ease}
+.cf-node{text-align:center;position:relative;z-index:1;padding:0 14px}
+.cf-ph{width:140px;height:140px;margin:0 auto 18px;border-radius:50%;overflow:hidden;border:2px solid rgba(31,154,214,.45)}
+.cf-ph img{width:100%;height:100%;object-fit:cover}
+.cf-n{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--blue-hi);margin-bottom:8px}
+.cf-node p{color:var(--cream-dim);font-size:16px;max-width:24ch;margin:0 auto}
+@media(max-width:760px){.impgrid{grid-template-columns:1fr 1fr}.impgrid .stat:nth-child(3){border-left:none}.cf-row{grid-template-columns:1fr;gap:36px}.cf-wire{display:none}}
+
+.order{background:var(--blue);color:#04121c;text-align:center;position:relative;overflow:hidden}
+.order h2{font-size:clamp(40px,6vw,84px);margin-bottom:14px;color:#04121c}
+.order p{font-size:21px;margin-bottom:28px;color:#08202f;opacity:.85}
+.order .btn-line{border-color:#04121c;color:#04121c}.order .btn-line:hover{background:#04121c;color:var(--blue-hi)}
+.order .ctaperk{color:#08202f}
+
+.map .mgrid{display:grid;grid-template-columns:4fr 8fr;align-items:stretch;border:1px solid rgba(246,239,207,.12)}
+.map .info{padding:48px;background:var(--ink2)}.map .info .num{color:var(--blue-hi)}
+.map .info h3{font-size:38px;color:var(--cream);margin:14px 0 18px}.map .info p{color:var(--cream-dim);margin-bottom:14px}
+.map iframe{width:100%;height:100%;min-height:420px;border:0;filter:grayscale(.3) contrast(1.05)}
+
+footer{background:#0f0602;padding:70px 0 34px}
+.foot{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:34px}
+footer .lw{height:64px;margin-bottom:18px}
+footer h4{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--blue-hi);margin-bottom:14px}
+footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
+.fbot{border-top:1px solid rgba(246,239,207,.1);margin-top:46px;padding-top:22px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;opacity:.5;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+
+.scrim{position:fixed;inset:0;background:rgba(8,3,1,.62);opacity:0;pointer-events:none;transition:.3s;z-index:80}
+.scrim.open{opacity:1;pointer-events:auto}
+.cart{position:fixed;top:0;right:0;height:100%;width:412px;max-width:90vw;background:var(--espresso);z-index:90;transform:translateX(100%);transition:.45s cubic-bezier(.16,1,.3,1);display:flex;flex-direction:column;box-shadow:-30px 0 80px rgba(0,0,0,.5)}
+.cart.open{transform:none}
+.cart .top{padding:24px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(246,239,207,.12)}
+.cart .top h3{font-size:25px;color:var(--cream)}.cart .x{cursor:pointer;font-size:28px;opacity:.7}
+.cart .items{flex:1;overflow:auto;padding:6px 24px}
+.ci{display:flex;justify-content:space-between;gap:10px;padding:16px 0;border-bottom:1px solid rgba(246,239,207,.08)}
+.ci .nm{font-family:var(--disp);font-size:19px;color:var(--cream)}
+.ci .mod{font-family:var(--mono);font-size:11px;color:var(--cream-dim);margin-top:3px}
+.ci .rm{font-family:var(--mono);font-size:10px;color:var(--roast);cursor:pointer;text-transform:uppercase;letter-spacing:.1em;margin-top:5px}
+.ci .pr{font-family:var(--mono);font-size:15px;color:var(--blue-hi)}
+.cart .empty{text-align:center;padding:64px 20px;opacity:.5;font-style:italic}
+.cart .rewardbar{margin:12px 24px 0;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--cream-dim)}
+.cart .rb{height:5px;background:rgba(246,239,207,.12);margin-top:7px;overflow:hidden}
+.cart .rb i{display:block;height:100%;width:0;background:var(--blue-hi);box-shadow:0 0 8px var(--glow);transition:.4s}
+.cart .f{padding:18px 24px;border-top:1px solid rgba(246,239,207,.12)}
+.memrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;font-family:var(--mono);font-size:11.5px;color:var(--cream);letter-spacing:.04em}
+.sw{width:42px;height:22px;border-radius:20px;border:1px solid rgba(246,239,207,.3);position:relative;cursor:pointer;transition:.2s;flex:0 0 42px}
+.sw i{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--cream-dim);transition:.2s}
+.sw.on{background:var(--blue);border-color:var(--blue)}.sw.on i{left:22px;background:#04121c}
+.cart .tips{display:flex;gap:8px;margin-bottom:14px}
+.cart .tip{flex:1;text-align:center;font-family:var(--mono);font-size:13px;padding:10px 0;border:1px solid rgba(246,239,207,.28);cursor:pointer}
+.cart .tip.on{background:var(--blue);color:#04121c;border-color:var(--blue);font-weight:700}
+.cart .ln{display:flex;justify-content:space-between;font-family:var(--mono);font-size:14px;margin-bottom:7px;opacity:.85}
+.cart .ln.disc{color:var(--blue-hi);opacity:1}
+.cart .tot{display:flex;justify-content:space-between;font-family:var(--disp);font-size:26px;color:var(--cream);margin:10px 0 16px}
+.cart .note{font-family:var(--mono);font-size:10px;opacity:.5;text-align:center;margin-top:10px}
+
+.spark{position:fixed;z-index:120;width:14px;height:14px;border-radius:50%;background:var(--blue-hi);box-shadow:0 0 16px 5px var(--glow);pointer-events:none}
+.proto{position:fixed;left:16px;bottom:16px;z-index:70;background:var(--espresso);color:var(--cream);font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;padding:8px 12px;text-transform:uppercase;border-left:3px solid var(--blue-hi);opacity:.9}
+#mnav{position:fixed;inset:0;z-index:58;background:rgba(15,6,2,.97);backdrop-filter:blur(10px);display:none;flex-direction:column;align-items:center;justify-content:center;gap:26px}
+#mnav.open{display:flex}
+#mnav a{font-family:var(--mono);font-size:22px;letter-spacing:.1em;text-transform:uppercase;color:var(--cream);cursor:pointer}
+#mnav .x{position:absolute;top:26px;right:30px;font-size:30px;cursor:pointer}
+
+@media(prefers-reduced-motion:reduce){.js .power{filter:none}*{animation:none!important;scroll-behavior:auto}.js .reveal{opacity:1;transform:none}}
+@media(max-width:960px){
+  .wrap{padding:0 22px}
+  header nav,.nav-cta .btn-blue{display:none}#burger{display:flex}
+  .hero .lead,.hero p.sub{grid-column:1/13}
+  .sp-card{grid-column:span 12;max-width:440px;margin:0 auto}.sp-card:nth-child(2){transform:none}
+  .forms{grid-template-columns:1fr;gap:44px}.wire{display:none}.form .dot{display:none}
+  .cur-grid,.bg-grid{grid-template-columns:1fr;gap:34px}
+  .menu-cols{grid-template-columns:1fr}
+  .story .lead-grid{grid-template-columns:1fr;gap:24px}.progs{grid-template-columns:1fr;max-width:420px;margin:0 auto}
+  .map .mgrid{grid-template-columns:1fr}
+  .foot{grid-template-columns:1fr 1fr}
+  section{padding:84px 0}
+}
+@media(max-width:560px){ #curWheel{display:none} .wheel-rows{display:block} }
+</style>
+</head>
+<body>
+<div id="grain"></div>
+<div id="perkbar">&#9889; Makerspace members save 10% on every cup. <a onclick="scrollTo2('#story')">Join</a> &middot; <a>Sign in at pickup</a><span class="xp" onclick="document.body.classList.add('noperk')">&times;</span></div>
+<div id="cond"><div id="condFill"></div></div><div id="condPulse"></div>
+
+<header id="hdr">
+  <div class="wrap">
+    <a href="#top"><img src="img/logo_white.png" class="logo" alt="Wired Coffee Co."></a>
+    <nav><a onclick="scrollTo2('#current')">Dial in</a><a href="#specials">Specials</a><a href="#craft">Craft</a><a href="#build">Build</a><a href="#menu">Menu</a><a href="#story">Story</a></nav>
+    <div class="nav-cta"><div id="cartBtn" onclick="openCart()">Cart <span id="cartDot">0</span></div><a class="btn btn-blue" href="#menu">Order</a><div id="burger" onclick="document.getElementById('mnav').classList.add('open')"><span></span><span></span><span></span></div></div>
+  </div>
+</header>
+<div id="mnav"><div class="x" onclick="this.parentNode.classList.remove('open')">&times;</div><a onclick="mnav('#current')">Dial in</a><a onclick="mnav('#specials')">Specials</a><a onclick="mnav('#build')">Build</a><a onclick="mnav('#menu')">Menu</a><a onclick="mnav('#story')">Story</a><a onclick="mnav('#menu')">Order</a></div>
+
+<section class="hero" id="top">
+  <img class="bg" src="img/Wired_Coffee_Steamy_Espresso_1.jpg" alt="">
+  <div class="wrap"><div class="grid">
+    <div class="lead">
+      <div class="status"><i></i> Open now &middot; pickup ~10 min</div>
+      <div class="num">Cortez Makerspace &nbsp;/&nbsp; Specialty Coffee</div>
+      <h1 style="margin-top:18px">Every cup,<br>a current.<br><em>Every sip, a spark.</em></h1>
+    </div>
+    <p class="sub">Top-tier coffee that powers ideas and fuels the local workforce. Pulled fresh, all day, inside the makerspace.</p>
+    <div class="cta">
+      <a class="btn btn-blue" href="#menu">Order ahead</a>
+      <a class="btn btn-line" onclick="scrollTo2('#current')">Dial in your cup</a>
+      <a class="btn btn-line" href="#build">Build your drink</a>
+    </div>
+  </div></div>
+</section>
+
+<div class="ticker"><div class="t" id="tick"></div></div>
+
+<section class="specials power" id="specials">
+  <div class="wrap">
+    <div class="head"><span class="num">01 / <b>The signatures</b></span><h2>Three drinks you won&rsquo;t find anywhere else.</h2></div>
+    <div class="sp-grid">
+      <div class="sp-card"><span class="node"></span><div class="ph"><img src="img/Wired_Coffee_Small_Cinnamon_Latte_Blue.jpg" alt="The Flow State"></div>
+        <div class="eq">2x Espresso + Oat + Banana Bread</div><h3>The Flow State</h3><div class="d">Our strongest signature. Double shot, cinnamon on top.</div>
+        <div class="spec"><span class="chip">Current <b>High</b></span><span class="chip">Caffeine <b>150mg</b></span><span class="chip">Temp <b>Hot/Iced</b></span></div>
+        <div class="row"><span class="pr">$5 / $6 / $7</span><span class="add" onclick="add('Flow State','signature',5,this)">Add +</span></div></div>
+      <div class="sp-card"><span class="node"></span><div class="ph"><img src="img/Wired_Coffee_Cinnamon_Latte_Sun_1.jpg" alt="Maple Byte"></div>
+        <div class="eq">Espresso + Whole + Maple + Cinnamon</div><h3>Maple Byte</h3><div class="d">Real maple and cinnamon. The everyday favorite.</div>
+        <div class="spec"><span class="chip">Current <b>Med</b></span><span class="chip">Caffeine <b>75mg</b></span><span class="chip">Temp <b>Hot</b></span></div>
+        <div class="row"><span class="pr">$5 / $6 / $7</span><span class="add" onclick="add('Maple Byte','signature',5,this)">Add +</span></div></div>
+      <div class="sp-card"><span class="node"></span><div class="ph"><img src="img/Wired_Coffee_Small_Cinnamon_Latte_2.jpg" alt="Nutty Professor"></div>
+        <div class="eq">Espresso + Almond + Hazelnut + Cocoa</div><h3>Nutty Professor</h3><div class="d">Almond milk, hazelnut, and a dust of cocoa.</div>
+        <div class="spec"><span class="chip">Current <b>Med</b></span><span class="chip">Caffeine <b>75mg</b></span><span class="chip">Temp <b>Hot</b></span></div>
+        <div class="row"><span class="pr">$5 / $6 / $7</span><span class="add" onclick="add('Nutty Professor','signature',5,this)">Add +</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="craft power" id="craft">
+  <div class="wrap">
+    <div class="head"><span class="num">02 / <b>The craft</b></span><h2>From bean to cup.</h2></div>
+    <div class="forms" id="forms">
+      <div class="wire"><div class="fill" id="wireFill"></div></div>
+      <div class="form"><span class="dot"></span><div class="ph"><img src="img/Wired_Coffee_Beans_2.jpg" alt="Beans"></div><div class="n">01 &middot; BEAN</div><h3>Sourced</h3><p>Small-lot beans, roasted for balance.</p></div>
+      <div class="form"><span class="dot"></span><div class="ph"><img src="img/Wired_Coffee_Grounds_1.jpg" alt="Grounds"></div><div class="n">02 &middot; GRIND</div><h3>Dialed in</h3><p>Ground to order, extraction on point.</p></div>
+      <div class="form"><span class="dot"></span><div class="ph"><img src="img/Wired_Coffee_Steaming_Milk_1.jpg" alt="Pour"></div><div class="n">03 &middot; POUR</div><h3>Poured</h3><p>Micro-foam, steady hand. The spark.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="pow power">
+  <img class="bg" src="img/Wired_Coffee_Cracked_Coffee_Sun_1.jpg" alt="">
+  <div class="wrap"><div class="num">Pour of the week</div><h2>The Flow State</h2><div class="tw">Oat &middot; banana bread &middot; double shot</div>
+    <span class="btn btn-blue" onclick="add('Flow State','pour of the week',5,this)">Add to order &mdash; $5</span></div>
+</section>
+
+<!-- CURRENT WHEEL -->
+<section class="current power" id="current">
+  <div class="wrap"><div class="cur-grid">
+    <div class="copy">
+      <span class="num">Dial in / <b>The Dial-In</b></span>
+      <h2>Dial it in.<br>Find your drink.</h2>
+      <p>Five dials to your drink. Go deeper and invent your own. Set what you feel and the needle finds it, no wrong answers.</p>
+      <p style="font-size:16px">The dials read <b style="color:var(--cream)">current</b> (energy), <b style="color:var(--cream)">roast</b> (smooth to dark &amp; bitter), <b style="color:var(--cream)">body</b> (milk), <b style="color:var(--cream)">sweet</b>, and <b style="color:var(--cream)">temp</b>. Hit <b style="color:var(--cream)">Go deeper</b> to add flavor and combine our ingredients into your own drink.</p>
+    </div>
+    <div class="wheelbox">
+      <svg id="curWheel" viewBox="-60 -54 520 520" aria-label="The Dial-In"></svg>
+      <div class="wheel-rows" id="wheelRows"></div>
+      <div style="display:flex;gap:12px;justify-content:center;margin-top:16px;flex-wrap:wrap"><button class="deeper" id="deeperBtn" onclick="toggleDeep()">+ Go deeper</button><button class="deeper" onclick="surpriseSpin()">&#9889; Surprise me</button></div>
+      <div class="hubcard" id="hubcard"><div class="aura" id="hubAura"></div><div class="empty">Tap the dials. We read your cup live.</div></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- BUILD -->
+<section class="build power" id="build">
+  <div class="wrap"><div class="bg-grid">
+    <div class="copy">
+      <span class="num">03 / <b>Made here</b></span>
+      <h2>Build your drink.</h2>
+      <p>This is a makerspace. Naturally, you build your own. Set the base and dial the strength; the strength reads in the right unit for each drink.</p>
+      <p style="font-size:15px;opacity:.8">Current means strength and body, not just caffeine.</p>
+    </div>
+    <div class="cupwrap">
+      <span class="bpnum bp-tl">WIRED / SPEC</span><span class="bpnum bp-tr" id="cupSize">12 OZ</span><span class="bpnum bp-br">REV. B</span>
+      <svg id="cupSvg" viewBox="0 0 300 460" aria-label="Live preview of your drink">
+        <defs>
+          <clipPath id="cupInner"><path d="M74 108 H226 L214 384 H86 Z"/></clipPath>
+          <radialGradient id="glowG" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#5CC5F2" stop-opacity="1"/><stop offset="100%" stop-color="#5CC5F2" stop-opacity="0"/></radialGradient>
+        </defs>
+        <ellipse id="glow" cx="150" cy="250" rx="150" ry="185" fill="url(#glowG)" opacity=".2"/>
+        <g id="steam" fill="none" stroke="rgba(246,239,207,.5)" stroke-width="3" stroke-linecap="round" style="opacity:0">
+          <path d="M120 92 q10 -18 0 -36 q-10 -18 0 -36"/><path d="M150 90 q12 -20 0 -40 q-12 -20 0 -40"/><path d="M180 92 q10 -18 0 -36 q-10 -18 0 -36"/></g>
+        <path id="cupBack" d="M70 104 H230 L216 388 H84 Z" fill="#160a04"/>
+        <g clip-path="url(#cupInner)">
+          <rect id="liquid" x="74" y="108" width="152" height="276" fill="#2E1608" style="transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(0.12);transition:transform .5s cubic-bezier(.16,1,.3,1),fill .4s ease"/>
+          <g id="syrup"></g><g id="ice"></g>
+          <ellipse id="crema" cx="150" cy="108" rx="76" ry="0" fill="rgba(0,0,0,.25)" style="transition:.45s"/>
+          <ellipse id="foam" cx="150" cy="108" rx="78" ry="0" fill="#EFE3BE" style="transition:.45s"/>
+        </g>
+        <path id="cupFront" d="M70 104 H230 L216 388 H84 Z" fill="none" stroke="rgba(246,239,207,.5)" stroke-width="2"/>
+        <ellipse cx="150" cy="104" rx="80" ry="12" fill="none" stroke="rgba(246,239,207,.55)" stroke-width="2"/>
+        <rect x="86" y="270" width="128" height="66" fill="rgba(31,154,214,.14)" stroke="var(--blue)" stroke-width="1.5"/>
+        <text id="sleeveName" x="150" y="309" text-anchor="middle" font-family="Space Mono, monospace" font-size="15" fill="#F6EFCF" letter-spacing="1">YOUR NAME</text>
+        <text id="calMg" x="252" y="150" font-family="Space Mono, monospace" font-size="10" fill="rgba(246,239,207,.6)">--</text>
+        <line x1="214" y1="150" x2="248" y2="150" stroke="rgba(92,197,242,.5)" stroke-width="1"/>
+      </svg>
+    </div>
+    <div class="inst">
+      <div class="glabel">Base</div><div class="chips" id="gBase"></div>
+      <div class="faders">
+        <div class="fader"><div class="lbl"><span>Strength</span><b id="shotCap2" style="font-size:9.5px;opacity:.7"></b></div>
+          <div class="stepper"><button onclick="step('shot',-1)">&minus;</button><span class="v" id="shotN">--</span><button onclick="step('shot',1)">+</button></div><div class="meter" id="shotM"></div><div class="cap" id="shotCap">pick a base</div></div>
+        <div class="fader"><div class="lbl"><span>Sweet</span></div>
+          <div class="stepper"><button onclick="step('pump',-1)">&minus;</button><span class="v" id="pumpN">0</span><button onclick="step('pump',1)">+</button></div><div class="meter" id="pumpM"></div><div class="cap" id="sweetCap">syrup pumps</div></div>
+      </div>
+      <div id="xshotRow" style="display:none;margin-bottom:16px">
+        <div class="fader"><div class="lbl"><span>&#9889; Add espresso</span><b id="xshotName" style="font-size:9.5px;opacity:.85;color:var(--blue-hi)"></b></div>
+          <div class="stepper"><button onclick="step('xshot',-1)">&minus;</button><span class="v" id="xshotN">0</span><button onclick="step('xshot',1)">+</button></div><div class="cap">+$1 each &middot; makes it dirty</div></div>
+      </div>
+      <div class="glabel">Temp <div class="toggle"><button id="tHot" onclick="setTemp('hot')">Hot</button><button id="tIced" onclick="setTemp('iced')">Iced</button></div></div>
+      <div class="glabel">Size <div class="toggle"><button id="s12" onclick="setSize('Regular')">12 oz</button><button id="s16" onclick="setSize('Large')">16 oz +$1</button><button id="s20" onclick="setSize('XL')">20 oz +$2</button></div></div>
+      <div class="glabel">Milk</div><div class="chips" id="gMilk"></div>
+      <div class="glabel">Syrup flavor</div><div class="chips" id="gSyrup"></div>
+      <div class="out"><div><div class="num" style="margin-bottom:6px">Your build</div><div class="recipe" id="recipe">Pick a base to begin</div></div><div class="price" id="bPrice">$&ndash;.&ndash;&ndash;</div></div>
+      <div style="margin-top:14px;font-family:var(--mono);font-size:11px;color:var(--cream-dim);display:flex;align-items:center;gap:8px">&#9889; Cup sleeve <input id="cupName" placeholder="your name" maxlength="16" style="background:none;border:none;border-bottom:1px solid rgba(246,239,207,.3);color:var(--cream);font-family:var(--mono);font-size:12px;padding:3px 4px;flex:1"></div>
+      <div class="btn btn-blue" id="addBuild" style="width:100%;text-align:center;margin-top:16px;opacity:.5;pointer-events:none" onclick="addBuild(this)">Assemble &amp; add to order</div>
+    </div>
+  </div></div>
+</section>
+
+<section class="menu power" id="menu">
+  <div class="wrap">
+    <div id="printHead"><img src="img/logo.png" alt="Wired Coffee Co."><div class="ph-l">Wired Coffee Co. &mdash; Every cup, a current.</div><div class="ph-s">209 W Main St, Cortez CO &middot; inside the Cortez Makerspace &middot; Order at the counter or fundamentalneeds.net &middot; Members save 10% &middot; Every cup funds the makerspace</div></div>
+    <div class="head"><span class="num">04 / <b>Order ahead</b></span><h2>The menu.</h2></div>
+    <div class="menu-cols" id="menuCols"></div>
+    <div class="miy">
+      <div class="miy-h"><span class="num" style="color:var(--roast);display:block;margin-bottom:8px">Make it yours</span><h3>Every drink, your way.</h3></div>
+      <div class="miy-grid" id="miyGrid"></div>
+      <div class="miy-foot">Not sure what to get? Dial it in on the screen or ask the counter. Members save 10%.</div>
+    </div>
+    <div class="menu-foot">Tap a drink for its spec &middot; pickup ~10 min &middot; tax included <button class="btn btn-line" id="printBtn" style="padding:10px 18px;margin-left:12px" onclick="window.print()">&#9113; Print this menu</button></div>
+  </div>
+</section>
+
+<section class="story power" id="story">
+  <div class="wrap">
+    <div class="lead-grid">
+      <div><span class="num">05 / <b>Our story</b></span><h2>A coffee shop that funds a mission.</h2></div>
+      <div><p>Wired Coffee Co. is the cafe inside the <b style="color:var(--cream)">Cortez Makerspace</b>, one of three programs run by <b style="color:var(--cream)">Fundamental Needs</b>, a 501(c)(3) public charity. Sit down with a latte and you are steps from a laser lab, an off-grid solar-water workshop, and a room of students building their futures.</p><p>Coffee revenue helps keep the space running and seeds the programs next door.</p></div>
+    </div>
+
+    <div class="impact reveal">
+      <img class="impbg" src="img/fn/oasis2.jpg" alt="">
+      <div class="impgrid">
+        <div class="stat"><b data-count="220" data-suf="+">0</b><span>Dine homes with clean water</span></div>
+        <div class="stat"><b data-count="200" data-suf="+">0</b><span>makerspace members</span></div>
+        <div class="stat"><b data-count="30" data-suf="+">0</b><span>workshops in 6 months</span></div>
+        <div class="stat"><b data-count="2020" data-raw="1">0</b><span>founded in Colorado</span></div>
+      </div>
+    </div>
+
+    <div class="progs">
+      <div class="prog"><div class="ph"><img src="img/fn/oasis.jpg" alt="Oasis Project water install"></div><div class="k">Oasis Project &middot; Water &amp; solar</div><h3>Clean water on the Nation</h3><p>Off-grid solar water systems for Din&eacute; families across the Navajo Nation, built and installed by local high-school students under a teach, train, and hire model. 220+ homes served since 2021, from Rock Point to Shiprock and Kayenta.</p></div>
+      <div class="prog"><div class="ph"><img src="img/fn/makerspace.jpg" alt="Cortez Makerspace laser lab"></div><div class="k">Cortez Makerspace &middot; Make anything</div><h3>A shop for the whole town</h3><p>Laser lab, 3D printers, silkscreen, woodshop, and the new xTool MetalFab on Main Street. Opened January 2026, now 200+ members and 30+ workshops, with certification pathways in solar, fabrication, and the trades.</p></div>
+      <div class="prog"><div class="ph"><img src="img/fn/youth.jpg" alt="Youth entrepreneurship pitch"></div><div class="k">Youth Entrepreneurship &middot; Build a business</div><h3>Students who pitch, then run it</h3><p>The I.D.E.A. Lab at Southwest Open School lets students earn credit while launching real ventures, with pitch competitions at Kirtland Central too. Some of the students who pitched here now run this counter.</p></div>
+    </div>
+
+    <div class="cupflow reveal">
+      <div class="cf-h"><span class="num" style="color:var(--blue-hi);display:block;margin-bottom:6px">The circuit</span><h3>Where your cup goes.</h3></div>
+      <div class="cf-row" id="cfRow">
+        <div class="cf-wire"><div class="cf-fill" id="cfFill"></div></div>
+        <div class="cf-node"><div class="cf-ph"><img src="img/Wired_Coffee_Small_Cinnamon_Latte_Blue.jpg" alt=""></div><div class="cf-n">01</div><p>Your $7 latte</p></div>
+        <div class="cf-node"><div class="cf-ph"><img src="img/fn/makerspace.jpg" alt=""></div><div class="cf-n">02</div><p>Keeps the lights, lasers, and doors open</p></div>
+        <div class="cf-node"><div class="cf-ph"><img src="img/fn/oasis.jpg" alt=""></div><div class="cf-n">03</div><p>So a student gets paid to install clean water on the Nation</p></div>
+      </div>
+    </div>
+
+    <div class="fund"><p>&ldquo;A sanctuary of productivity, powering ideas and the local workforce.&rdquo;</p>
+      <div class="badge">Wired Coffee is incubated inside the makerspace by<br>Fundamental Needs Inc &middot; 501(c)(3) &middot; EIN 85-3603760<br>Dolores &amp; Cortez, Colorado</div></div>
+  </div>
+</section>
+
+<section class="order">
+  <div class="wrap"><h2>Order ahead. Skip the line.</h2><p>Tap it in. Ready at the counter in about ten minutes.</p><a class="btn btn-line" href="#menu">Order now</a><div class="ctaperk">&#9889; Makerspace members save 10%</div></div>
+</section>
+
+<section class="map power" id="visit" style="padding-top:0">
+  <div class="wrap"><div class="mgrid">
+    <div class="info"><span class="num">06 / <b>Find us</b></span><h3>Inside the Cortez Makerspace</h3>
+      <p>209 W Main St<br>Cortez, CO 81321</p><p>Mon&ndash;Sat 7a&ndash;4p &middot; Sun 8a&ndash;2p<br><span style="opacity:.5">(hours placeholder)</span></p>
+      <a class="btn btn-line" href="https://www.google.com/maps/dir/?api=1&destination=209+W+Main+St+Cortez+CO+81321" target="_blank" style="margin-top:10px">Get directions</a></div>
+    <iframe title="Wired Coffee location" loading="lazy" src="https://www.google.com/maps?q=209%20W%20Main%20St,%20Cortez,%20CO%2081321&output=embed"></iframe>
+  </div></div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <div><img src="img/logo_white.png" class="lw" alt="Wired Coffee Co."><p>Every cup, a current.<br>Every sip, a spark.</p></div>
+    <div><h4>Visit</h4><p>209 W Main St<br>Cortez, CO 81321</p><p>Inside the Cortez Makerspace</p></div>
+    <div><h4>Hours</h4><p>Mon&ndash;Sat 7a&ndash;4p</p><p>Sun 8a&ndash;2p</p></div>
+    <div><h4>Order</h4><a onclick="scrollTo2('#current')">Dial in</a><a href="#build">Build a drink</a><a href="#menu">See the menu</a></div>
+  </div>
+  <div class="wrap fbot"><span>&copy; 2026 Wired Coffee Co. &middot; a Fundamental Needs project</span><span>Prototype &middot; ordering powered by Wix</span></div>
+</footer>
+
+<div class="scrim" id="scrim" onclick="closeCart()"></div>
+<div class="cart" id="cart">
+  <div class="top"><h3>Your order</h3><div class="x" onclick="closeCart()">&times;</div></div>
+  <div class="items" id="cartItems"><div class="empty">Empty cart. Low voltage.<br>Add something with a spark.</div></div>
+  <div class="rewardbar" id="rewardWrap" style="display:none"><span id="rewardTxt"></span><div class="rb"><i id="rewardBar"></i></div></div>
+  <div class="f">
+   <div id="cartMain">
+    <div class="memrow"><span>Makerspace member? 10% off at pickup</span><div class="sw" id="memSw" onclick="toggleMem()"><i></i></div></div>
+    <div class="tips"><div class="tip" onclick="setTip(this,.15)">15%</div><div class="tip on" onclick="setTip(this,.18)">18%</div><div class="tip" onclick="setTip(this,.2)">20%</div></div>
+    <div class="ln"><span>Subtotal</span><span id="sub">$0.00</span></div>
+    <div class="ln disc" id="discLn" style="display:none"><span>Member 10%</span><span id="discv">-$0.00</span></div>
+    <div class="ln"><span>Tip</span><span id="tipv">$0.00</span></div>
+    <div class="tot"><span>Total</span><span id="tot">$0.00</span></div>
+    <div class="btn btn-blue" style="width:100%;text-align:center" onclick="checkout()">Checkout</div>
+    <div class="note" id="memNote">Card charged by Square &middot; member 10% verified at pickup</div>
+   </div>
+   <div id="coPanel" style="display:none">
+    <div style="font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--cream-dim);margin-bottom:10px">Pickup details</div>
+    <input id="coName" placeholder="Name for the order" maxlength="60" style="width:100%;background:none;border:1px solid rgba(246,239,207,.25);color:var(--cream);font-family:var(--mono);font-size:13px;padding:11px;margin-bottom:8px">
+    <input id="coPhone" placeholder="Phone" maxlength="20" inputmode="tel" style="width:100%;background:none;border:1px solid rgba(246,239,207,.25);color:var(--cream);font-family:var(--mono);font-size:13px;padding:11px;margin-bottom:12px">
+    <div id="card-container" style="background:rgba(246,239,207,.06);padding:6px;border-radius:4px"></div>
+    <div id="coErr" style="display:none;font-family:var(--mono);font-size:11.5px;color:#e08a7a;margin:10px 0"></div>
+    <div class="btn btn-blue" id="coPay" style="width:100%;text-align:center;margin-top:12px" onclick="coSubmit()">Pay</div>
+    <button onclick="coBack()" style="display:block;margin:12px auto 0;background:none;border:none;color:var(--cream-dim);font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer">&lt; Back to cart</button>
+    <div class="note">Secure payment by Square &middot; pickup at the counter in ~10 min</div>
+   </div>
+  </div>
+</div>
+
+<script src="https://web.squarecdn.com/v1/square.js"></script>
+<script>
+var SQ_APP="sq0idp-ZA0s_qf1JP5BBBKZTrFJSw",SQ_LOC="LRQ2P6QH2BXKV";
+var $=function(s){return document.querySelector(s);};
+function scrollTo2(s){var e=$(s);if(e)e.scrollIntoView({behavior:'smooth'});}
+function mnav(s){document.getElementById('mnav').classList.remove('open');scrollTo2(s);}
+var hdr=$('#hdr'),fill=$('#condFill'),pulse=$('#condPulse');
+function onScroll(){hdr.classList.toggle('scrolled',scrollY>60);var h=document.documentElement.scrollHeight-innerHeight,p=h>0?scrollY/h:0;fill.style.height=(p*100)+'vh';pulse.style.top=(p*innerHeight)+'px';document.querySelectorAll('.power').forEach(function(el){if(el.getBoundingClientRect().top<innerHeight*0.72)el.classList.add('lit');});craftScrub();}
+addEventListener('scroll',onScroll,{passive:true});
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
+var forms=[].slice.call(document.querySelectorAll('.form')),wireFill=$('#wireFill');
+function craftScrub(){var sec=$('#craft');if(!sec)return;var r=sec.getBoundingClientRect(),vh=innerHeight,prog=(vh-r.top)/(vh+r.height);prog=Math.max(0,Math.min(1,prog));var t=Math.max(0,Math.min(1,(prog-0.15)/0.6));wireFill.style.width=(t*100)+'%';forms.forEach(function(f,i){f.classList.toggle('lit',t>=i*0.42);});}
+var tick=$('#tick'),tx=0,vel=0,lastY=scrollY,tbase=0.4,tW=0,tpaused=false;
+tick.innerHTML=(function(){var s='Now pouring <span class="z">/</span> <b style="color:var(--cream)">The Flow State</b> <span class="z">&#9889;</span> Members save 10% <span class="z">&#9889;</span> Navajo tea in stock <span class="z">&#9889;</span> Pickup ~10 min <span class="z">&#9889;</span> Every cup funds the makerspace <span class="z">&#9889;</span> ';return s+s;})();
+setTimeout(function(){tW=tick.scrollWidth/2;},500);
+addEventListener('scroll',function(){vel=Math.min(6,Math.abs(scrollY-lastY)*0.4);lastY=scrollY;},{passive:true});
+tick.parentNode.addEventListener('mouseenter',function(){tpaused=true;});tick.parentNode.addEventListener('mouseleave',function(){tpaused=false;});
+function tickLoop(){vel*=0.92;if(!tpaused){tx-=(tbase+vel);if(tW&&-tx>=tW)tx+=tW;tick.style.transform='translateX('+tx+'px)';}requestAnimationFrame(tickLoop);}tickLoop();
+
+/* WebAudio tick */
+var actx=null;function tick2(){try{if(!actx)actx=new (window.AudioContext||window.webkitAudioContext)();var o=actx.createOscillator(),g=actx.createGain();o.frequency.value=660;g.gain.value=0.04;o.connect(g);g.connect(actx.destination);o.start();g.gain.exponentialRampToValueAtTime(0.0001,actx.currentTime+0.05);o.stop(actx.currentTime+0.06);}catch(e){}if(navigator.vibrate)navigator.vibrate(8);}
+
+/* ===== SHARED DRINK DATA ===== */
+var DRINKS={
+ 'house-brew':{name:'House Brew',persona:'The Constant',aura:'#E8A24C',tagline:'Dependable. You keep the whole room running.',spec:['Current LOW','~60mg','Hot / Iced'],addPrice:3},
+ 'cold-brew':{name:'Cold Brew',persona:'The Slow Burn',aura:'#3A6DF0',tagline:'Cool, patient, sustained.',spec:['Current HIGH','~95mg','Iced'],addPrice:4},
+ 'espresso':{name:'Espresso',persona:'The Live Wire',aura:'#C9922E',tagline:'Max voltage, zero filler.',spec:['Current MAX','~75mg/shot','Hot'],addPrice:2},
+ 'latte':{name:'Latte',persona:'The Smooth Operator',aura:'#B98E4A',tagline:'Easy, balanced, everybody’s friend.',spec:['Current MED','~75mg','Hot / Iced'],addPrice:4},
+ 'mocha':{name:'Mocha',persona:'The Charmer',aura:'#C0685A',tagline:'Sweet, social, impossible not to like.',spec:['Current MED','~75mg','Hot / Iced'],addPrice:4},
+ 'breve':{name:'Breve',persona:'The Maximalist',aura:'#D9A441',tagline:'Richest cup on the board.',spec:['Current MED','~75mg','Hot'],addPrice:4.5},
+ 'cortado':{name:'Cortado',persona:'The Precisionist',aura:'#6C8CA6',tagline:'Dialed in to the gram.',spec:['Current MED-HIGH','~75mg','Hot'],addPrice:4},
+ 'tea':{name:'Tea',persona:'The Steady Signal',aura:'#8FA98A',tagline:'Calm, analog, unhurried.',spec:['Current LOW','~30mg','Hot / Iced'],addPrice:2},
+ 'matcha':{name:'Matcha',persona:'The Green Circuit',aura:'#5FBF6A',tagline:'Clean energy, no jitter.',spec:['Current MED','~60mg','Hot / Iced'],addPrice:4},
+ 'chai':{name:'Chai',persona:'The Warm Current',aura:'#C6702E',tagline:'Spiced, cozy, grounding.',spec:['Current MED','~40mg','Hot / Iced'],addPrice:4},
+ 'nutty-professor':{name:'Nutty Professor',persona:'The Tinkerer',aura:'#A97B4F',tagline:'Inventive and a little nutty.',spec:['Current MED','~75mg','Hot'],addPrice:5},
+ 'maple-byte':{name:'Maple Byte',persona:'The Sweet Hacker',aura:'#C98A3C',tagline:'Maple, cinnamon, clever.',spec:['Current MED','~75mg','Hot'],addPrice:5},
+ 'flow-state':{name:'The Flow State',persona:'The Flow State',aura:'#7A6CE0',tagline:'Headphones in, world out.',spec:['Current HIGH','~150mg','Hot / Iced'],addPrice:5}};
+var SEED={'house-brew':{base:'House Brew',milk:'Whole',syrup:null,temp:'hot'},'cold-brew':{base:'Cold Brew',milk:'Whole',syrup:null,temp:'iced'},'espresso':{base:'Espresso',milk:'Black',syrup:null,temp:'hot'},'latte':{base:'Latte',milk:'Whole',syrup:null,temp:'hot'},'mocha':{base:'Mocha',milk:'Whole',syrup:'Dark Chocolate',temp:'hot'},'breve':{base:'Breve',milk:'Half n\' Half',syrup:null,temp:'hot'},'cortado':{base:'Cortado',milk:'Whole',syrup:null,temp:'hot'},'tea':{base:'Tea',milk:'Black',syrup:null,temp:'hot'},'matcha':{base:'Matcha',milk:'Oat',syrup:null,temp:'iced'},'chai':{base:'Chai',milk:'Whole',syrup:null,temp:'hot'},'nutty-professor':{base:'Latte',milk:'Almond',syrup:'Hazelnut',temp:'hot'},'maple-byte':{base:'Latte',milk:'Whole',syrup:'Maple',temp:'hot'},'flow-state':{base:'Latte',milk:'Oat',syrup:'Vanilla',temp:'iced'}};
+var SIGNATURES=['flow-state','nutty-professor','maple-byte'];
+var PRIORITY=['flow-state','nutty-professor','maple-byte','cortado','latte','mocha','breve','cold-brew','matcha','chai','espresso','house-brew','tea'];
+function pickWinner(s){var max=Math.max.apply(null,Object.keys(s).map(function(k){return s[k];}));var tied=Object.keys(s).filter(function(k){return s[k]===max;});if(tied.length===1)return tied[0];var sig=SIGNATURES.filter(function(k){return tied.indexOf(k)>-1;});var pool=sig.length?sig:tied;pool.sort(function(a,b){return PRIORITY.indexOf(a)-PRIORITY.indexOf(b);});return pool[0];}
+function matchPct(s,w){var v=Object.keys(s).map(function(k){return s[k];}).sort(function(a,b){return b-a;});var top=v[0],sec=v[1]||0;if(top<=0)return 90;return Math.round(88+11*Math.min(1,(top-sec)/top));}
+
+/* ===== CURRENT WHEEL ===== */
+Object.assign(DRINKS,{
+ 'tea-navajo':{name:'Navajo Tea',persona:'The Analog',aura:'#8FA98A',tagline:'The house pour. Grown on the Navajo Nation.',spec:['Caffeine-free','Herbal','Hot / Iced'],addPrice:2},
+ 'tea-green':{name:'Green Tea',persona:'Clean Signal',aura:'#7FB985',tagline:'A clean, grassy lift.',spec:['~30mg','Green','Hot / Iced'],addPrice:2},
+ 'tea-black':{name:'Black Tea',persona:'Steady Signal',aura:'#9C6B3E',tagline:'Classic and steady.',spec:['~45mg','Black','Hot / Iced'],addPrice:2},
+ 'tea-herbal-lemon':{name:'Herbal Lemon',persona:'Bright Idle',aura:'#D9C24A',tagline:'Bright, caffeine-free.',spec:['Caffeine-free','Citrus','Hot / Iced'],addPrice:2},
+ 'tea-herbal-peppermint':{name:'Herbal Peppermint',persona:'Cool Down',aura:'#6FB8A0',tagline:'Cool and caffeine-free.',spec:['Caffeine-free','Mint','Hot / Iced'],addPrice:2},
+ 'dark-circuit':{name:'Dark Circuit',persona:'Dark Circuit',aura:'#3a1c0c',tagline:'Cold brew with a dark-chocolate edge.',spec:['Dark','Iced','~150mg'],addPrice:7},
+ 'the-kernel':{name:'The Kernel',persona:'The Kernel',aura:'#3A1E0C',tagline:'Two shots, no mercy.',spec:['Dark','Hot','150mg'],addPrice:6},
+ 'black-box':{name:'Black Box',persona:'Black Box',aura:'#1a0d0d',tagline:'As dark as the board gets.',spec:['Bitter','Iced','150mg'],addPrice:6},
+ 'burnt-signal':{name:'Burnt Signal',persona:'Burnt Signal',aura:'#2a1305',tagline:'Bold drip, straight black.',spec:['Dark','Hot','75mg'],addPrice:5},
+ 'white-noise':{name:'White Noise',persona:'White Noise',aura:'#D9C79E',tagline:'Rich white-chocolate breve.',spec:['Rich','Hot','75mg'],addPrice:8},
+ 'honeycomb':{name:'Honeycomb',persona:'Honeycomb',aura:'#D8A93A',tagline:'Honey and oat, dialed in.',spec:['Med','Hot','75mg'],addPrice:7},
+ 'caramel-cache':{name:'Caramel Cache',persona:'Caramel Cache',aura:'#C57B2C',tagline:'A smooth caramel latte.',spec:['Med','Hot / Iced','75mg'],addPrice:7},
+ 'golden-hour':{name:'Golden Hour',persona:'Golden Hour',aura:'#E8C15A',tagline:'Honey, vanilla, oat, iced.',spec:['Med','Iced','75mg'],addPrice:8},
+ 'green-volt':{name:'Green Volt',persona:'Green Volt',aura:'#5FBF6A',tagline:'Matcha with a maple kick.',spec:['Med','Iced','60mg'],addPrice:7},
+ 'chai-charge':{name:'Chai Charge',persona:'Chai Charge',aura:'#C6702E',tagline:'A dirty chai with a shot.',spec:['Med-high','Hot','115mg'],addPrice:7},
+ 'nut-cluster':{name:'Nut Cluster',persona:'Nut Cluster',aura:'#A97B4F',tagline:'Hazelnut and dark chocolate.',spec:['Med','Hot','75mg'],addPrice:8},
+ 'cinnamon-toast':{name:'Cinnamon Toast',persona:'Cinnamon Toast',aura:'#C98A3C',tagline:'Cinnamon-maple latte.',spec:['Med','Hot','75mg'],addPrice:8},
+ 'vanilla-sky':{name:'Vanilla Sky',persona:'Vanilla Sky',aura:'#EFE1B8',tagline:'Vanilla and white chocolate, iced.',spec:['Med','Iced','75mg'],addPrice:8},
+ 'root-access':{name:'Root Access',persona:'Root Access',aura:'#B98E4A',tagline:'The richest, maple and cinnamon.',spec:['Rich','Hot','75mg'],addPrice:8},
+ 'cold-circuit':{name:'Cold Circuit',persona:'Cold Circuit',aura:'#6FB8A0',tagline:'An iced peppermint mocha.',spec:['Med','Iced','75mg'],addPrice:8},
+ 'static':{name:'Static',persona:'Static',aura:'#9C8B6A',tagline:'Low and easy, half-caff.',spec:['Low','Hot / Iced','30mg'],addPrice:4}});
+Object.assign(SEED,{
+ 'tea-navajo':{base:'Tea',milk:'Black',syrup:null,temp:'hot'},'tea-green':{base:'Tea',milk:'Black',syrup:null,temp:'hot'},'tea-black':{base:'Tea',milk:'Black',syrup:null,temp:'hot'},'tea-herbal-lemon':{base:'Tea',milk:'Black',syrup:null,temp:'iced'},'tea-herbal-peppermint':{base:'Tea',milk:'Black',syrup:null,temp:'iced'},
+ 'dark-circuit':{base:'Cold Brew',milk:'Black',syrup:'Dark Chocolate',temp:'iced'},'the-kernel':{base:'Cortado',milk:'Whole',syrup:null,temp:'hot'},'black-box':{base:'Cold Brew',milk:'Black',syrup:null,temp:'iced'},'burnt-signal':{base:'House Brew',milk:'Black',syrup:null,temp:'hot'},'white-noise':{base:'Breve',milk:'Half n\' Half',syrup:'White Chocolate',temp:'hot'},'honeycomb':{base:'Cortado',milk:'Oat',syrup:'Honey',temp:'hot'},'caramel-cache':{base:'Latte',milk:'Whole',syrup:'Caramel',temp:'hot'},'golden-hour':{base:'Latte',milk:'Oat',syrup:'Honey',temp:'iced'},'green-volt':{base:'Matcha',milk:'Oat',syrup:'Maple',temp:'iced'},'chai-charge':{base:'Chai',milk:'Whole',syrup:null,temp:'hot'},'nut-cluster':{base:'Latte',milk:'Almond',syrup:'Hazelnut',temp:'hot'},'cinnamon-toast':{base:'Latte',milk:'Whole',syrup:'Maple',temp:'hot'},'vanilla-sky':{base:'Latte',milk:'Whole',syrup:'Vanilla',temp:'iced'},'root-access':{base:'Breve',milk:'Half n\' Half',syrup:'Maple',temp:'hot'},'cold-circuit':{base:'Mocha',milk:'Whole',syrup:'Dark Chocolate',temp:'iced'},'static':{base:'House Brew',milk:'Whole',syrup:null,temp:'hot'}});
+var TEA_VARS=['tea-navajo','tea-green','tea-black','tea-herbal-lemon','tea-herbal-peppermint'];
+NEWKEYS().forEach(function(k){if(SIGNATURES.indexOf(k)<0)SIGNATURES.push(k);});
+function NEWKEYS(){return ['dark-circuit','the-kernel','black-box','burnt-signal','white-noise','honeycomb','caramel-cache','golden-hour','green-volt','chai-charge','nut-cluster','cinnamon-toast','vanilla-sky','root-access','cold-circuit','static'];}
+NEWKEYS().concat(TEA_VARS).forEach(function(k){if(PRIORITY.indexOf(k)<0)PRIORITY.unshift(k);});
+
+var FACTIONS_CORE=[
+ {key:'energy',label:'CURRENT',mode:'level',bands:['Unplugged','Trickle','Steady','Live wire']},
+ {key:'roast', label:'ROAST',  mode:'level',bands:['Smooth','Balanced','Bold','Dark & bitter']},
+ {key:'milk',  label:'BODY',   mode:'level',bands:['Black','Splash','Creamy','Rich']},
+ {key:'sweet', label:'SWEET',  mode:'level',bands:['None','A touch','Dessert']},
+ {key:'temp',  label:'TEMP',   mode:'pick', bands:['Hot','Iced']}];
+var FACTIONS_ADV=[
+ {key:'flavor',label:'FLAVOR', mode:'drill', bands:['tap to combine']},
+ {key:'mode',  label:'MODE',   mode:'pick', bands:['Sprint','Deep flow','Social','Calm']}];
+var FACTIONS=FACTIONS_CORE.slice();
+var deep=false;
+var WP=function(en,ro,mi,sw,te,mo,fl){return {energy:en,roast:ro,milk:mi,sweet:sw,temp:te,mode:mo,flavor:fl};};
+var WHEEL_PROFILE={
+ 'house-brew':WP(1,1,1,0,'either','calm','any'),'cold-brew':WP(3,2,1,0,'iced','flow','any'),'espresso':WP(3,3,0,0,'hot','sprint','any'),
+ 'latte':WP(2,1,3,1,'either','social','any'),'mocha':WP(2,1,2,2,'either','social','chocolate'),'breve':WP(2,1,3,0,'hot','social','any'),
+ 'cortado':WP(3,2,1,0,'hot','sprint','any'),'matcha':WP(2,0,2,1,'iced','flow','any'),'chai':WP(1,1,2,2,'hot','calm','spiced'),
+ 'nutty-professor':WP(2,1,2,2,'hot','flow','nutty'),'maple-byte':WP(2,1,2,2,'hot','social','caramel'),'flow-state':WP(3,2,2,1,'either','flow','vanilla'),
+ 'tea-navajo':WP(0,0,0,0,'either','calm','herbal'),'tea-green':WP(1,0,0,0,'either','flow','herbal'),'tea-black':WP(1,1,1,0,'either','calm','any'),
+ 'tea-herbal-lemon':WP(0,0,0,1,'either','calm','herbal'),'tea-herbal-peppermint':WP(0,0,0,0,'either','calm','herbal'),
+ 'dark-circuit':WP(3,3,1,1,'iced','flow','chocolate'),'the-kernel':WP(3,3,1,0,'hot','sprint','any'),'black-box':WP(3,3,0,0,'iced','sprint','any'),
+ 'burnt-signal':WP(2,3,0,0,'hot','calm','any'),'white-noise':WP(2,1,3,2,'hot','social','chocolate'),'honeycomb':WP(3,2,1,1,'hot','flow','caramel'),
+ 'caramel-cache':WP(2,1,3,2,'either','social','caramel'),'golden-hour':WP(2,1,3,2,'iced','calm','vanilla'),'green-volt':WP(2,0,2,1,'iced','flow','caramel'),
+ 'chai-charge':WP(2,2,2,2,'hot','sprint','spiced'),'nut-cluster':WP(2,2,2,2,'hot','flow','nutty'),'cinnamon-toast':WP(2,1,3,2,'hot','social','spiced'),
+ 'vanilla-sky':WP(2,1,3,2,'iced','flow','vanilla'),'root-access':WP(2,1,3,2,'hot','calm','caramel'),'cold-circuit':WP(2,2,2,2,'iced','flow','chocolate'),
+ 'static':WP(1,1,1,0,'either','calm','any')};
+var wsel={energy:null,roast:null,milk:null,sweet:null,temp:null,mode:null,flavor:null,flavors:[]};
+var WCX=200,WCY=200,RHUB=86,RRIM=178,RD0=192,RD1=236;
+function polar(cx,cy,r,deg){var a=(deg-90)*Math.PI/180;return[cx+r*Math.cos(a),cy+r*Math.sin(a)];}
+function sector(rIn,rOut,a0,a1){var A=polar(WCX,WCY,rOut,a0),B=polar(WCX,WCY,rOut,a1),C=polar(WCX,WCY,rIn,a1),D=polar(WCX,WCY,rIn,a0);var big=(a1-a0)>180?1:0;return 'M'+A[0]+' '+A[1]+' A'+rOut+' '+rOut+' 0 '+big+' 1 '+B[0]+' '+B[1]+' L'+C[0]+' '+C[1]+' A'+rIn+' '+rIn+' 0 '+big+' 0 '+D[0]+' '+D[1]+' Z';}
+function AW(){return 360/FACTIONS.length;}
+function BT(){var mb=Math.max.apply(null,FACTIONS.map(function(f){return f.mode==='level'?f.bands.length:1;}));return (RRIM-RHUB)/mb;}
+var FLAVOR_TREE={Nutty:['Hazelnut','Almond','Cocoa'],Chocolate:['Dark Chocolate','White Chocolate','Mocha'],Caramel:['Caramel','Maple','Honey'],Vanilla:['Vanilla','Banana Bread'],Spiced:['Cinnamon','Chai spice'],Herbal:['Peppermint','Lemon','Navajo']};
+var detailLevel=1,detailFamily=null;
+function buildWheel(){
+ var svg=$('#curWheel'),g='',aw=AW(),bt=BT();
+ FACTIONS.forEach(function(f,i){var a0=i*aw+1.6,a1=(i+1)*aw-1.6;
+   if(f.mode==='drill'){g+='<path class="wband wdrill" data-fac="'+i+'" d="'+sector(RHUB,RRIM,a0,a1)+'"></path>';}
+   else{f.bands.forEach(function(bn,j){var rIn=RHUB+j*bt,rOut=RHUB+(j+1)*bt;g+='<path class="wband" data-fac="'+i+'" data-lvl="'+j+'" d="'+sector(rIn,rOut,a0,a1)+'"></path>';});}
+   var mid=i*aw+aw/2,lp=polar(WCX,WCY,RRIM+13,mid);g+='<text class="wlabel" x="'+lp[0]+'" y="'+lp[1]+'" text-anchor="middle">'+f.label+'</text>';
+ });
+ g+='<polygon id="curTrace" points=""></polygon>';
+ g+='<circle cx="200" cy="200" r="80" fill="#160a04" stroke="rgba(246,239,207,.18)"></circle>';
+ g+='<text id="hubName" class="hubtxt" x="200" y="192" font-family="Playfair Display,serif" font-style="italic" font-size="20" fill="#fff"></text>';
+ g+='<text id="hubSub" class="hubtxt" x="200" y="214" font-family="Space Mono,monospace" font-size="9" letter-spacing="1" fill="#5CC5F2"></text>';
+ g+='<text id="hubHint" class="hubtxt" x="200" y="204" font-family="Space Mono,monospace" font-size="9" letter-spacing="1.5" fill="rgba(246,239,207,.5)">TUNE</text>';
+ g+='<g id="detailRing"></g>';
+ svg.innerHTML=g;
+ svg.onclick=function(e){var dd=e.target.closest('.dband,.ddone,.dback');if(dd){onDetailClick(dd);return;}var p=e.target.closest('.wband');if(!p)return;var f=+p.dataset.fac;if(FACTIONS[f].mode==='drill'){openDetail();return;}setWheel(f,+p.dataset.lvl);};
+ var rows='';FACTIONS.forEach(function(f,i){if(f.mode==='drill'){rows+='<div class="wrow"><div class="wl">'+f.label+' (tap to combine)</div><div class="wseg wflav" data-fac="'+i+'"></div></div>';}else{rows+='<div class="wrow"><div class="wl">'+f.label+'</div><div class="wseg" data-fac="'+i+'">'+f.bands.map(function(bn,j){return '<button data-lvl="'+j+'">'+bn+'</button>';}).join('')+'</div></div>';}});
+ $('#wheelRows').innerHTML=rows;
+ $('#wheelRows').onclick=function(e){var b=e.target.closest('button');if(!b||!b.parentNode.dataset.fac)return;var f=+b.parentNode.dataset.fac;if(FACTIONS[f].mode==='drill')return;setWheel(f,+b.dataset.lvl);};
+ paintWheel();
+}
+function setWheel(fac,lvl){wsel[FACTIONS[fac].key]=lvl;tick2();paintWheel();resolveWheel();}
+function paintWheel(){
+ var aw=AW(),bt=BT();
+ document.querySelectorAll('#curWheel .wband').forEach(function(p){if(p.classList.contains('wdrill')){p.classList.toggle('on',!!wsel.flavor||(wsel.flavors&&wsel.flavors.length>0));return;}var f=+p.dataset.fac,l=+p.dataset.lvl,fk=FACTIONS[f];var sv=wsel[fk.key];var on=(sv==null)?false:(fk.mode==='level'?l<=sv:l===sv);p.classList.toggle('on',on);});
+ document.querySelectorAll('#wheelRows .wseg').forEach(function(seg){if(seg.classList.contains('wflav'))return;var f=+seg.dataset.fac,fk=FACTIONS[f],sv=wsel[fk.key];[].forEach.call(seg.children,function(b,j){var on=(sv==null)?false:(fk.mode==='level'?j<=sv:j===sv);b.classList.toggle('on',on);});});
+ var pts=[];FACTIONS.forEach(function(f,i){if(f.mode!=='level')return;var sv=wsel[f.key];if(sv==null)return;var r=RHUB+(sv+0.5)*bt,mid=i*aw+aw/2,pt=polar(WCX,WCY,r,mid);pts.push(pt[0].toFixed(1)+','+pt[1].toFixed(1));});
+ var tr=$('#curTrace');if(tr)tr.setAttribute('points',pts.length>=2?pts.join(' '):'');
+}
+/* detail ring */
+function openDetail(){detailLevel=1;detailFamily=null;$('.current')&&document.querySelector('.current').classList.add('drilling');drawDetail();}
+function closeDetail(){$('#detailRing')&&($('#detailRing').innerHTML='');var c=document.querySelector('.current');if(c)c.classList.remove('drilling');paintWheel();resolveWheel();}
+function drawDetail(){var ring=$('#detailRing');if(!ring)return;var opts=detailLevel===1?Object.keys(FLAVOR_TREE):FLAVOR_TREE[detailFamily];var M=opts.length,DA=360/M,g='';
+ opts.forEach(function(o,i){var a0=i*DA+1.2,a1=(i+1)*DA-1.2;var picked=detailLevel===1?(wsel.flavor===o):(wsel.flavors.indexOf(o)>-1);g+='<path class="dband'+(picked?' on':'')+'" data-opt="'+o+'" d="'+sector(RD0,RD1,a0,a1)+'"></path>';var mid=i*DA+DA/2,lp=polar(WCX,WCY,(RD0+RD1)/2,mid);g+='<text class="dlabel" x="'+lp[0]+'" y="'+lp[1]+'" text-anchor="middle">'+o+'</text>';});
+ g+='<circle class="ddone" cx="200" cy="200" r="80" fill="#0c0703" stroke="var(--blue)" opacity=".96"></circle>';
+ g+='<text class="ddone hubtxt" x="200" y="'+(detailLevel===2?190:196)+'" font-family="Space Mono,monospace" font-size="10" letter-spacing="1" fill="#5CC5F2">'+(detailLevel===2?detailFamily.toUpperCase():'PICK A FAMILY')+'</text>';
+ if(detailLevel===2)g+='<text class="dback hubtxt" x="200" y="206" font-family="Space Mono,monospace" font-size="8.5" fill="rgba(246,239,207,.6)">&lt; families</text>';
+ g+='<text class="ddone hubtxt" x="200" y="'+(detailLevel===2?222:212)+'" font-family="Space Mono,monospace" font-size="8.5" fill="rgba(246,239,207,.6)">tap center = done</text>';
+ ring.innerHTML=g;
+}
+function onDetailClick(el){if(el.classList.contains('dback')){detailLevel=1;detailFamily=null;drawDetail();return;}if(el.classList.contains('ddone')){closeDetail();return;}var o=el.dataset.opt;tick2();if(detailLevel===1){wsel.flavor=o;detailFamily=o;detailLevel=2;drawDetail();}else{var i=wsel.flavors.indexOf(o);if(i>-1)wsel.flavors.splice(i,1);else wsel.flavors.push(o);drawDetail();resolveWheel();}}
+function famFlavor(){return wsel.flavor?wsel.flavor.toLowerCase():null;}
+function distFor(k){var p=WHEEL_PROFILE[k],d=0;if(!p)return 999;
+ if(wsel.energy!=null)d+=2.0*Math.abs(p.energy-wsel.energy);
+ if(wsel.roast!=null)d+=2.0*Math.abs(p.roast-wsel.roast);
+ if(wsel.milk!=null)d+=1.5*Math.abs(p.milk-wsel.milk);
+ if(wsel.sweet!=null)d+=1.0*Math.abs(p.sweet-wsel.sweet);
+ if(wsel.temp!=null){var tw=wsel.temp===0?'hot':'iced';if(!(p.temp==='either'||p.temp===tw))d+=2.5;}
+ if(wsel.mode!=null){var mm=['sprint','flow','social','calm'][wsel.mode];if(p.mode!==mm)d+=1.5;}
+ if(wsel.flavor!=null){var ff=famFlavor();if(p.flavor===ff)d+=0;else if(p.flavor==='any')d+=1.2;else d+=1.8;}
+ return d;}
+function wheelScore(){var s={};Object.keys(WHEEL_PROFILE).forEach(function(k){s[k]=100-distFor(k);});return s;}
+function wheelReasons(w){var r=[];if(wsel.energy!=null)r.push(['unplugged','a low trickle','a steady current','a live-wire current'][wsel.energy]);if(wsel.roast!=null&&wsel.roast>1)r.push(['','','a bold roast','it dark and bitter'][wsel.roast]);if(wsel.milk!=null)r.push(['it black','a splash','it creamy','it rich'][wsel.milk]);if(wsel.sweet!=null&&wsel.sweet>0)r.push(['','a touch of sweet','dessert-sweet'][wsel.sweet]);if(wsel.flavors&&wsel.flavors.length)r.push(wsel.flavors.join(' + ').toLowerCase());else if(wsel.flavor)r.push(wsel.flavor.toLowerCase());if(wsel.temp!=null)r.push(wsel.temp===1?'iced':'hot');if(wsel.mode!=null)r.push(['a sprint','deep flow','something social','something calm'][wsel.mode]);return r.filter(Boolean);}
+function joinNicely(a){if(a.length<=1)return a[0]||'';if(a.length===2)return a[0]+' and '+a[1];return a.slice(0,-1).join(', ')+', and '+a[a.length-1];}
+function setCountFn(){return ['energy','roast','milk','sweet','temp','mode','flavor'].filter(function(k){return wsel[k]!=null;}).length;}
+function inventName(){var noun=(wsel.roast>=3&&(wsel.milk==null||wsel.milk<=1))?'Kernel Panic':(wsel.energy>=3&&wsel.temp===1)?'Overclock':(wsel.energy>=3)?'Live Wire':(wsel.sweet>=2)?'Sugar Rush':(wsel.milk>=3)?'Deep Buffer':(wsel.energy===0)?'Sleep Mode':'Custom Current';var lead=(wsel.flavors&&wsel.flavors.length)?wsel.flavors[0]:(wsel.temp===1?'Iced':'Hot');return lead+' '+noun;}
+function inventPrice(){var p=5+((wsel.energy||0)>=3?1:0)+((wsel.flavors?wsel.flavors.length:0)*0.5)+((wsel.milk||0)>=3?0.5:0);return Math.max(4,p);}
+function resolveWheel(){
+ var setCount=setCountFn();var hn=$('#hubName'),hs=$('#hubSub'),hh=$('#hubHint');
+ if(setCount===0){if(hn)hn.textContent='';if(hs)hs.textContent='';if(hh)hh.textContent='TUNE';$('#hubcard').innerHTML='<div class="aura" id="hubAura"></div><div class="empty">Tap the dials. We read your cup live.</div>';return;}
+ var s=wheelScore(),w=pickWinner(s),d=DRINKS[w],pct=matchPct(s,w);
+ var invent=(wsel.flavors&&wsel.flavors.length>=2&&pct<82);
+ if(hh)hh.textContent='';
+ if(invent){var nm=inventName();if(hn)hn.textContent=nm.split(' ').slice(-1)[0];if(hs)hs.textContent='INVENTED';renderHub({invent:true,name:nm,aura:'#7A6CE0',pct:null});return;}
+ if(hn)hn.textContent=d.name.replace('The ','');if(hs)hs.textContent=pct+'% MATCH';
+ renderHub({key:w,drink:d,pct:pct});
+}
+function renderHub(o){
+ var setCount=setCountFn();var showCta=setCount>=2;
+ if(o.invent){
+  var html='<div class="aura" style="background:radial-gradient(120% 90% at 50% 0,'+o.aura+' 0,transparent 70%);opacity:.85"></div>';
+  html+='<div class="persona">'+o.name+'</div><div class="drink">You invented this &middot; a Wired original</div>';
+  html+='<div class="why">You patched '+joinNicely(wsel.flavors)+' over your own base. Nobody else is drinking this.</div>';
+  html+='<div class="hcta"><button class="btn btn-blue" onclick="inventAdd(this)">Order my invention</button><button class="btn btn-line" onclick="inventTweak()">Tweak in builder</button><button class="btn btn-line" onclick="patchIt()">&#9889; Patch it</button></div>';
+  html+='<button class="clear" onclick="clearWheel()">Clear the board</button>';
+  $('#hubcard').innerHTML=html;return;
+ }
+ var d=o.drink,w=o.key;
+ var reasons=wheelReasons(w),why=reasons.length?('You wanted '+joinNicely(reasons)+'.'):d.tagline;
+ var html='<div class="aura" style="background:radial-gradient(120% 90% at 50% 0,'+d.aura+' 0,transparent 70%);opacity:.85"></div>';
+ html+='<div class="persona">'+d.persona+'</div><div class="drink">Your current: '+d.name+' &middot; '+o.pct+'% match</div>';
+ html+='<div class="why">'+why+'</div>';
+ if(w.indexOf('tea-')===0||w==='tea'){html+='<div class="teastrip">Which tea? '+TEA_VARS.map(function(t){return '<button class="teachip'+(w===t?' on':'')+'" onclick="pickTea(\''+t+'\')">'+DRINKS[t].name.replace(' Tea','')+'</button>';}).join('')+'</div>';}
+ if(showCta){html+='<div class="hcta"><button class="btn btn-blue" onclick="quizAdd(\''+w+'\',this)">Order this</button><button class="btn btn-line" onclick="quizTweak(\''+w+'\')">Tweak in builder</button><button class="btn btn-line" onclick="patchIt()">&#9889; Patch it</button></div>';}
+ else{html+='<div style="font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.6);letter-spacing:.08em">Set one more dial to lock it in</div>';}
+ html+='<button class="clear" onclick="clearWheel()">Clear the board</button>';
+ $('#hubcard').innerHTML=html;
+}
+var teaPick=null;
+function pickTea(t){teaPick=t;var d=DRINKS[t];var el=document.querySelector('.hubcard .persona');if(el)el.textContent=d.persona;document.querySelectorAll('.teachip').forEach(function(b){b.classList.toggle('on',b.textContent===d.name.replace(' Tea',''));});var wl=document.querySelector('.hubcard .why');if(wl)wl.textContent=d.tagline;var oc=document.querySelector('.hubcard .btn-blue');if(oc)oc.setAttribute('onclick','quizAdd(\''+t+'\',this)');var tw=document.querySelector('.hubcard .btn-line');if(tw)tw.setAttribute('onclick','quizTweak(\''+t+'\')');tick2();}
+function clearWheel(){wsel={energy:null,roast:null,milk:null,sweet:null,temp:null,mode:null,flavor:null,flavors:[]};closeDetail();paintWheel();resolveWheel();}
+function surpriseSpin(){
+ var pool=Math.random()<0.7?SIGNATURES:Object.keys(WHEEL_PROFILE);var k=pool[Math.floor(Math.random()*pool.length)];var p=WHEEL_PROFILE[k];
+ wsel.energy=p.energy;wsel.roast=p.roast;wsel.milk=p.milk;wsel.sweet=p.sweet;wsel.temp=(p.temp==='either')?(Math.random()<0.5?0:1):(p.temp==='iced'?1:0);
+ wsel.flavor=null;wsel.flavors=[];wsel.mode=null;
+ var reduce=matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches;
+ var bands=document.querySelectorAll('#curWheel .wband:not(.wdrill)');
+ if(reduce||!bands.length){paintWheel();resolveWheel();return;}
+ var t0=null,dur=850,last=0;
+ (function frame(t){if(!t0)t0=t;var el=Math.min((t-t0)/dur,1);if(t-last>90+el*160){last=t;bands.forEach(function(b){b.classList.remove('on');});var r=bands[Math.floor(Math.random()*bands.length)];if(r)r.classList.add('on');tick2();}if(el<1)requestAnimationFrame(frame);else{paintWheel();resolveWheel();}})(0);
+}
+function dialLink(){var enc=[wsel.energy,wsel.roast,wsel.milk,wsel.sweet,wsel.temp,wsel.mode].map(function(v){return v==null?'x':v;}).join(',');if(wsel.flavors&&wsel.flavors.length)enc+='|'+wsel.flavors.join('.');return location.origin+location.pathname+'?dial='+enc;}
+function patchIt(){var url=dialLink();var nm=($('#hubName')&&$('#hubName').textContent)||'my current';if(navigator.share){navigator.share({title:'My Wired current',text:nm+' at Wired Coffee',url:url}).catch(function(){});}else if(navigator.clipboard){navigator.clipboard.writeText(url);toast('Link copied');}else{toast('Copy: '+url);}}
+function toast(msg){var t=document.createElement('div');t.className='proto';t.style.left='50%';t.style.transform='translateX(-50%)';t.style.bottom='60px';t.textContent='⚡ '+msg;document.body.appendChild(t);setTimeout(function(){t.remove();},1900);}
+function toggleDeep(){deep=!deep;FACTIONS=deep?FACTIONS_CORE.concat(FACTIONS_ADV):FACTIONS_CORE.slice();if(!deep){wsel.flavor=null;wsel.flavors=[];wsel.mode=null;}buildWheel();resolveWheel();var b=$('#deeperBtn');if(b)b.textContent=deep?'− Keep it simple':'+ Go deeper';}
+function quizAdd(w,el){var d=DRINKS[w];add(d.name,'your Current',d.addPrice,el);openCart();}
+function quizTweak(w){var seed=SEED[w]||{base:'Latte',milk:'Whole',syrup:null,temp:'hot'};if(BASES[seed.base]===undefined)seed.base='Latte';sel.base=seed.base;sel.milk=seed.milk;sel.syrup=seed.syrup;sel.temp=seed.temp;sel.pump=0;selectBaseStrength(seed.base,seed.temp);paint();scrollTo2('#build');var inst=document.querySelector('.inst');if(inst&&inst.animate)inst.animate([{boxShadow:'0 0 0 rgba(31,154,214,0)'},{boxShadow:'0 0 40px rgba(31,154,214,.6)'},{boxShadow:'0 0 0 rgba(31,154,214,0)'}],{duration:1200});}
+function inventComp(){var b=(wsel.roast>=3&&(wsel.milk==null||wsel.milk<=1))?((wsel.energy>=3&&wsel.temp===1)?'Cold Brew':'Espresso'):(wsel.milk>=3?'Breve':(wsel.milk>=2?(hasFlav('chocolate')?'Mocha':'Latte'):(wsel.roast<=1?'House Brew':'Cortado')));var milk=['Black','Almond','Oat','Whole'][wsel.milk==null?2:wsel.milk];var syr=null;var sm={'Hazelnut':'Hazelnut','Almond':null,'Cocoa':'Dark Chocolate','Dark Chocolate':'Dark Chocolate','White Chocolate':'White Chocolate','Mocha':'Dark Chocolate','Caramel':'Caramel','Maple':'Maple','Honey':'Honey','Vanilla':'Vanilla','Banana Bread':'Vanilla','Cinnamon':'Maple','Chai spice':null,'Peppermint':'Dark Chocolate','Lemon':null,'Navajo':null};(wsel.flavors||[]).forEach(function(f){if(!syr&&sm[f])syr=sm[f];});return {base:b,milk:milk,syrup:syr,temp:wsel.temp===1?'iced':'hot'};}
+function hasFlav(x){return (wsel.flavors||[]).join(',').toLowerCase().indexOf(x)>-1||famFlavor()===x;}
+function inventAdd(el){add(inventName(),'invented: '+joinNicely(wsel.flavors||[]),inventPrice(),el);openCart();}
+function inventTweak(){var c=inventComp();sel.base=c.base;sel.milk=c.milk;sel.syrup=c.syrup;sel.temp=c.temp;sel.pump=(wsel.sweet||0);selectBaseStrength(c.base,c.temp);if(wsel.energy>=3)sel.strength=Math.min((STRENGTH[c.base]||{scale:['']}).scale.length-1,sel.strength+1);paint();scrollTo2('#build');}
+buildWheel();resolveWheel();
+
+/* ===== BUILDER ===== */
+var BASES={'Latte':4,'Mocha':4,'Cold Brew':4,'Cortado':4,'Matcha':4,'Chai':4,'House Brew':3,'Espresso':2,'Breve':4.5,'Americano':3.5,'Cappuccino':4,'Tea':2};
+var MILKS=['Whole','Half n\' Half','Almond','Oat','Soy','Black'];
+var SYRUPS=['Maple','Vanilla','Hazelnut','Caramel','Honey','Dark Chocolate','White Chocolate'];
+var BASE_VIS={
+ 'House Brew':{color:'#4A2A15',milkFrac:0,foamFac:0},'Cold Brew':{color:'#2A160A',milkFrac:0,foamFac:0},
+ 'Espresso':{color:'#2E1608',milkFrac:0,foamFac:.3},'Latte':{color:'#3A1E0C',milkFrac:.62,foamFac:1},
+ 'Mocha':{color:'#331A0C',milkFrac:.5,foamFac:1},'Breve':{color:'#3A1E0C',milkFrac:.7,foamFac:1.2},
+ 'Cortado':{color:'#331808',milkFrac:.4,foamFac:.6},'Tea':{color:'#A8641E',milkFrac:0,foamFac:0},
+ 'Matcha':{color:'#6FA53C',milkFrac:.55,foamFac:1},'Chai':{color:'#8C5A2B',milkFrac:.5,foamFac:1},
+ 'Americano':{color:'#33190A',milkFrac:.15,foamFac:.2},'Cappuccino':{color:'#3A1E0C',milkFrac:.55,foamFac:1.35}};
+var STRENGTH={
+ 'Espresso':{unit:'shots',scale:['1 shot','2 shots','3 shots'],def:0,priceStep:1.00,mg:[75,150,225],cup:'shot'},
+ 'Cortado':{unit:'shots',scale:['1 shot','2 shots'],def:0,priceStep:1.00,mg:[75,150],cup:'shotmilk'},
+ 'Latte':{unit:'shots',scale:['1 shot','2 shots','3 shots'],def:0,priceStep:1.00,mg:[75,150,225],cup:'tallmilk'},
+ 'Mocha':{unit:'shots',scale:['1 shot','2 shots','3 shots'],def:0,priceStep:1.00,mg:[75,150,225],cup:'tallmilk'},
+ 'Breve':{unit:'shots',scale:['1 shot','2 shots','3 shots'],def:0,priceStep:1.00,mg:[75,150,225],cup:'tallmilk'},
+ 'Cold Brew':{unit:'concentration',scale:['Regular','Bold','Extra Bold'],def:1,priceStep:0.50,mg:[90,120,150],cup:'icedtall'},
+ 'House Brew':{unit:'strength',scale:['Mild','Regular','Strong'],def:1,priceStep:0.00,mg:[50,60,75],cup:'mug'},
+ 'Matcha':{unit:'scoops',scale:['Light','Ceremonial','Double'],def:1,priceStep:0.75,mg:[40,60,80],cup:'bowl'},
+ 'Chai':{unit:'steep',scale:['Light','Regular','Strong'],def:1,priceStep:0.00,mg:[30,40,55],cup:'mug'},
+ 'Tea':{unit:'steep',scale:['Light','Regular','Strong'],def:1,priceStep:0.00,mg:[20,30,45],cup:'mug'},
+ 'Americano':{unit:'shots',scale:['1 shot','2 shots','3 shots'],def:0,priceStep:1.00,mg:[75,150,225],cup:'mug'},
+ 'Cappuccino':{unit:'shots',scale:['1 shot','2 shots'],def:0,priceStep:1.00,mg:[75,150],cup:'tallmilk'}};
+var FORCE_TEMP={'Cold Brew':'iced','Espresso':'hot','Cortado':'hot','Breve':'hot','Chai':'hot','Matcha':'iced','Cappuccino':'hot'};
+var MILK_TINT={'Black':null,'Whole':'#E7D6A8','Half n\' Half':'#EFE3BE','Oat':'#DFC9A0','Almond':'#D9CDB0','Soy':'#E3D8B4'};
+var MILK_FOAM={'Black':0,'Whole':12,'Half n\' Half':16,'Oat':12,'Almond':9,'Soy':9};
+var SYRUP_COL={'Maple':'#C98A3C','Vanilla':'#EFE1B8','Hazelnut':'#B98A5A','Caramel':'#C57B2C','Honey':'#D8A93A','Dark Chocolate':'#4A2A16','White Chocolate':'#EDE3C6'};
+var sel={base:null,size:'Regular',strength:0,shot:0,pump:0,milk:'Whole',syrup:null,temp:'hot'};
+var H=276,TOPY=108;
+function canShot(b){return b&&STRENGTH[b]&&STRENGTH[b].unit!=='shots';}
+function shotName(b,n){if(!n)return null;if(b==='House Brew')return n>=2?'Black Eye':'Red Eye';if(b==='Cold Brew')return 'Shot in the Dark';if(b==='Chai')return 'Dirty Chai';if(b==='Matcha')return 'Dirty Matcha';return null;}
+function hx(h){h=h.replace('#','');return[parseInt(h.substr(0,2),16),parseInt(h.substr(2,2),16),parseInt(h.substr(4,2),16)];}
+function mixHex(a,b,f){if(!b||f<=0)return a;if(f>1)f=1;var x=hx(a),y=hx(b);return '#'+[0,1,2].map(function(i){var v=Math.round(x[i]+(y[i]-x[i])*f);return('0'+v.toString(16)).slice(-2);}).join('');}
+function chip(t,on,dl){return '<button class="chip'+(on?' on':'')+'">'+t+(dl?' <span class="dl">'+dl+'</span>':'')+'</button>';}
+function meter(id,val,max){var h='';for(var i=0;i<max;i++)h+='<span class="'+(i<val?'on':'')+'"></span>';$(id).innerHTML=h;}
+function selectBaseStrength(v,temp){var cfg=STRENGTH[v];if(cfg)sel.strength=cfg.def;sel.shot=0;var forced=FORCE_TEMP[v];sel.temp=forced?forced:(temp||'hot');if(v==='Espresso'||v==='Tea')sel.milk='Black';}
+function setSize(s){sel.size=s;paint();}
+function paint(){
+ $('#gBase').innerHTML=Object.keys(BASES).map(function(b){return chip(b,sel.base===b,'$'+BASES[b]);}).join('');
+ $('#gMilk').innerHTML=MILKS.map(function(m){return chip(m,sel.milk===m,(m==='Whole'||m==='Black')?'':'+50¢');}).join('');
+ $('#gSyrup').innerHTML=chip('None',!sel.syrup,'')+SYRUPS.map(function(s){return chip(s,sel.syrup===s,'+50¢');}).join('');
+ bindGroup('#gBase',Object.keys(BASES),function(v){sel.base=v;selectBaseStrength(v);});
+ bindGroup('#gMilk',MILKS,function(v){sel.milk=v;tick2();});
+ bindGroup('#gSyrup',['None'].concat(SYRUPS),function(v){sel.syrup=v==='None'?null:v;if(sel.syrup&&sel.pump===0)sel.pump=1;if(!sel.syrup)sel.pump=0;tick2();});
+ var cfg=sel.base?STRENGTH[sel.base]:null;
+ if(cfg){$('#shotN').textContent=cfg.scale[sel.strength];meter('#shotM',sel.strength+1,cfg.scale.length);$('#shotCap').textContent=cfg.unit;}
+ else{$('#shotN').textContent='--';$('#shotM').innerHTML='';$('#shotCap').textContent='pick a base';}
+ $('#pumpN').textContent=sel.pump;meter('#pumpM',sel.pump,4);
+ var sc=$('#sweetCap');if(sc)sc.textContent=(sel.pump>0)?'1st free, +50¢ each':'syrup pumps';
+ var xr=$('#xshotRow');if(xr){if(canShot(sel.base)){xr.style.display='';$('#xshotN').textContent=sel.shot;$('#xshotName').textContent=shotName(sel.base,sel.shot)||'';}else xr.style.display='none';}
+ if($('#s12')){$('#s12').classList.toggle('on',sel.size==='Regular');$('#s16').classList.toggle('on',sel.size==='Large');var s20=$('#s20');if(s20)s20.classList.toggle('on',sel.size==='XL');}
+ var forced=sel.base&&FORCE_TEMP[sel.base];
+ $('#tHot').classList.toggle('on',sel.temp==='hot');$('#tIced').classList.toggle('on',sel.temp==='iced');
+ $('#tHot').disabled=(forced==='iced');$('#tIced').disabled=(forced==='hot');
+ calc();renderCup();
+}
+function bindGroup(id,vals,set){var c=$(id).children;for(var i=0;i<c.length;i++){(function(i){c[i].onclick=function(){set(vals[i]);paint();};})(i);}}
+function setTemp(t){var forced=sel.base&&FORCE_TEMP[sel.base];if(forced)return;sel.temp=t;paint();}
+function step(k,d){if(k==='shot'){if(!sel.base)return;var n=STRENGTH[sel.base].scale.length;sel.strength=Math.max(0,Math.min(n-1,sel.strength+d));flare();}else if(k==='xshot'){if(!canShot(sel.base))return;sel.shot=Math.max(0,Math.min(2,sel.shot+d));flare();if(navigator.vibrate)navigator.vibrate([8,18,8]);}else{sel.pump=Math.max(0,Math.min(4,sel.pump+d));}tick2();paint();}
+function price(){if(!sel.base)return null;var cfg=STRENGTH[sel.base];var p=BASES[sel.base]+(sel.size==='Large'?1:(sel.size==='XL'?2:0));p+=sel.strength*cfg.priceStep;if(sel.milk!=='Whole'&&sel.milk!=='Black')p+=0.5;if(sel.syrup)p+=0.5;p+=Math.max(0,sel.pump-1)*0.5;p+=sel.shot*1;return p;}
+function recipe(){if(!sel.base)return 'Pick a base to begin';var cfg=STRENGTH[sel.base];var sn=shotName(sel.base,sel.shot);var a=[];a.push(cfg.scale[sel.strength]);if(sel.milk!=='Black')a.push(sel.milk);a.push(sn||((sel.temp==='iced'?'Iced ':'')+sel.base));if(sel.shot&&!sn)a.push('+'+sel.shot+' shot');if(sel.syrup)a.push('+ '+sel.syrup);if(sel.syrup&&sel.pump>=1)a.push('('+sel.pump+' pump'+(sel.pump>1?'s':'')+')');if(sel.size==='Large')a.push('16oz');if(sel.size==='XL')a.push('20oz');return a.join(' ');}
+function calc(){var p=price();$('#recipe').textContent=recipe();var pe=$('#bPrice'),ab=$('#addBuild');if(p===null){pe.innerHTML='$&ndash;.&ndash;&ndash;';ab.style.opacity=.5;ab.style.pointerEvents='none';}else{pe.textContent='$'+p.toFixed(2);ab.style.opacity=1;ab.style.pointerEvents='auto';}}
+function setSyrupBands(n){var floor=TOPY+H,h='';for(var i=0;i<4;i++){var y=floor-8-(i*9);h+='<rect x="80" y="'+y+'" width="140" height="8" fill="'+(SYRUP_COL[sel.syrup]||'#D9C79E')+'" opacity="'+(i<n?0.92:0)+'" style="transition:opacity .35s '+(i*0.05)+'s"/>';}$('#syrup').innerHTML=h;}
+function setIce(on){if(!on){$('#ice').innerHTML='';return;}var h='',rot=[-12,10,-6,14,4];for(var i=0;i<5;i++){var x=92+(i%3)*42+(i>2?20:0),y=TOPY+80+(i*28);h+='<rect x="'+x+'" y="'+y+'" width="32" height="32" rx="6" fill="rgba(246,239,207,.28)" stroke="rgba(246,239,207,.45)" transform="rotate('+rot[i]+' '+(x+16)+' '+(y+16)+')"/>';}$('#ice').innerHTML=h;}
+function renderCup(){
+ var svg=$('#cupSvg');if(!svg)return;
+ if(!sel.base){$('#liquid').style.transform='scaleY(0.12)';$('#liquid').style.fill='#2E1608';$('#foam').setAttribute('ry',0);$('#crema').setAttribute('ry',0);$('#steam').style.opacity=0;setIce(false);setSyrupBands(0);$('#glow').setAttribute('opacity',0.18);$('#calMg').textContent='--';$('#cupSize').textContent='12 OZ';$('#sleeveName').textContent=($('#cupName').value.trim().toUpperCase()||'YOUR NAME');return;}
+ var b=BASE_VIS[sel.base],cfg=STRENGTH[sel.base],si=sel.strength,cup=cfg.cup,tint=MILK_TINT[sel.milk];
+ var level,liquid,iced=(sel.temp==='iced'),steam=!iced,foamR=(MILK_FOAM[sel.milk]||0)*(b.foamFac||0),cremaRy=0,size='12 OZ';
+ if(cup==='shot'){level=.30+si*.04;liquid=b.color;foamR=0;iced=false;steam=true;cremaRy=4+(si+1)*1.6;size='3 OZ';}
+ else if(cup==='shotmilk'){level=.50;liquid=mixHex(b.color,tint,(sel.milk==='Black')?0:b.milkFrac);cremaRy=4+(si+1)*1.4;size='4.5 OZ';}
+ else if(cup==='tallmilk'){level=.86;var frac=(sel.milk==='Black')?0:Math.max(0,b.milkFrac-si*0.14);liquid=mixHex(b.color,tint,frac);cremaRy=3+si*1.4;}
+ else if(cup==='icedtall'){level=.90+si*.02;liquid=mixHex(b.color,'#160a0a',si*0.25);iced=true;steam=false;foamR=0;size='16 OZ';}
+ else if(cup==='mug'){level=.90;var deep=(sel.base==='House Brew')?'#2a1305':'#5A2E12';liquid=mixHex(b.color,deep,si*0.22);if(sel.milk!=='Black'&&b.milkFrac>0)liquid=mixHex(liquid,tint,b.milkFrac*0.6);}
+ else if(cup==='bowl'){level=.88;liquid=mixHex('#6FA53C','#3F7A22',si*0.30);foamR=8;size='12 OZ';}
+ else{level=.5;liquid=b.color;}
+ if(sel.shot){liquid=mixHex(liquid,'#1c0d05',0.12*sel.shot);cremaRy=Math.max(cremaRy,3+3*sel.shot);}
+ if(sel.size==='Large'){level=Math.min(0.96,level+0.03);}else if(sel.size==='XL'){level=Math.min(0.98,level+0.06);}
+ var fillTopPx=(1-level)*H;
+ $('#liquid').style.fill=liquid;$('#liquid').style.transform='scaleY('+level+')';
+ var foam=$('#foam');foam.setAttribute('ry',foamR);foam.style.fill=tint||'#EFE3BE';foam.style.transform='translateY('+fillTopPx+'px)';
+ var crema=$('#crema');crema.setAttribute('ry',cremaRy);crema.style.transform='translateY('+fillTopPx+'px)';
+ setSyrupBands(sel.pump);
+ var glowO=Math.min(1,0.18+(si+1)*0.18);$('#glow').setAttribute('opacity',glowO);$('#glow').setAttribute('rx',150+si*16);
+ setIce(iced);$('#steam').style.opacity=steam?0.9:0;
+ $('#sleeveName').textContent=($('#cupName').value.trim().toUpperCase()||'YOUR NAME');
+ $('#calMg').textContent=(cfg.mg[si]+sel.shot*75)+'mg';$('#cupSize').textContent=(sel.size==='XL'?'20 OZ':(sel.size==='Large'?'16 OZ':size));
+}
+function flare(){var g=$('#glow');g.setAttribute('opacity',0.95);setTimeout(renderCup,380);}
+function addBuild(el){var p=price();if(p===null)return;var cfg=STRENGTH[sel.base];var sn=shotName(sel.base,sel.shot);var mods=[];mods.push(cfg.scale[sel.strength]);if(sel.shot&&!sn)mods.push('+'+sel.shot+' shot');if(sel.temp==='iced')mods.push('iced');if(sel.size==='Large')mods.push('16oz');if(sel.size==='XL')mods.push('20oz');if(sel.milk!=='Whole')mods.push(sel.milk);if(sel.syrup)mods.push(sel.syrup);var nm=$('#cupName').value.trim();var drink=sn||sel.base;
+ $('#liquid').style.transform='scaleY(0.02)';setTimeout(renderCup,60);flare();
+ setTimeout(function(){add((nm?nm+"'s ":'')+drink,mods.join(', '),p,el);},700);}
+$('#cupName').addEventListener('input',renderCup);
+paint();
+
+/* ===== MENU ===== */
+var MENU=[
+ {c:'&#9889; Signature Drinks',items:[['Nutty Professor','5 / 6 / 7','Espresso + almond milk + hazelnut + cocoa','12/16/20oz &middot; <b>Med</b> &middot; 75mg'],['Maple Byte','5 / 6 / 7','Espresso + whole milk + maple + cinnamon','12/16/20oz &middot; <b>Med</b>'],['Flow State','5 / 6 / 7','2x espresso + oat + banana bread syrup','12/16/20oz &middot; <b>High current</b> &middot; 150mg'],['Prickly Palmer','5 / 6 / 7','Prickly pear + lemonade + Navajo black tea','12/16/20oz &middot; caffeine-light']]},
+ {c:'&#9889; Coffee &amp; Espresso',items:[['House Brew','3 / 4 / 5','Daily drip','12/16/20oz &middot; <b>Power Hour pick</b>'],['Cold Brew','4 / 5 / 6','Slow-steeped, smooth','Iced &middot; <b>High current</b> &middot; Power Hour pick'],['Latte','4 / 5 / 6','Espresso + steamed milk','Hot/Iced'],['Mocha','4 / 5 / 6','Espresso + chocolate + milk','Hot/Iced'],['Breve','4.5 / 5.5 / 6.5','Espresso + half &amp; half','Hot &middot; rich'],['Americano','3.5 / 4.5 / 5.5','Espresso + hot water','Hot &middot; clean'],['Cappuccino','4 / 5','Espresso + foamed milk','12/16oz'],['Cortado','4','Equal parts espresso + milk','12oz'],['Espresso','2 / 4','Pulled fresh, all day','Single / Double &middot; <b>Max</b>']]},
+ {c:'&#9889; Sippers',items:[['Tea','2 / 3 / 4','Navajo, black, or green','Hot/Iced &middot; Power Hour pick'],['Matcha','4 / 5 / 6','Whisked matcha','Hot/Iced'],['Chai','4 / 5 / 6','Spiced black tea + milk','Hot/Iced'],['Lemonade','2.5 / 3 / 3.5','Regular or prickly pear','Power Hour pick'],['Soda','2.5','Assorted','Power Hour pick'],['Rize Fuel Energy','2.5','16oz can','Grab &amp; go']]},
+ {c:'&#9889; Smoothies',items:[['Circuit Berry','5.5 / 6.5 / 7.5','Strawberry + blueberry + raspberry + banana','Dairy-free on request'],['Maker Mango','5.5 / 6.5 / 7.5','Mango + pineapple + peach','Dairy-free on request'],['Pink Prototype','5.5 / 6.5 / 7.5','Strawberry + banana','Dairy-free on request'],['Peach Paradise','5.5 / 6.5 / 7.5','Peach + mango + orange','Dairy-free on request'],['Green Machine','5.5 / 6.5 / 7.5','Spinach + mango + pineapple + banana','Dairy-free on request'],['Java Jolt','6 / 7 / 8','Espresso + banana + chocolate + peanut butter','The caffeinated one']]},
+ {c:'&#9889; Pizza',items:[['Cheese','3.5 / 13','Slice or 16&quot; whole','Power Hour pick (slice)'],['Pepperoni','4 / 15','Slice or 16&quot; whole','Slice or whole'],['Specialty','5 / 18','Ask what today&rsquo;s is','Slice or 16&quot; whole']]},
+ {c:'&#9889; Bagels &amp; Bakery',items:[['Bagel &amp; Cream Cheese','3.5','Fresh bagel + cream cheese','Toasted'],['Breakfast Bagel','6.5','Egg + cheese + bacon or sausage','The morning fix'],['Double Chocolate Espresso Cookie','3','Baked fresh','Has espresso in it'],['Chocolate Chip Cookie','3','Baked fresh','A classic']]},
+ {c:'&#9889; Combos',items:[['Maker&rsquo;s Lunch','10','2 pizza slices + 16oz drink','House brew, iced tea, soda, or lemonade'],['Jump Start','8','Breakfast bagel + 12oz house brew or tea','The opener'],['Quick Byte','5','Bagel &amp; cream cheese + 12oz house brew or tea','In and out']]}];
+$('#menuCols').innerHTML=[MENU.slice(0,3),MENU.slice(3)].map(function(col){return '<div>'+col.map(function(cat){return '<div class="mcat"><h3>'+cat.c+'</h3>'+cat.items.map(function(it){return '<div class="mrow" onclick="this.classList.toggle(\'open\')"><div class="top"><span class="n">'+it[0]+'</span><span class="lead"></span><span class="p">'+it[1]+'</span></div><div class="eq">'+it[2]+'</div><div class="exp">'+it[3]+'</div></div>';}).join('')+'</div>';}).join('')+'</div>';}).join('');
+
+/* ===== MAKE IT YOURS ===== */
+var IC={
+ milk:'<path d="M8 3h8l2 4v14H6V7z"/><path d="M8 3l-2 4h12"/><line x1="6" y1="14" x2="18" y2="14" stroke="#1F9AD6"/>',
+ syrup:'<path d="M12 3c4 6 5 8 5 11a5 5 0 0 1-10 0c0-3 1-5 5-11z"/><circle cx="10" cy="13" r="1.4" fill="#1F9AD6" stroke="none"/>',
+ shot:'<path d="M13 2 L5 13 h5 l-1 9 8-12 h-5 z"/><circle cx="19" cy="4" r="1.2" fill="#1F9AD6" stroke="none"/>',
+ temp:'<path d="M12 4v9"/><circle cx="12" cy="16" r="3.5"/><path d="M20 6l-2 2M20 10h-2" stroke="#1F9AD6"/>',
+ roast:'<path d="M4 17a8 8 0 0 1 16 0"/><line x1="12" y1="17" x2="17" y2="12" stroke="#1F9AD6"/><circle cx="12" cy="17" r="1.4" fill="#1F9AD6" stroke="none"/>',
+ sweet:'<rect x="5" y="9" width="8" height="8" rx="1"/><rect x="11" y="5" width="8" height="8" rx="1"/><path d="M15 8v3M13.5 9.5h3" stroke="#1F9AD6"/>',
+ size:'<rect x="4" y="8" width="7" height="11" rx="1"/><rect x="12" y="4" width="8" height="15" rx="1"/><line x1="12" y1="6" x2="20" y2="6" stroke="#1F9AD6"/>',
+ top:'<path d="M8 3h8l-1 4H9z"/><path d="M9 7c-1 4-1 8 0 12h6c1-4 1-8 0-12"/><circle cx="10" cy="12" r="1" fill="#1F9AD6" stroke="none"/><circle cx="14" cy="15" r="1"/>',
+ diet:'<path d="M12 20c0-6 3-11 8-13-1 7-3 11-8 13z"/><path d="M12 20C8 16 6 10 6 5c3 2 5 6 6 10" stroke="#1F9AD6"/>'
+};
+function icon(k){return '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">'+IC[k]+'</svg>';}
+var MIY=[
+ {i:'milk',n:'Milk',o:'Whole &middot; Half &amp; Half &middot; Oat <span class="pl">+50&cent;</span> &middot; Almond <span class="pl">+50&cent;</span> &middot; Soy <span class="pl">+50&cent;</span> &middot; Black (none)'},
+ {i:'syrup',n:'Syrup',o:'Maple &middot; Vanilla &middot; Hazelnut &middot; Caramel &middot; Honey &middot; Dark Chocolate &middot; White Chocolate',note:'1st pump free, +50&cent; each after'},
+ {i:'shot',n:'Add espresso',o:'Add a shot <span class="pl">+$1</span>',note:'Red Eye on drip &middot; Dirty Chai &middot; Shot in the Dark'},
+ {i:'temp',n:'Temp',o:'Hot or Iced',note:'some drinks are one or the other'},
+ {i:'roast',n:'Roast',o:'Smooth &middot; Balanced &middot; Bold &middot; Dark &amp; bitter',note:'drip &amp; espresso'},
+ {i:'sweet',n:'Sweetness',o:'0 to 4 pumps',note:'1st free, +50&cent; each'},
+ {i:'size',n:'Size',o:'12 oz &middot; 16 oz <span class="pl">+$1</span>'},
+ {i:'top',n:'Top it',o:'Cocoa dust &middot; Cinnamon &middot; Banana-bread drizzle <span class="pl">+50&cent;</span>'},
+ {i:'diet',n:'Diet',o:'Oat / Almond / Soy non-dairy &middot; Sugar-free syrup &middot; Decaf or half-caf',note:'no charge'}
+];
+$('#miyGrid').innerHTML=MIY.map(function(m){return '<div class="miy-card"><div class="ic">'+icon(m.i)+'<b>'+m.n+'</b></div><div class="opts">'+m.o+'</div>'+(m.note?'<div class="note">'+m.note+'</div>':'')+'</div>';}).join('');
+
+/* ===== STORY: count-up + cup-flow ===== */
+function countUp(el){var to=+el.dataset.count,suf=el.dataset.suf||'';if(el.dataset.raw||(matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches)){el.textContent=to+(el.dataset.raw?'':suf);return;}var s=null;function f(t){if(!s)s=t;var p=Math.min((t-s)/1100,1),e=1-Math.pow(1-p,3);el.textContent=Math.round(e*to)+suf;if(p<1)requestAnimationFrame(f);}requestAnimationFrame(f);}
+var io2=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;if(e.target.classList.contains('impact'))e.target.querySelectorAll('[data-count]').forEach(countUp);if(e.target.classList.contains('cupflow')){var cf=$('#cfFill');if(cf)cf.style.width='100%';}io2.unobserve(e.target);})},{threshold:.3});
+(function(){var a=$('.impact');if(a)io2.observe(a);var b=$('.cupflow');if(b)io2.observe(b);})();
+
+/* ===== CART ===== */
+var cart=[],tipRate=.18,memberOn=false;
+function add(name,mod,pr,srcEl){cart.push({name:name,mod:mod,price:pr});render();fly(srcEl);}
+function fly(srcEl){var cb=$('#cartDot');if(!cb)return;var to=cb.getBoundingClientRect(),from=srcEl?srcEl.getBoundingClientRect():{left:innerWidth/2,top:innerHeight/2,width:0,height:0};var s=document.createElement('div');s.className='spark';document.body.appendChild(s);var x0=from.left+from.width/2,y0=from.top+from.height/2,x1=to.left+to.width/2,y1=to.top+to.height/2,t0=null,dur=640;function fr(t){if(!t0)t0=t;var p=Math.min((t-t0)/dur,1),e=1-Math.pow(1-p,3),x=x0+(x1-x0)*e,y=y0+(y1-y0)*e-Math.sin(p*Math.PI)*130;s.style.left=x+'px';s.style.top=y+'px';s.style.transform='translate(-50%,-50%) scale('+(1-p*0.5)+')';s.style.opacity=1-p*0.3;if(p<1)requestAnimationFrame(fr);else{s.remove();cb.classList.add('hot');if(cb.animate)cb.animate([{transform:'scale(1)'},{transform:'scale(1.5)'},{transform:'scale(1)'}],{duration:340});}}requestAnimationFrame(fr);}
+function rm(i){cart.splice(i,1);render();}
+function setTip(el,r){tipRate=r;document.querySelectorAll('.tip').forEach(function(t){t.classList.remove('on');});el.classList.add('on');render();}
+function toggleMem(){memberOn=!memberOn;$('#memSw').classList.toggle('on',memberOn);render();}
+function render(){var box=$('#cartItems');$('#cartDot').textContent=cart.length;if(!cart.length){box.innerHTML='<div class="empty">Empty cart. Low voltage.<br>Add something with a spark.</div>';$('#cartDot').classList.remove('hot');}else box.innerHTML=cart.map(function(c,i){return '<div class="ci"><div><div class="nm">'+c.name+'</div>'+(c.mod?'<div class="mod">'+c.mod+'</div>':'')+'<div class="rm" onclick="rm('+i+')">Remove</div></div><div class="pr">$'+c.price.toFixed(2)+'</div></div>';}).join('');
+ var sub=cart.reduce(function(a,c){return a+c.price;},0);var disc=0;var tp=sub*tipRate;
+ $('#sub').textContent='$'+sub.toFixed(2);$('#tipv').textContent='$'+tp.toFixed(2);$('#tot').textContent='$'+(sub-disc+tp).toFixed(2);
+ $('#discLn').style.display=disc>0?'flex':'none';$('#discv').textContent='-$'+disc.toFixed(2);
+ var rw=$('#rewardWrap');if(sub>0){rw.style.display='block';var goal=25,left=Math.max(0,goal-sub);$('#rewardBar').style.width=Math.min(100,sub/goal*100)+'%';$('#rewardTxt').innerHTML=left>0?('$'+left.toFixed(2)+' from a free makerspace day-pass'):'⚡ Free day-pass unlocked';}else rw.style.display='none';}
+function openCart(){$('#cart').classList.add('open');$('#scrim').classList.add('open');}
+function closeCart(){$('#cart').classList.remove('open');$('#scrim').classList.remove('open');}
+var sqPayments=null,sqCard=null;
+async function initSquare(){
+ if(typeof Square==='undefined')throw new Error('Payment system did not load. Check your connection.');
+ if(!sqPayments)sqPayments=window.Square.payments(SQ_APP,SQ_LOC);
+ if(!sqCard){sqCard=await sqPayments.card();await sqCard.attach('#card-container');}
+}
+function coErrShow(m){var e=$('#coErr');e.textContent=m;e.style.display='block';}
+function coErrHide(){$('#coErr').style.display='none';}
+function checkout(){
+ if(!cart.length)return;
+ $('#cartMain').style.display='none';$('#coPanel').style.display='block';
+ $('#coPay').textContent='Pay '+$('#tot').textContent;
+ initSquare().catch(function(e){coErrShow(e.message);});
+}
+function coBack(){$('#coPanel').style.display='none';$('#cartMain').style.display='';coErrHide();}
+async function coSubmit(){
+ var nm=$('#coName').value.trim(),ph=$('#coPhone').value.trim();
+ if(!nm){coErrShow('Please enter a name for the order.');return;}
+ if(ph.replace(/\D/g,'').length<10){coErrShow('Please enter a valid phone number.');return;}
+ var btn=$('#coPay');btn.style.pointerEvents='none';btn.textContent='Processing...';coErrHide();
+ try{
+  var tok=await sqCard.tokenize();
+  if(tok.status!=='OK')throw new Error((tok.errors&&tok.errors[0]&&tok.errors[0].message)||'Card details are not valid.');
+  var sub=cart.reduce(function(a,c){return a+c.price;},0);
+  var payload={sourceId:tok.token,customerName:nm,customerPhone:ph,
+   items:cart.map(function(l){return{name:l.name,variant:'',qty:1,unitPrice:l.price,modifiers:l.mod?[{name:l.mod,price:0}]:[]};}),
+   tipAmount:(sub*tipRate).toFixed(2),subtotalCheck:sub.toFixed(2)};
+  var res=await fetch('/.netlify/functions/process-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  var data=await res.json();
+  if(!res.ok||!data.ok)throw new Error(data.error||'Order failed. Try again or order at the counter.');
+  $('#coPanel').innerHTML='<div style="text-align:center;padding:26px 6px"><div style="font-family:var(--disp);font-size:26px;color:var(--cream)">&#9889; Order in.</div><div style="font-family:var(--mono);font-size:12px;color:var(--blue-hi);margin:10px 0">Order #'+String(data.orderId||'').slice(-6).toUpperCase()+' &middot; total $'+data.totalDollars+'</div><div style="font-family:var(--body);font-size:16px;color:var(--cream-dim)">Ready at the counter in about 10 minutes.</div></div>';
+  cart=[];render();
+ }catch(e){coErrShow(e.message||'Something went wrong.');btn.style.pointerEvents='';btn.textContent='Pay '+$('#tot').textContent;}
+}
+
+/* demo hooks */
+(function(){try{var qp=new URLSearchParams(location.search);
+ if(qp.get('base')){sel.base=qp.get('base');selectBaseStrength(sel.base,qp.get('temp'));if(qp.get('milk'))sel.milk=qp.get('milk');if(qp.get('str'))sel.strength=+qp.get('str');if(qp.get('shot'))sel.shot=+qp.get('shot');if(qp.get('size'))sel.size=qp.get('size');if(qp.get('pump'))sel.pump=+qp.get('pump');if(qp.get('syrup'))sel.syrup=qp.get('syrup');if(qp.get('temp'))sel.temp=qp.get('temp');paint();}
+ if(qp.get('dial')){var pt=qp.get('dial').split('|'),dv=pt[0].split(','),kk=['energy','roast','milk','sweet','temp','mode'];kk.forEach(function(k,i){wsel[k]=(dv[i]==='x'||dv[i]==null||dv[i]==='')?null:+dv[i];});if(pt[1]){wsel.flavors=pt[1].split('.');}var nd=(wsel.mode!=null)||(wsel.flavors&&wsel.flavors.length);if(nd&&!deep)toggleDeep();buildWheel();paintWheel();resolveWheel();scrollTo2('#current');}
+ if(qp.get('wheeldemo')){wsel={energy:3,roast:3,milk:0,sweet:0,temp:0,mode:null,flavor:null,flavors:[]};paintWheel();resolveWheel();}
+ if(qp.get('deep')){toggleDeep();}
+ if(qp.get('drill')){if(!deep)toggleDeep();openDetail();if(qp.get('drill')==='2'){onDetailClick({classList:{contains:function(){return false;}},dataset:{opt:'Chocolate'}});}}
+}catch(e){}})();
+onScroll();
+</script>
+</body>
+</html>
