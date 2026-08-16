@@ -119,7 +119,7 @@ exports.handler = async function(event) {
 
   // Validate required env vars
   const accessToken = process.env.SQUARE_ACCESS_TOKEN;
-  const environment = process.env.SQUARE_ENVIRONMENT || 'sandbox';
+  const environment = (process.env.SQUARE_ENVIRONMENT || 'sandbox').trim().toLowerCase();
   const locationId  = process.env.SQUARE_LOCATION_ID;
   if (!accessToken || !locationId) {
     console.error('Missing env vars', { hasToken: !!accessToken, hasLocation: !!locationId });
