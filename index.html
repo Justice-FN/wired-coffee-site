@@ -533,7 +533,7 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
       <div id="syrupRow"><div class="glabel">Syrup flavor</div><div class="chips" id="gSyrup"></div></div>
       <div class="out"><div><div class="num" style="margin-bottom:6px">Your build</div><div class="recipe" id="recipe">Pick a base to begin</div></div><div class="price" id="bPrice">$&ndash;.&ndash;&ndash;</div></div>
       <div style="margin-top:14px;font-family:var(--mono);font-size:11px;color:var(--cream-dim);display:flex;align-items:center;gap:8px">&#9889; Name on the cup <input id="cupName" placeholder="type it here" maxlength="16" style="background:rgba(246,239,207,.07);border:1px solid rgba(246,239,207,.35);border-radius:3px;color:var(--cream);font-family:var(--mono);font-size:13px;padding:7px 10px;flex:1"></div>
-      <div class="btn btn-blue" id="addBuild" style="width:100%;text-align:center;margin-top:16px;opacity:.5;pointer-events:none" onclick="addBuild(this)">Assemble &amp; add to order</div>
+      <div role="button" tabindex="0" class="btn btn-blue" id="addBuild" style="width:100%;text-align:center;margin-top:16px;opacity:.5;pointer-events:none" onclick="addBuild(this)">Assemble &amp; add to order</div>
     </div>
   </div></div>
 </section>
@@ -628,7 +628,7 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
     <div class="ln"><span>Tip</span><span id="tipv">$0.00</span></div>
     <div class="tot"><span>Total</span><span id="tot">$0.00</span></div>
     <div id="closedNote" style="display:none;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;color:#e08a7a;border:1px solid rgba(224,138,122,.4);background:rgba(224,138,122,.08);padding:9px 12px;margin-bottom:10px;text-align:center">&#9889; Online ordering is open Tue&ndash;Sat 8am&ndash;2pm. Build your order now, pay when we're on.</div>
-    <div class="btn btn-blue" id="checkoutBtn" style="width:100%;text-align:center" onclick="checkout()">Checkout</div>
+    <div role="button" tabindex="0" class="btn btn-blue" id="checkoutBtn" style="width:100%;text-align:center" onclick="checkout()">Checkout</div>
     <div class="note" id="memNote">Card charged by Square &middot; member 10% verified at pickup</div>
    </div>
    <div id="coPanel" style="display:none">
@@ -638,7 +638,7 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
     <div id="card-container" style="background:rgba(246,239,207,.06);padding:6px;border-radius:4px"></div>
     <label style="display:flex;align-items:flex-start;gap:9px;margin-top:11px;font-family:var(--mono);font-size:11px;color:var(--cream-dim);cursor:pointer;line-height:1.5"><input type="checkbox" id="coLoyal" style="margin-top:2px;accent-color:#1F9AD6"><span>&#9889; <b style="color:var(--cream)">Wired Rewards</b>: earn points on this order. Square tracks them by your phone number.</span></label>
     <div id="coErr" style="display:none;font-family:var(--mono);font-size:11.5px;color:#e08a7a;margin:10px 0"></div>
-    <div class="btn btn-blue" id="coPay" style="width:100%;text-align:center;margin-top:12px" onclick="coSubmit()">Pay</div>
+    <div role="button" tabindex="0" class="btn btn-blue" id="coPay" style="width:100%;text-align:center;margin-top:12px" onclick="coSubmit()">Pay</div>
     <button onclick="coBack()" style="display:block;margin:12px auto 0;background:none;border:none;color:var(--cream-dim);font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer">&lt; Back to cart</button>
     <div class="note">Secure payment by Square &middot; pickup at the counter in ~10 min</div>
    </div>
@@ -1190,6 +1190,16 @@ function render(){var box=$('#cartItems');var units=cart.reduce(function(a,c){re
  if(typeof syncMenuQtys==='function')syncMenuQtys();
  var rw=$('#rewardWrap');if(sub>0){rw.style.display='block';var rb=$('#rewardBar');if(rb&&rb.parentNode)rb.parentNode.style.display='none';$('#rewardTxt').innerHTML='&#9889; Wired Rewards: spend $50, get $5 off. Points track by phone &middot; opt in at checkout.';}else rw.style.display='none';}
 /* A finished order leaves the confirmation showing and the cart body hidden. Closing the drawer with the X or the scrim skips coDoneClose(), so without this the next open lands back on the previous order's "Order in." screen with no way to shop. Every open normalizes the drawer. */
+/* The four purchase actions are styled divs with onclick, so the whole path from
+   "add to order" to "pay" was unreachable by keyboard and unannounced to a screen
+   reader. role and tabindex are on them now; this makes the keys actually fire, and
+   respects the disabled state the CSS expresses as pointer-events:none. */
+document.addEventListener('keydown',function(e){
+ if(e.key!=='Enter'&&e.key!==' '&&e.key!=='Spacebar')return;
+ var t=e.target;if(!t||t.getAttribute('role')!=='button')return;
+ if(getComputedStyle(t).pointerEvents==='none')return;
+ e.preventDefault();t.click();
+});
 function openCart(){var dnO=$('#coDone');if(dnO&&dnO.style.display==='block'){dnO.style.display='none';dnO.innerHTML='';$('#coPanel').style.display='none';var cmO=$('#cartMain');if(cmO)cmO.style.display='';}$('#cart').classList.add('open');$('#scrim').classList.add('open');}
 function closeCart(){$('#cart').classList.remove('open');$('#scrim').classList.remove('open');}
 var sqPayments=null,sqCard=null;
@@ -1235,7 +1245,7 @@ async function coSubmit(){
   if(data.loyalty&&data.loyalty.points>0){loyLn='<div style="font-family:var(--mono);font-size:11.5px;color:#5CC5F2;margin-top:8px">&#9889; +'+data.loyalty.points+' '+(data.loyalty.unit||'points')+' &middot; balance '+data.loyalty.balance+'</div>';if(data.loyalty.tierPoints){var need=data.loyalty.tierPoints-data.loyalty.balance;loyLn+='<div style="font-family:var(--mono);font-size:10.5px;color:var(--cream-dim);margin-top:4px">'+(need>0?(need+' '+(data.loyalty.unit||'points')+' to '+(data.loyalty.tierName||'your next reward')):((data.loyalty.tierName||'Your reward')+' is ready &middot; redeem at the counter'))+'</div>';}}
   $('#coPanel').style.display='none';
   var dn=$('#coDone');dn.style.display='block';
-  dn.innerHTML='<div style="text-align:center;padding:26px 6px"><div style="font-family:var(--disp);font-size:26px;color:var(--cream)">&#9889; Order in.</div><div style="font-family:var(--mono);font-size:12px;color:var(--blue-hi);margin:10px 0">Order #'+String(data.orderId||'').slice(-6).toUpperCase()+' &middot; total $'+data.totalDollars+'</div><div style="font-family:var(--body);font-size:16px;color:var(--cream-dim)">Ready at the counter in about 10 minutes.</div>'+loyLn+'<div class="btn btn-line" style="width:100%;text-align:center;margin-top:16px" onclick="coDoneClose()">Start another order</div></div>';
+  dn.innerHTML='<div style="text-align:center;padding:26px 6px"><div style="font-family:var(--disp);font-size:26px;color:var(--cream)">&#9889; Order in.</div><div style="font-family:var(--mono);font-size:12px;color:var(--blue-hi);margin:10px 0">Order #'+String(data.orderId||'').slice(-6).toUpperCase()+' &middot; total $'+data.totalDollars+'</div><div style="font-family:var(--body);font-size:16px;color:var(--cream-dim)">Ready at the counter in about 10 minutes.</div>'+loyLn+'<div role="button" tabindex="0" class="btn btn-line" style="width:100%;text-align:center;margin-top:16px" onclick="coDoneClose()">Start another order</div></div>';
   try{if(sqCard){sqCard.destroy();}}catch(e2){}
   sqCard=null;
   cart=[];render();
