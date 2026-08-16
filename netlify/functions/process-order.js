@@ -109,7 +109,15 @@ async function accrueLoyalty(client, locationId, orderId, phoneRaw) {
   });
   const prior = Number(account.balance || 0);
   const term = program.terminology || {};
-  return { points: pts, balance: prior + pts, unit: pts === 1 ? (term.one || 'point') : (term.other || 'points') };
+  // Lowest reward tier, so the site can say how far the customer is from it
+  const tiers = (program.rewardTiers || []).slice().sort(function (a, b) { return Number(a.points) - Number(b.points); });
+  const tier = tiers[0];
+  return {
+    points: pts, balance: prior + pts,
+    unit: pts === 1 ? (term.one || 'point') : (term.other || 'points'),
+    tierPoints: tier ? Number(tier.points) : null,
+    tierName: tier ? (tier.name || 'your next reward') : null
+  };
 }
 
 exports.handler = async function(event) {
