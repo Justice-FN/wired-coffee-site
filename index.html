@@ -427,7 +427,28 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
   .foot{grid-template-columns:1fr 1fr}
   section{padding:84px 0}
 }
-@media(max-width:560px){ #curWheel{display:none} .wheel-rows{display:block} }
+/* Declared before the phone block, because a later rule of equal specificity wins:
+   with this sitting after the media query it silently cancelled the toggle's
+   display:inline-block and the button never appeared. */
+.wtoggle{display:none;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--cream-dim);background:none;border:1px solid rgba(246,239,207,.25);padding:10px 14px;cursor:pointer;border-radius:2px}
+/* The wheel stays on a phone. It used to be hidden here and replaced by .wheel-rows,
+   which is the boring version of the best thing on the page. See wheelGeom() for the
+   tap-target arithmetic that makes the bands thumb-sized instead of hairlines. */
+@media(max-width:560px){
+  #curWheel{display:block;width:100%;height:auto}
+  /* Band text renders at about 5px once the wheel is scaled to a phone, which is
+     noise, not a label. The hub readout names whatever the thumb is on instead. */
+  .wbandtxt{display:none}
+  .wlabel{font-size:17px;letter-spacing:.1em}
+  /* Full bleed: every pixel of width is another pixel of tap depth. */
+  .wheelbox{margin-left:-22px;margin-right:-22px}
+  .wheel-rows{display:none;max-width:none;margin:14px auto 0}
+  body.listdials .wheel-rows{display:block}
+  body.listdials #curWheel{display:none}
+  .wtoggle{display:inline-block}
+  /* Landing on a section from a nav tap must not put it under the fixed header. */
+  section{scroll-margin-top:112px}
+}
 /* Phone layout, measured at 375x812 rather than guessed.
    The header is fixed and the hero cleared it by only 40px, so the "Cortez
    Makerspace / Specialty Coffee" line printed straight through the logo. And
@@ -517,7 +538,7 @@ footer p,footer a{opacity:.72;font-size:16px;margin-bottom:6px;display:block}
     <div class="wheelbox">
       <svg id="curWheel" viewBox="-60 -54 520 520" aria-label="Wired to Order"></svg>
       <div class="wheel-rows" id="wheelRows"></div>
-      <div style="display:flex;gap:12px;justify-content:center;margin-top:16px;flex-wrap:wrap"><button class="deeper" id="deeperBtn" onclick="toggleDeep()">+ Go deeper</button><button class="deeper" onclick="surpriseSpin()">&#9889; Surprise me</button></div>
+      <div style="display:flex;gap:12px;justify-content:center;margin-top:16px;flex-wrap:wrap"><button class="deeper" id="deeperBtn" onclick="toggleDeep()">+ Go deeper</button><button class="deeper" onclick="surpriseSpin()">&#9889; Surprise me</button><button class="wtoggle" id="dialToggle" onclick="toggleDials()" aria-pressed="false">Use a list</button></div>
       <div class="hubcard" id="hubcard"><div class="aura" id="hubAura"></div><div class="empty">Tap the dials. We read your cup live.</div></div>
     </div>
   </div></div>
@@ -841,6 +862,27 @@ Object.assign(SEED,{
 var wsel={energy:null,roast:null,milk:null,sweet:null,temp:null,kind:null,fruit:null,mode:null,flavor:null,flavors:[]};
 var BLEND_KIND=['lemonade','lemonade-prickly','prickly-palmer','circuit-berry','maker-mango','pink-prototype','peach-paradise','green-machine','java-jolt'];
 var WCX=200,WCY=200,RHUB=86,RRIM=178,RD0=192,RD1=236;
+/* The wheel used to be display:none on a phone, with a row of plain buttons standing
+   in for it, which threw away the entire point of the section. Radial controls are
+   actually well suited to touch, since every option sits the same distance from the
+   thumb, and the real constraint is tap-target depth: at the desktop geometry a band
+   on a 375px screen is 14.6px deep, well under the 24px WCAG 2.5.8 floor. Shrinking
+   the hub and pushing the rim out buys 35.5 viewBox units per band, about 26px on a
+   375px screen, so the wheel becomes usable rather than decorative. */
+var WVIEW='-60 -54 520 520';
+function wheelGeom(){
+ var narrow=(window.innerWidth<=560);
+ RHUB=narrow?54:86;
+ RRIM=narrow?196:178;
+ RD0=RRIM+14; RD1=RRIM+58;
+ /* The desktop viewBox spends 60 units a side on margin. On a phone every one of
+    those units is tap depth thrown away, so the box is cropped tighter. It cannot be
+    cropped to the rim itself: a label is centred on RRIM+26 and spreads about 27
+    units either side of that anchor, so a 472 box chopped "TEMP" and "ROAST" against
+    the screen edges. 512 clears them and still leaves about 26px of tap depth at
+    375 wide, against the 24px WCAG 2.5.8 floor. */
+ WVIEW=narrow?'-56 -50 512 512':'-60 -54 520 520';
+}
 function polar(cx,cy,r,deg){var a=(deg-90)*Math.PI/180;return[cx+r*Math.cos(a),cy+r*Math.sin(a)];}
 function sector(rIn,rOut,a0,a1){var A=polar(WCX,WCY,rOut,a0),B=polar(WCX,WCY,rOut,a1),C=polar(WCX,WCY,rIn,a1),D=polar(WCX,WCY,rIn,a0);var big=(a1-a0)>180?1:0;return 'M'+A[0]+' '+A[1]+' A'+rOut+' '+rOut+' 0 '+big+' 1 '+B[0]+' '+B[1]+' L'+C[0]+' '+C[1]+' A'+rIn+' '+rIn+' 0 '+big+' 0 '+D[0]+' '+D[1]+' Z';}
 function AW(){return 360/FACTIONS.length;}
@@ -848,7 +890,9 @@ function BT(){var mb=Math.max.apply(null,FACTIONS.map(function(f){return f.mode=
 var FLAVOR_TREE={Nutty:['Hazelnut','Almond','Cocoa'],Chocolate:['Dark Chocolate','White Chocolate','Mocha'],Caramel:['Caramel','Maple','Honey'],Vanilla:['Vanilla','Banana Bread'],Spiced:['Cinnamon','Chai spice'],Herbal:['Peppermint','Lemon','Navajo'],Fruit:['Prickly Pear','Berry','Mango','Peach','Banana']};
 var detailLevel=1,detailFamily=null;
 function buildWheel(){
+ wheelGeom();
  var svg=$('#curWheel'),g='',aw=AW(),bt=BT();
+ svg.setAttribute('viewBox',WVIEW);
  FACTIONS.forEach(function(f,i){var a0=i*aw+1.6,a1=(i+1)*aw-1.6;
    if(f.mode==='drill'){g+='<path class="wband wdrill" data-fac="'+i+'" d="'+sector(RHUB,RRIM,a0,a1)+'"></path>';var rmD=(RHUB+RRIM)/2,midD=(a0+a1)/2,flipD=(midD>95&&midD<265),AD=polar(WCX,WCY,rmD,flipD?a1:a0),BD=polar(WCX,WCY,rmD,flipD?a0:a1),aidD='barcD'+i;g+='<path id="'+aidD+'" d="M'+AD[0]+' '+AD[1]+' A'+rmD+' '+rmD+' 0 0 '+(flipD?0:1)+' '+BD[0]+' '+BD[1]+'" fill="none"></path>';g+='<text class="wbandtxt" dominant-baseline="central"><textPath href="#'+aidD+'" startOffset="50%" text-anchor="middle">tap to mix</textPath></text>';}
    else{f.bands.forEach(function(bn,j){var rIn=RHUB+j*bt,rOut=RHUB+(j+1)*bt;g+='<path class="wband" data-fac="'+i+'" data-lvl="'+j+'" d="'+sector(rIn,rOut,a0,a1)+'"></path>';var rm=(rIn+rOut)/2,mid2=(a0+a1)/2,flip=(mid2>95&&mid2<265),A2=polar(WCX,WCY,rm,flip?a1:a0),B2=polar(WCX,WCY,rm,flip?a0:a1),aid='barc'+i+'_'+j;g+='<path id="'+aid+'" d="M'+A2[0]+' '+A2[1]+' A'+rm+' '+rm+' 0 0 '+(flip?0:1)+' '+B2[0]+' '+B2[1]+'" fill="none"></path>';g+='<text class="wbandtxt" dominant-baseline="central"><textPath href="#'+aid+'" startOffset="50%" text-anchor="middle">'+bn+'</textPath></text>';});}
@@ -863,7 +907,10 @@ function buildWheel(){
  svg.innerHTML=g;
  svg.onmousemove=function(e){var pb=e.target.closest('.wband');var hh2=$('#hubHint');if(!hh2)return;if(pb){var fk2=FACTIONS[+pb.dataset.fac];hh2.textContent=fk2.mode==='drill'?'FLAVOR: TAP TO MIX':(fk2.label+': '+String(fk2.bands[+pb.dataset.lvl]).toUpperCase());}else{hh2.textContent=setCountFn()===0?'TUNE':'';}};
  svg.onmouseleave=function(){var hh2=$('#hubHint');if(hh2)hh2.textContent=setCountFn()===0?'TUNE':'';};
- svg.onclick=function(e){var dd=e.target.closest('.dband,.ddone,.dback');if(dd){onDetailClick(dd);return;}var p=e.target.closest('.wband');if(!p)return;var f=+p.dataset.fac;if(FACTIONS[f].mode==='drill'){openDetail();return;}setWheel(f,+p.dataset.lvl);};
+ svg.onclick=function(e){var dd=e.target.closest('.dband,.ddone,.dback');if(dd){onDetailClick(dd);return;}var p=e.target.closest('.wband');if(!p)return;var f=+p.dataset.fac;if(FACTIONS[f].mode==='drill'){openDetail();return;}setWheel(f,+p.dataset.lvl);
+  /* On a phone the band text is too small to render, so the hub IS the label. A
+     finger produces no mousemove, so the tap has to write the readout itself. */
+  var hh3=$('#hubHint');if(hh3)hh3.textContent=FACTIONS[f].label+': '+String(FACTIONS[f].bands[+p.dataset.lvl]).toUpperCase();};
  var rows='';FACTIONS.forEach(function(f,i){if(f.mode==='drill'){rows+='<div class="wrow"><div class="wl">'+f.label+' (tap to combine)</div><div class="wseg wflav" data-fac="'+i+'"></div></div>';}else{rows+='<div class="wrow"><div class="wl">'+f.label+'</div><div class="wseg" data-fac="'+i+'">'+f.bands.map(function(bn,j){return '<button data-lvl="'+j+'">'+bn+'</button>';}).join('')+'</div></div>';}});
  $('#wheelRows').innerHTML=rows;
  $('#wheelRows').onclick=function(e){var b=e.target.closest('button');if(!b||!b.parentNode.dataset.fac)return;var f=+b.parentNode.dataset.fac;if(FACTIONS[f].mode==='drill')return;setWheel(f,+b.dataset.lvl);};
@@ -945,6 +992,24 @@ function renderHub(o){
 }
 var teaPick=null;
 function pickTea(t){teaPick=t;if(LASTHUB&&!LASTHUB.invent){LASTHUB.key=t;LASTHUB.drink=DRINKS[t];renderHub(LASTHUB);}tick2();}
+/* The row-of-buttons view still exists, but as a deliberate choice rather than as
+   what every phone silently got. It is also the keyboard path: the wheel's bands are
+   SVG paths with click handlers, which a keyboard cannot reach. */
+function toggleDials(){
+ var on=document.body.classList.toggle('listdials');
+ var b=$('#dialToggle');
+ if(b){b.textContent=on?'Use the wheel':'Use a list';b.setAttribute('aria-pressed',on?'true':'false');}
+ if(!on)buildWheel();
+ paintWheel();resolveWheel();
+}
+/* Rotating the phone crosses the breakpoint, and the geometry is baked in at build
+   time, so the wheel has to be rebuilt rather than just rescaled. */
+var _wheelNarrow=null;
+window.addEventListener('resize',function(){
+ var n=(window.innerWidth<=560);
+ if(n===_wheelNarrow)return;
+ _wheelNarrow=n;buildWheel();paintWheel();resolveWheel();
+});
 function clearWheel(){wsel={energy:null,roast:null,milk:null,sweet:null,temp:null,kind:null,fruit:null,mode:null,flavor:null,flavors:[]};closeDetail();paintWheel();resolveWheel();}
 function surpriseSpin(){
  var pool=Math.random()<0.7?SIGNATURES:Object.keys(WHEEL_PROFILE);var k=pool[Math.floor(Math.random()*pool.length)];var p=WHEEL_PROFILE[k];
